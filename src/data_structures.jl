@@ -1,3 +1,4 @@
+__precompile__(true)
 module DataStructures # Satellite Tasking Data Structures
 
 using SatelliteDynamics.Time
@@ -122,6 +123,47 @@ struct Image
         new(lon, lat, ecef, look_angle_min, look_angle_max,
             require_zero_doppler, reward, id)
     end
+end
+
+export load_images
+"""
+Loads image data from a JSON file.
+
+THe JSON file is expected to contain an array of JSON objects where each object 
+has the following format:
+
+```json
+{
+    "lon": 22,
+    "lat": 12.23,
+    "reward": 42.0,
+    "look_angle_min": 5.0,
+    "look_angle_max": 55.0
+}
+```
+
+Arguments:
+- `file::String` Filepath to JSON file encoding image 
+"""
+function load_images(file::String)
+    data = JSON.parsefile(file)
+
+    # Initialize array of Images
+    n_img  = length(data["images"])
+    images = Array{Image, 1}(undef, n_img)
+
+    for (i, img) in enumerate(data["images"])
+        lon = img["lon"]
+        lat = img["lat"]
+        id  = uuid4()
+        look_angle_min = img["look_angle_min"]
+        look_angle_max = img["look_angle_max"]
+        reward = img["reward"]
+        images[i] = Image(lon, lat, id=id, look_angle_min=look_angle_min,
+                        look_angle_max=look_angle_max, require_zero_doppler=false, reward=reward)
+    end
+
+    return images
 end
 
 ###########

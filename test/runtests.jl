@@ -48,7 +48,7 @@ end
     @time @testset "SatelliteTasking.DataStructures" begin
         include(joinpath(testdir, "test_data_structures.jl"))
     end
-    # @time @testset "SatelliteTasking.SingleSatellite" begin
-    #     include(joinpath(testdir, "test_singlesat.jl"))
-    # end
+    @time @testset "SatelliteTasking.Collection" begin
+        include(joinpath(testdir, "test_collection.jl"))
+    end
 end

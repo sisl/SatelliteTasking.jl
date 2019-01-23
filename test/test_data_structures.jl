@@ -1,5 +1,5 @@
 let
-    # Test initialization of orbit
+    # Test Orbit constructor
     epc0 = Epoch(2019, 1, 1, 12, 0, 0, 0.0) 
     oe0  = [R_EARTH + 500e3, 0.0, 90.0, 0, 0, 0]
     eci0 = sOSCtoCART(oe0, use_degrees=true)
@@ -26,6 +26,15 @@ let
 end
 
 let
+    # Test Image loading
+    img_data = abspath(string(@__DIR__), "../data/landsat_test.json")
+    images = load_images(img_data)
+
+    @test length(images) == 150
+end
+
+let
+    # Test Collect constructor
     sow = Epoch(2018, 1, 1, 12, 1, 0, 0)
     eow = Epoch(2018, 1, 1, 12, 1, 1, 0)
     col1 = Collect(sow, eow)

@@ -6,5 +6,6 @@ throughout the `SatelliteTasking` module.
 ```@docs
 Orbit
 Image
+load_images
 Collect
 ```
