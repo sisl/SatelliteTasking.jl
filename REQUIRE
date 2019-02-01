@@ -3,4 +3,5 @@ Reexport
 HTTP
 SOFA 0.1.1
 OrdinaryDiffEq
-SatelliteDynamics
+SatelliteDynamics 0.1.1
+PGFPlots

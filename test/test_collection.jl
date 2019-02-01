@@ -18,3 +18,19 @@ let
     image = Image(0, 0)
     @test image_visible(ecef, image) == false
 end
+
+let
+    indices = [1, 2, 3, 47, 48, 50]
+
+    gidx = SatelliteTasking.Collection.group_indices(indices)
+
+    @test length(gidx[1]) == 3
+    array_isapprox(gidx[1], [1, 2, 3])
+
+    @test length(gidx[2]) == 2
+    array_isapprox(gidx[2], [47, 48])
+
+    @test length(gidx[3]) == 1
+    array_isapprox(gidx[3], [50])
+end
+

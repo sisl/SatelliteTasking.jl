@@ -28,9 +28,9 @@ Arguments:
 - `timestep::Real` Timestep used for propgation output
 - `dtmax::Real` Maximum allowable integrator step
 - `mass::Real` Satellite mass [kg]
-- `area_drag::Real`: Wetted wind-facing area [m^2]
-- `coef_drag::Real`: Coefficient of drag
-- `area_srp::Real`: Area illuminated by solar radiation pressure [m^2]
+- `area_drag::Real` Wetted wind-facing area [m^2]
+- `coef_drag::Real` Coefficient of drag
+- `area_srp::Real` Area illuminated by solar radiation pressure [m^2]
 - `coef_srp::Real` Coefficient of reflectivity
 - `n_grav::Integer` Gravity model degree
 - `m_grav::Integer` Gravity model order

@@ -14,6 +14,16 @@ makedocs(
         "Home" => "index.md",
         "Modules" => Any[
             "Data Structures" => "modules/data_structures.md",
+            "modules/collection.md",
+            "modules/simulation.md",
+            "Satellite Planning" => Any[
+                "modules/satellite_planning/graph.md",
+                "modules/satellite_planning/milp.md",
+                "modules/satellite_planning/mdp.md",
+            ],
+            "Analysis" => Any[
+                "modules/analysis/collect_uncertainty.md",
+            ]
         ],
         "Function Index" => "function_index.md",
     ]

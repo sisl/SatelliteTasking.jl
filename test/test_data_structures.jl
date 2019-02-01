@@ -13,12 +13,12 @@ end
 let
     img = Image(10, 20, look_angle_min=6, look_angle_max=40, reward=2.0)
 
-    @test img.lon == 10
-    @test img.lat == 20
+    @test img.lon            == 10
+    @test img.lat            == 20
     @test img.look_angle_min == 6
     @test img.look_angle_max == 40
-    @test img.reward == 2.0
-    @test typeof(img.id) == UUID
+    @test img.reward         == 2.0
+    @test typeof(img.id)     == UUID
 
     img2 = Image(0, 0)
 
@@ -35,8 +35,8 @@ end
 
 let
     # Test Collect constructor
-    sow = Epoch(2018, 1, 1, 12, 1, 0, 0)
-    eow = Epoch(2018, 1, 1, 12, 1, 1, 0)
+    sow  = Epoch(2018, 1, 1, 12, 1, 0, 0)
+    eow  = Epoch(2018, 1, 1, 12, 1, 1, 0)
     col1 = Collect(sow, eow)
     col2 = Collect(sow, eow)
 

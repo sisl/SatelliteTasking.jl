@@ -3,6 +3,9 @@ module Collection
 
 # Julia imports
 using LinearAlgebra
+using Statistics
+
+# SatelliteDynamics imports
 using SatelliteDynamics.Constants: R_EARTH
 using SatelliteDynamics.Coordinates: sECEFtoGEOD, sGEODtoECEF
 
@@ -64,7 +67,7 @@ function image_visible(sat_ecef::Array{<:Real, 1}, image::Image)
     # To be fixed, no idea why this is complex:
     max_range = sqrt(r^2 - R_EARTH^2)
 
-    @debug "max range: $max_range"
+    # @debug "max range: $max_range"
 
     if image.look_angle_min <= look_angle &&
        look_angle <= image.look_angle_max &&
@@ -86,17 +89,21 @@ Returns:
 - `groups::Array{Array{Int32, 1}, 1}` Array of arrays where each sub-array contains a continuous set of indicies where the image is visible.
 """
 function group_indices(indices::Array{<:Int, 1})
-    run = []
-    groups = [run]
+    run = Int64[]
+    groups = Array{Int64,1}[run]
     expected_idx = nothing
 
     for idx in indices
+
         if expected_idx == nothing || idx == expected_idx
+            # Add current index to run
             push!(groups[end], idx)
         else
-            run = []
+            # Start new run if necessary
+            run = Int64[idx]
             push!(groups, run)
         end
+
         expected_idx = idx + 1
     end
 
@@ -113,14 +120,13 @@ Returns:
 """
 function groups_extract_collects(orbit::Orbit, image::Image, index_groups)
     # collects = Array{Collect, 1}(undef, length(index_groups))
-    collects = []
+    collects = Collect[]
     
     for (i, group) in enumerate(index_groups)
         if length(group) > 0
             sow = orbit.epc[group[1]]
             eow = orbit.epc[group[end]]
-            # collects[i] = Collect(sow, eow, id=-1, orbit_id=orbit.id, image_id=image.id)
-            push!(collects, Collect(sow, eow, id=-1, orbit_id=orbit.id, image_id=image.id))
+            push!(collects, Collect(sow, eow, orbit_id=orbit.id, image_id=image.id))
         end
     end
     
@@ -164,7 +170,7 @@ Returns:
 - `collects::Array{Collect, 1}` Array of collection colortunities for all images
 """
 function find_all_collects(orbit::Orbit, images::Array{Image, 1}; sort=true::Bool)
-    collects = []
+    collects = Collect[]
     for img in images
         for col in find_collects(orbit, img)
             push!(collects, col)
@@ -199,17 +205,32 @@ Finds the closest matching collect out of a list
 Arguments:
 - `collect_list` List of collections to extract closest match from
 - `col::Collect` Collect to match from list
+- `match_max_seconds` _Optional_ Maximum difference in seconds to be considered a valid match. Default: 10 min
 
 Returns:
 - `collect::Collect` The closest matching in `collect_list` to the input collect.
 """
-function find_matching_collect(collect_list::Array{<:Any, 1}, col::Collect)
-    col_midtime = collect_midtime(col)
-    for o in collect_list
-        if o.sow < col_midtime && o.eow > col_midtime && o.image_id == col.image_id
-           return o
+function find_matching_collect(collect_list::Array{<:Any, 1}, col::Collect, match_max_seconds=600::Real)
+    collect_candidates = filter(x -> x.image_id == col.image_id, collect_list)
+
+    true_mid = collect_midtime(col)
+
+    # Screen each candidate and return if below match threshold
+    for c in collect_candidates
+        if abs(collect_midtime(c) - true_mid) < match_max_seconds
+            return c
         end
     end
+
+    @debug "Missing collect: $col"
+    @debug "Candidate collections: $collect_candidates"
+
+    # col_midtime = collect_midtime(col)
+    # for o in collect_list
+    #     if o.sow < col_midtime && o.eow > col_midtime && o.image_id == col.image_id
+    #        return o
+    #     end
+    # end
 
     # If no matching collect found return nothing
     return nothing
@@ -228,7 +249,7 @@ Returns:
 - `collect_diffs::Array{Array{Float64, 1}, 1}` Array of differences between collect windows. Returns difference in start time, end time, and duration for each matched collect between the two lists.
 """
 function collect_diff(collect_list_a::Array{<:Any, 1}, collect_list_b::Array{<:Any, 1})
-    col_diffs = []
+    col_diffs = Array{Float64, 1}[]
     for col in collect_list_b
         matching_a = find_matching_collect(collect_list_a, col)
         if matching_a != nothing
@@ -236,6 +257,8 @@ function collect_diff(collect_list_a::Array{<:Any, 1}, collect_list_b::Array{<:A
             eow_diff = col.eow - matching_a.eow
             dur_diff = col.duration - matching_a.duration
             push!(col_diffs, [sow_diff, eow_diff, dur_diff])
+        else
+            @debug "Unable to find matching collect for $col"
         end
     end
 
@@ -275,7 +298,7 @@ Arguments:
 - `collect_list_b::Array{Collect, 1}` Second set of collections
 
 Returns:
-- `collect_stats::Tuple{Array{Float64, 1}, Array{Float64, 1}}`: Mean and standard deviation of the differences in start time, end time, and collection window duration.
+- `collect_stats::Tuple{Array{Float64, 1}, Array{Float64, 1}}` Mean and standard deviation of the differences in start time, end time, and collection window duration.
 """
 function collect_stats(collect_list_a::Array{<:Any, 1}, collect_list_b::Array{<:Any, 1}; epc_min=nothing, epc_max=nothing)
     collects = []
@@ -294,6 +317,7 @@ function collect_stats(collect_list_a::Array{<:Any, 1}, collect_list_b::Array{<:
     end
 
     collects = vcat(collects...)
+    @debug "Found $(length(collects)) collects in window"
     
     # Compute the difference between all collects and the list of "true" collects
     col_diffs = collect_diff(collect_list_a, collects)
@@ -302,8 +326,11 @@ function collect_stats(collect_list_a::Array{<:Any, 1}, collect_list_b::Array{<:
     col_errors = hcat(col_diffs...)
 
     # Compute mean and standard deviation
-    col_mean = mean(col_errors, dims=2)
-    col_sdev = std(col_errors, dims=2)
+    col_mean, col_sdev = nothing, nothing
+    if length(col_errors) > 0
+        col_mean = mean(col_errors, dims=2)
+        col_sdev = std(col_errors, dims=2)
+    end
 
     return col_mean, col_sdev
 end
