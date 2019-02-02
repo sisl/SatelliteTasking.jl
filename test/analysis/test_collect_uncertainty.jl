@@ -18,11 +18,24 @@ let
     # Load test images
     images = load_images("../data/landsat_test.json");
 
-    true_collects, perturbed_collects, mean_diff, sdev_diff  = compute_perturbed_collects(true_orbit, perturbed_orbits, images)
+    true_collects, perturbed_collects, mean_diff, sdev_diff, miss_collect = compute_perturbed_collects(true_orbit, perturbed_orbits, images)
 
     @test typeof(true_collects)      == Array{Collect, 1}
     @test typeof(perturbed_collects) == Array{Array{Collect, 1}, 1}
 
     @debug mean_diff
     @debug sdev_diff
+end
+
+let
+    col1 = Collect(Epoch(2018, 1, 1, 12, 1, 0, 0), Epoch(2018, 1, 1, 12, 2, 0, 0))
+    col2 = Collect(Epoch(2018, 1, 1, 12, 3, 0, 0), Epoch(2018, 1, 1, 12, 4, 0, 0))
+
+    missing_from_a, missing_from_b = find_missing_collect([col1], [col2])
+
+    @test length(missing_from_a) == 1
+    @test missing_from_a[1]      == col2
+
+    @test length(missing_from_b) == 1
+    @test missing_from_b[1]      == col1
 end

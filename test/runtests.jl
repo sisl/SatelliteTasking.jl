@@ -9,6 +9,7 @@ using SatelliteDynamics
 
 # Package Under Test
 using SatelliteTasking
+using SatelliteTasking.SatellitePlanning
 using SatelliteTasking.Analysis
 
 # Set logging level

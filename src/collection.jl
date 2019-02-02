@@ -126,7 +126,8 @@ function groups_extract_collects(orbit::Orbit, image::Image, index_groups)
         if length(group) > 0
             sow = orbit.epc[group[1]]
             eow = orbit.epc[group[end]]
-            push!(collects, Collect(sow, eow, orbit_id=orbit.id, image_id=image.id))
+            push!(collects, Collect(sow, eow, orbit_id=orbit.id, 
+                                    image_id=image.id, dwell_time=image.dwell_time))
         end
     end
     
@@ -185,20 +186,6 @@ function find_all_collects(orbit::Orbit, images::Array{Image, 1}; sort=true::Boo
     return collects
 end
 
-
-"""
-Internal helper function. Return the midtime for a collect.
-
-Arguments:
-- `collect::Collect` Collect to compute midtime for
-
-Returns:
-- `epc::Epoch` Midtime collect window
-"""
-function collect_midtime(collect::Collect)
-    return collect.sow + (collect.eow - collect.sow)/2.0
-end
-
 """
 Finds the closest matching collect out of a list 
 
@@ -210,24 +197,22 @@ Arguments:
 Returns:
 - `collect::Collect` The closest matching in `collect_list` to the input collect.
 """
-function find_matching_collect(collect_list::Array{<:Any, 1}, col::Collect, match_max_seconds=600::Real)
+function find_matching_collect(collect_list::Array{Collect, 1}, col::Collect; match_max_seconds=600::Real)
     collect_candidates = filter(x -> x.image_id == col.image_id, collect_list)
-
-    true_mid = collect_midtime(col)
 
     # Screen each candidate and return if below match threshold
     for c in collect_candidates
-        if abs(collect_midtime(c) - true_mid) < match_max_seconds
+        if abs(c.mid - col.mid) < match_max_seconds
             return c
         end
     end
 
-    @debug "Missing collect: $col"
-    @debug "Candidate collections: $collect_candidates"
+    # @debug "Missing collect: $col"
+    # @debug "Candidate collections: $collect_candidates"
 
-    # col_midtime = collect_midtime(col)
+    # Older method for matching collects
     # for o in collect_list
-    #     if o.sow < col_midtime && o.eow > col_midtime && o.image_id == col.image_id
+    #     if o.sow < col.mid && o.eow > col.mid && o.image_id == col.image_id
     #        return o
     #     end
     # end
@@ -247,45 +232,25 @@ Arguments:
 
 Returns:
 - `collect_diffs::Array{Array{Float64, 1}, 1}` Array of differences between collect windows. Returns difference in start time, end time, and duration for each matched collect between the two lists.
+- `col_miss::Int64` Collects present in b missing from a
 """
-function collect_diff(collect_list_a::Array{<:Any, 1}, collect_list_b::Array{<:Any, 1})
+function collect_diff(collect_list_a::Array{Collect, 1}, collect_list_b::Array{Collect, 1})
     col_diffs = Array{Float64, 1}[]
-    for col in collect_list_b
-        matching_a = find_matching_collect(collect_list_a, col)
-        if matching_a != nothing
-            sow_diff = col.sow - matching_a.sow
-            eow_diff = col.eow - matching_a.eow
-            dur_diff = col.duration - matching_a.duration
+    col_miss  = 0
+    for col_a in collect_list_a
+        matching_b = find_matching_collect(collect_list_b, col_a)
+        if matching_b != nothing
+            sow_diff = matching_b.sow - col_a.sow
+            eow_diff = matching_b.eow - col_a.eow
+            dur_diff = matching_b.duration - col_a.duration
             push!(col_diffs, [sow_diff, eow_diff, dur_diff])
         else
-            @debug "Unable to find matching collect for $col"
+            @debug "Unable to find matching collect for $col_a"
+            col_miss += 1
         end
     end
 
-    return col_diffs
-end
-
-export collect_pair
-"""
-Gets the subset of Collects common to two sets of Collects.
-
-Arguments:
-- `collect_list_a::Array{Collect, 1}` First set of collections
-- `collect_list_b::Array{Collect, 1}` Second set of collections
-
-Returns:
-- `collect_diffs::Array{Collect, 1}` Array of Collects common to the two lists
-"""
-function collect_pair(collect_list_a::Array{<:Any, 1}, collect_list_b::Array{<:Any, 1})
-    col_pairs = []
-    for col in collect_list_b
-        matching_a = find_matching_collect(collect_list_a, col)
-        if matching_a != nothing
-            push!(col_pairs, (matching_a, col))
-        end
-    end
-
-    return col_pairs
+    return col_diffs, col_miss
 end
 
 export collect_stats
@@ -299,28 +264,24 @@ Arguments:
 
 Returns:
 - `collect_stats::Tuple{Array{Float64, 1}, Array{Float64, 1}}` Mean and standard deviation of the differences in start time, end time, and collection window duration.
+- `collect_miss::Int` Number of collects missing from collect_list_b that are epected to be present in a
 """
-function collect_stats(collect_list_a::Array{<:Any, 1}, collect_list_b::Array{<:Any, 1}; epc_min=nothing, epc_max=nothing)
-    collects = []
+function collect_stats(collect_list_a::Array{Collect, 1}, collect_list_b::Array{Collect, 1}; epc_min=nothing, epc_max=nothing)
+    collects = copy(collect_list_a) # Filter on true collects in case perturbed move around
 
     # Extract Opportunities from each list
-    for cols in collect_list_b
-        c = cols
-        if epc_min != nothing
-            c = filter(x -> x.sow > epc_min, c)
-        end
-
-        if epc_max != nothing
-            c = filter(x -> x.sow < epc_max, c)
-        end
-        push!(collects, c)
+    if epc_min != nothing
+        collects = filter(x -> x.sow > epc_min, collects)
     end
 
-    collects = vcat(collects...)
+    if epc_max != nothing
+        collects = filter(x -> x.sow < epc_max, collects)
+    end
+
     @debug "Found $(length(collects)) collects in window"
     
     # Compute the difference between all collects and the list of "true" collects
-    col_diffs = collect_diff(collect_list_a, collects)
+    col_diffs, col_miss = collect_diff(collects, collect_list_b)
 
     # Concatenate the matrix into a single matrix to easily compute statistic
     col_errors = hcat(col_diffs...)
@@ -332,7 +293,7 @@ function collect_stats(collect_list_a::Array{<:Any, 1}, collect_list_b::Array{<:
         col_sdev = std(col_errors, dims=2)
     end
 
-    return col_mean, col_sdev
+    return col_mean, col_sdev, col_miss
 end
 
 end # End module

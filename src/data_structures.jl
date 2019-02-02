@@ -98,6 +98,7 @@ Attributes:
 - `ecef::Array{Float64, 1}` Earth-Centered-Earth-Fixed Coordinates of image center [m]
 - `look_angle_min::Float64` Minimum look angle of valid collect
 - `look_angle_max::Float64` Maximum look angle of valid collect
+- `dwell_time` Required time to well of image for a feasible collection
 - `require_zero_doppler::Bool` Require that the collect occurs centered at zero Doppler offset
 - `reward::Float64` Reward for for image collection
 - `id::UUID` Unique image identifier
@@ -109,19 +110,21 @@ struct Image
     look_angle_min::Float64
     look_angle_max::Float64
     require_zero_doppler::Bool
+    dwell_time::Float64
     reward::Float64
     id::UUID
 
     function Image(lon::Real, lat::Real ; id::UUID=uuid4(),
                     look_angle_min=5.0::Real, look_angle_max=55.0::Real, 
-                    require_zero_doppler=false::Bool, reward=1.0::Real, use_degrees=true::Bool)
+                    require_zero_doppler=false::Bool, dwell_time=1.0::Real,
+                    reward=1.0::Real, use_degrees=true::Bool)
 
         # Compute ECEF coordinates of scene center
         ecef = sGEODtoECEF([lon, lat], use_degrees=use_degrees::Real)
 
         # Generate new image object
         new(lon, lat, ecef, look_angle_min, look_angle_max,
-            require_zero_doppler, reward, id)
+            require_zero_doppler, dwell_time, reward, id)
     end
 end
 
@@ -145,7 +148,7 @@ has the following format:
 Arguments:
 - `file::String` Filepath to JSON file encoding image 
 """
-function load_images(file::String)
+function load_images(file::String; dwell_time=1.0::Real)
     data = JSON.parsefile(file)
 
     # Initialize array of Images
@@ -155,12 +158,27 @@ function load_images(file::String)
     for (i, img) in enumerate(data["images"])
         lon = img["lon"]
         lat = img["lat"]
-        id  = uuid4()
         look_angle_min = img["look_angle_min"]
         look_angle_max = img["look_angle_max"]
         reward = img["reward"]
-        images[i] = Image(lon, lat, id=id, look_angle_min=look_angle_min,
-                        look_angle_max=look_angle_max, require_zero_doppler=false, reward=reward)
+        id  = uuid4()
+
+        # Read from file if present
+        img_keys = keys(data)
+
+        if "id" in img_keys
+            id = UUID(img["id"])
+        end
+
+        if "dwell_time" in img_keys
+            dwell_time = img["dwell_time"]
+        end
+
+        images[i] = Image(lon, lat, id=id, 
+                        look_angle_min=look_angle_min,
+                        look_angle_max=look_angle_max, 
+                        dwell_time=dwell_time,
+                        require_zero_doppler=false, reward=reward)
     end
 
     return images
@@ -178,7 +196,9 @@ Attributes:
 - `id::UUID` Unique collect identifier
 - `orbit_id::UUID` Identification ID of the orbit which produced this collect
 - `image_id::UUID` Identification UUID of the image associated with this collect
+- `dwell_time` Required dewell time to make collection
 - `sow::Epoch` Start of acquisition window 
+- `mid::Epoch` Mid-time of acquisition window
 - `eow::Epoch` End of possible acquisition window
 - `duration::` Length of acquisition window
 """
@@ -187,14 +207,19 @@ mutable struct Collect
     orbit_id::Integer
     image_id::UUID
     sow::Epoch
+    mid::Epoch
     eow::Epoch
     duration::Float64
+    dwell_time::Float64
 
     function Collect(sow::Epoch, eow::Epoch;
-                         id=uuid4()::UUID, orbit_id=0::Integer, image_id=uuid4()::UUID)
+                         id=uuid4()::UUID, orbit_id=0::Integer, 
+                         image_id=uuid4()::UUID,
+                         dwell_time=0::Real)
 
         duration = eow - sow
-        new(id, orbit_id, image_id, sow, eow, duration)
+        mid      = sow + duration/2.0
+        new(id, orbit_id, image_id, sow, mid, eow, duration, dwell_time)
     end
 end
 
