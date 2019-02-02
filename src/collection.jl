@@ -207,8 +207,7 @@ function find_matching_collect(collect_list::Array{Collect, 1}, col::Collect; ma
         end
     end
 
-    # @debug "Missing collect: $col"
-    # @debug "Candidate collections: $collect_candidates"
+    @debug "Missing collect: $col"
 
     # Older method for matching collects
     # for o in collect_list
