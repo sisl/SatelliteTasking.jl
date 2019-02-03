@@ -185,6 +185,45 @@ function load_images(file::String; dwell_time=1.0::Real)
 end
 
 ###########
+# Opportunity #
+###########
+
+export Opportunity
+"""
+Opportunity represents a single 
+
+Attributes:
+- `id::UUID` Unique collect identifier
+- `orbit::Orbit` Orbit object associated with this collect
+- `image::Image` Image object associated with this collect
+- `dwell_time` Required dewell time to make collection
+- `sow::Epoch` Start of acquisition window 
+- `mid::Epoch` Mid-time of acquisition window
+- `eow::Epoch` End of possible acquisition window
+- `duration::` Length of acquisition window
+"""
+mutable struct Opportunity
+    id::UUID
+    orbit::Union{Orbit, Nothing}
+    image::Union{Image, Nothing}
+    sow::Epoch
+    mid::Epoch
+    eow::Epoch
+    duration::Float64
+    dwell_time::Float64
+
+    function Opportunity(sow::Epoch, eow::Epoch;
+                         id=uuid4()::UUID, orbit=nothing::Union{Orbit, Nothing}, 
+                         image=nothing::Union{Image, Nothing},
+                         dwell_time=0::Real)
+
+        duration = eow - sow
+        mid      = sow + duration/2.0
+        new(id, orbit, image, sow, mid, eow, duration, dwell_time)
+    end
+end
+
+###########
 # Collect #
 ###########
 
@@ -194,32 +233,31 @@ Image represents a single
 
 Attributes:
 - `id::UUID` Unique collect identifier
-- `orbit_id::UUID` Identification ID of the orbit which produced this collect
-- `image_id::UUID` Identification UUID of the image associated with this collect
-- `dwell_time` Required dewell time to make collection
-- `sow::Epoch` Start of acquisition window 
-- `mid::Epoch` Mid-time of acquisition window
-- `eow::Epoch` End of possible acquisition window
-- `duration::` Length of acquisition window
+- `orbit::Orbit` Orbit object associated with this collect
+- `image::Image` Image object associated with this collect
+- `opportunity::Opportunity` Opportunity associated with this collect
+- `start::Epoch` Start of acquisition window 
+- `end::Epoch` End of possible acquisition window
+- `duration::Float64` Length of acquisition window
 """
 mutable struct Collect
     id::UUID
-    orbit_id::Integer
-    image_id::UUID
+    orbit::Union{Orbit, Nothing}
+    image::Union{Image, Nothing}
+    opportunity::Union{Opportunity, Nothing}
     sow::Epoch
     mid::Epoch
     eow::Epoch
     duration::Float64
-    dwell_time::Float64
 
     function Collect(sow::Epoch, eow::Epoch;
-                         id=uuid4()::UUID, orbit_id=0::Integer, 
-                         image_id=uuid4()::UUID,
+                         id=uuid4()::UUID, orbit=nothing::Union{Orbit, Nothing}, 
+                         image=nothing::Union{Image, Nothing}, opportunity=nothing::Union{Opportunity, Nothing},
                          dwell_time=0::Real)
 
         duration = eow - sow
         mid      = sow + duration/2.0
-        new(id, orbit_id, image_id, sow, mid, eow, duration, dwell_time)
+        new(id, orbit, image, opportunity, sow, mid, eow, duration)
     end
 end
 

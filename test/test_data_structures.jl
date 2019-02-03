@@ -34,6 +34,17 @@ let
 end
 
 let
+    # Test Opportunity constructor
+    sow  = Epoch(2018, 1, 1, 12, 1, 0, 0)
+    eow  = Epoch(2018, 1, 1, 12, 1, 1, 0)
+    opp1 = Opportunity(sow, eow)
+    opp2 = Opportunity(sow, eow)
+
+    @test opp1.id != opp2.id
+    @test opp1.orbit == opp2.orbit
+end
+
+let
     # Test Collect constructor
     sow  = Epoch(2018, 1, 1, 12, 1, 0, 0)
     eow  = Epoch(2018, 1, 1, 12, 1, 1, 0)
@@ -41,5 +52,5 @@ let
     col2 = Collect(sow, eow)
 
     @test col1.id != col2.id
-    @test col1.orbit_id == col2.orbit_id
+    @test col1.orbit == col2.orbit
 end

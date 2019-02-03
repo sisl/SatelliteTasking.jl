@@ -10,7 +10,7 @@ using SatelliteDynamics.Constants: R_EARTH
 using SatelliteDynamics.Coordinates: sECEFtoGEOD, sGEODtoECEF
 
 # Package imports
-using SatelliteTasking.DataStructures: Orbit, Image, Collect
+using SatelliteTasking.DataStructures: Orbit, Image, Opportunity, Collect
 
 export image_view_geometry
 """
@@ -116,36 +116,36 @@ Arguments:
 - `orbit::Orbit` Orbit 
 
 Returns:
-- `collects::Array{Collect, 1}`
+- `opportunities::Array{Opportunity, 1}`
 """
-function groups_extract_collects(orbit::Orbit, image::Image, index_groups)
-    # collects = Array{Collect, 1}(undef, length(index_groups))
-    collects = Collect[]
+function groups_extract_opportunities(orbit::Orbit, image::Image, index_groups)
+    # opportunities = Array{Opportunity, 1}(undef, length(index_groups))
+    opportunities = Opportunity[]
     
     for (i, group) in enumerate(index_groups)
         if length(group) > 0
             sow = orbit.epc[group[1]]
             eow = orbit.epc[group[end]]
-            push!(collects, Collect(sow, eow, orbit_id=orbit.id, 
-                                    image_id=image.id, dwell_time=image.dwell_time))
+            push!(opportunities, Opportunity(sow, eow, orbit=orbit, 
+                                    image=image, dwell_time=image.dwell_time))
         end
     end
     
-    return collects
+    return opportunities
 end
 
-export find_collects
+export find_opportunities
 """
-Find all collects a given image is visible for an orbit.
+Find all opportunities a given image is visible for an orbit.
 
 Arguments:
 - `orbit::Orbit` Orbit of observing satellite
 - `image::Image` Image under observation
 
 Returns:
-- `collects::Array{Collect, 1}` Array of collection colortunities given the orbit
+- `opportunities::Array{Opportunity, 1}` Array of collection opportunities given the orbit
 """
-function find_collects(orbit::Orbit, image::Image)
+function find_opportunities(orbit::Orbit, image::Image)
     visibility = Array{Bool, 1}(undef, length(orbit.t))
 
     for i in 1:length(orbit.t)
@@ -153,146 +153,194 @@ function find_collects(orbit::Orbit, image::Image)
     end
 
     visible_indices = group_indices(findall(visibility))
-    collects   = groups_extract_collects(orbit, image, visible_indices)
+    opportunities   = groups_extract_opportunities(orbit, image, visible_indices)
 
-    return collects
+    return opportunities
 end
 
-export find_all_collects
+export find_all_opportunities
 """
-Find all collection colortunities for a set of images.
+Find all collection opportunities for a set of images.
 
 Arguments:
 - `orbit::Orbit` Orbit of observing satellite
 - `images::Array{Image, 1}` Array of images 
-- `sort::Bool` Sort collects in ascending order by start of collect window
+- `sort::Bool` Sort opportunities in ascending order by start of window
 
 Returns:
-- `collects::Array{Collect, 1}` Array of collection colortunities for all images
+- `opportunities::Array{Opportunity, 1}` Array of collection opportunities for all images
 """
-function find_all_collects(orbit::Orbit, images::Array{Image, 1}; sort=true::Bool)
-    collects = Collect[]
+function find_all_opportunities(orbit::Orbit, images::Array{Image, 1}; sort=true::Bool)
+    opportunities = Opportunity[]
     for img in images
-        for col in find_collects(orbit, img)
-            push!(collects, col)
+        for col in find_opportunities(orbit, img)
+            push!(opportunities, col)
         end
     end
 
-    # Sort collects in start-of-window order
+    # Sort opportunities in start-of-window order
     if sort
-        sort!(collects, by = x -> x.sow)
+        sort!(opportunities, by = x -> x.sow)
     end
 
-    return collects
+    return opportunities
 end
 
 """
-Finds the closest matching collect out of a list 
+Finds the closest matching opportunity out of a list 
 
 Arguments:
-- `collect_list` List of collections to extract closest match from
-- `col::Collect` Collect to match from list
+- `opportunity_list` List of opportunities to extract closest match from
+- `col::Opportunity` Opportunity to match from list
 - `match_max_seconds` _Optional_ Maximum difference in seconds to be considered a valid match. Default: 10 min
 
 Returns:
-- `collect::Collect` The closest matching in `collect_list` to the input collect.
+- `opportunity::Opportunity` The closest matching in `opportunity_list` to the input opportunity.
 """
-function find_matching_collect(collect_list::Array{Collect, 1}, col::Collect; match_max_seconds=600::Real)
-    collect_candidates = filter(x -> x.image_id == col.image_id, collect_list)
+function find_matching_opportunity(opportunity_list::Array{Opportunity, 1}, col::Opportunity; match_max_seconds=600::Real)
+    opportunity_candidates = filter(x -> x.image == col.image, opportunity_list)
 
     # Screen each candidate and return if below match threshold
-    for c in collect_candidates
+    for c in opportunity_candidates
         if abs(c.mid - col.mid) < match_max_seconds
             return c
         end
     end
 
-    @debug "Missing collect: $col"
+    @debug "Missing opportunity: $col"
 
-    # Older method for matching collects
-    # for o in collect_list
-    #     if o.sow < col.mid && o.eow > col.mid && o.image_id == col.image_id
+    # Older method for matching opportunities
+    # for o in opportunity_list
+    #     if o.sow < col.mid && o.eow > col.mid && o.image == col.image
     #        return o
     #     end
     # end
 
-    # If no matching collect found return nothing
+    # If no matching opportunity found return nothing
     return nothing
 end
 
-export collect_diff
+export opportunity_diff
 """
-Compute the difference in collection times between two different sets of collections.
-Finds matching sets of collects between the two collect lists. 
+Compute the difference in opportunity times between two different sets of opportunities.
+Finds matching sets of opportunities between the two opportunity lists. 
 
 Arguments:
-- `collect_list_a::Array{Collect, 1}` First set of collections
-- `collect_list_b::Array{Collect, 1}` Second set of collections
+- `opportunity_list_a::Array{Opportunity, 1}` First set of opportunities
+- `opportunity_list_b::Array{Opportunity, 1}` Second set of opportunities
 
 Returns:
-- `collect_diffs::Array{Array{Float64, 1}, 1}` Array of differences between collect windows. Returns difference in start time, end time, and duration for each matched collect between the two lists.
-- `col_miss::Int64` Collects present in b missing from a
+- `opportunity_diffs::Array{Array{Float64, 1}, 1}` Array of differences between opportunity windows. Returns difference in start time, end time, and duration for each matched opportunity between the two lists.
+- `opp_miss::Int64` Opportunitys present in b missing from a
 """
-function collect_diff(collect_list_a::Array{Collect, 1}, collect_list_b::Array{Collect, 1})
-    col_diffs = Array{Float64, 1}[]
-    col_miss  = 0
-    for col_a in collect_list_a
-        matching_b = find_matching_collect(collect_list_b, col_a)
+function opportunity_diff(opportunity_list_a::Array{Opportunity, 1}, opportunity_list_b::Array{Opportunity, 1})
+    opp_diffs = Array{Float64, 1}[]
+    opp_miss  = 0
+    for opp_a in opportunity_list_a
+        matching_b = find_matching_opportunity(opportunity_list_b, opp_a)
         if matching_b != nothing
-            sow_diff = matching_b.sow - col_a.sow
-            eow_diff = matching_b.eow - col_a.eow
-            dur_diff = matching_b.duration - col_a.duration
-            push!(col_diffs, [sow_diff, eow_diff, dur_diff])
+            sow_diff = matching_b.sow - opp_a.sow
+            eow_diff = matching_b.eow - opp_a.eow
+            dur_diff = matching_b.duration - opp_a.duration
+            push!(opp_diffs, [sow_diff, eow_diff, dur_diff])
         else
-            @debug "Unable to find matching collect for $col_a"
-            col_miss += 1
+            @debug "Unable to find matching opportunity for $opp_a"
+            opp_miss += 1
         end
     end
 
-    return col_diffs, col_miss
+    return opp_diffs, opp_miss
 end
 
-export collect_stats
+export opportunity_stats
 """
-Compute the statistics on the differences of the collect windows of collect list
-B with respect to collect list A.
+Compute the statistics on the differences of the opportunity windows of opportunity list
+B with respect to opportunity list A.
 
 Arguments:
-- `collect_list_a::Array{Collect, 1}` First set of collections
-- `collect_list_b::Array{Collect, 1}` Second set of collections
+- `opportunity_list_a::Array{Opportunity, 1}` First set of opportunities
+- `opportunity_list_b::Array{Opportunity, 1}` Second set of opportunities
 
 Returns:
-- `collect_stats::Tuple{Array{Float64, 1}, Array{Float64, 1}}` Mean and standard deviation of the differences in start time, end time, and collection window duration.
-- `collect_miss::Int` Number of collects missing from collect_list_b that are epected to be present in a
+- `opportunity_stats::Tuple{Array{Float64, 1}, Array{Float64, 1}}` Mean and standard deviation of the differences in start time, end time, and collection window duration.
+- `opportunity_miss::Int` Number of opportunities missing from opportunity_list_b that are epected to be present in a
 """
-function collect_stats(collect_list_a::Array{Collect, 1}, collect_list_b::Array{Collect, 1}; epc_min=nothing, epc_max=nothing)
-    collects = copy(collect_list_a) # Filter on true collects in case perturbed move around
+function opportunity_stats(opportunity_list_a::Array{Opportunity, 1}, opportunity_list_b::Array{Opportunity, 1}; epc_min=nothing, epc_max=nothing)
+    opportunities = copy(opportunity_list_a) # Filter on true opportunities in case perturbed move around
 
     # Extract Opportunities from each list
     if epc_min != nothing
-        collects = filter(x -> x.sow > epc_min, collects)
+        opportunities = filter(x -> x.sow > epc_min, opportunities)
     end
 
     if epc_max != nothing
-        collects = filter(x -> x.sow < epc_max, collects)
+        opportunities = filter(x -> x.sow < epc_max, opportunities)
     end
 
-    @debug "Found $(length(collects)) collects in window"
+    @debug "Found $(length(opportunities)) opportunities in window"
     
-    # Compute the difference between all collects and the list of "true" collects
-    col_diffs, col_miss = collect_diff(collects, collect_list_b)
+    # Compute the difference between all opportunities and the list of "true" opportunities
+    opp_diffs, opp_miss = opportunity_diff(opportunities, opportunity_list_b)
 
     # Concatenate the matrix into a single matrix to easily compute statistic
-    col_errors = hcat(col_diffs...)
+    opp_errors = hcat(opp_diffs...)
 
     # Compute mean and standard deviation
-    col_mean, col_sdev = nothing, nothing
-    if length(col_errors) > 0
-        col_mean = mean(col_errors, dims=2)
-        col_sdev = std(col_errors, dims=2)
+    opp_mean, opp_sdev = nothing, nothing
+    if length(opp_errors) > 0
+        opp_mean = mean(opp_errors, dims=2)
+        opp_sdev = std(opp_errors, dims=2)
     end
 
-    return col_mean, col_sdev, col_miss
+    return opp_mean, opp_sdev, opp_miss
+end
+
+export compute_collects_by_number
+"""
+Compute discrete collection opportunities for 
+
+Arguments:
+- `opportunity_list::Array{Opportunity,1}` List of opportunities to compute collections for
+- `max_collects::Integer` Maximum number of collects to divide each opportunity into
+
+Returns:
+- `collects::Array{Collects,1}` Array of collection opportunities
+"""
+function compute_collects_by_number(opportunity_list::Array{Opportunity,1}, max_collects=0::Integer)
+    collects = Collect[]
+
+    # Compute Collects for each opportunity
+    for opportunity in opportunity_list
+        # If maximum number of collects per opportunity is not set, set as the 
+        # maximum possible of non-overlapping collects over the opportunity window
+        if max_collects == 0
+            max_collects = convert(typeof(max_collects), floor(opportunity.duration/opportunity.dwell_time))
+        end
+
+        # Time in opportunity window not taken up by a collect
+        empty_span = opportunity.duration - max_collects*opportunity.dwell_time
+
+        # Spacing between collects
+        collect_spacing = empty_span/(max_collects + 1)
+
+        # Start time of next collect window
+        next_collect_start = deepcopy(opportunity.sow)
+
+        # Create collects for opportunities
+        for i in 1:max_collects
+            next_collect_start += collect_spacing
+            push!(collects, Collect(next_collect_start, 
+                                    next_collect_start+opportunity.dwell_time,
+                                    orbit=opportunity.orbit,
+                                    image=opportunity.image,
+                                    opportunity=opportunity))
+        end
+    end
+    
+    # Sort collects so they are in ascending order
+    sort!(collects, by = x -> x.sow)
+    
+    return collects
 end
 
 end # End module
