@@ -1,0 +1,4504 @@
+{
+    "images": [
+        {
+            "lat": 55.913127773,
+            "lon": 34.932361192,
+            "ecef": [
+                2937328.768312681,
+                2051576.3169924426,
+                5259027.397132301
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "79bc8486-7e88-4e6d-894b-f475302d7c1c"
+        },
+        {
+            "lat": -78.137015886,
+            "lon": 25.91909509,
+            "ecef": [
+                1183077.5860980593,
+                574958.941296068,
+                -6220099.081135132
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "9f703e00-56ad-48c3-bacd-187b9117cf1a"
+        },
+        {
+            "lat": -78.137015886,
+            "lon": 57.327256842,
+            "ecef": [
+                710099.9502047235,
+                1107252.644893276,
+                -6220099.081135132
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "a940c106-cb13-4935-85a0-6339940eb2ae"
+        },
+        {
+            "lat": 4.339169442,
+            "lon": -55.95333302,
+            "ecef": [
+                3560747.2782547865,
+                -5269761.309897645,
+                479351.1893595752
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "bd4e7de9-d225-481b-8770-c2120c76a3c3"
+        },
+        {
+            "lat": -40.333933825,
+            "lon": -63.556348929,
+            "ecef": [
+                2168157.5385551625,
+                -4359382.667442376,
+                -4106320.340841015
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "a2648453-0f02-43e5-80ca-ca8bb870ab1e"
+        },
+        {
+            "lat": -80.029687575,
+            "lon": 116.981379144,
+            "ecef": [
+                -502655.3060841341,
+                987309.6896913464,
+                -6260117.74433633
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "c8e2c595-92bc-45a3-b536-0620f9ec3eb0"
+        },
+        {
+            "lat": -80.783382159,
+            "lon": -156.731767538,
+            "ecef": [
+                -941557.0656915262,
+                -404879.81261200807,
+                -6274143.349880477
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "283643e9-73a7-48cc-abce-3a2427ac5cc4"
+        },
+        {
+            "lat": 5.78535614,
+            "lon": 13.882901742,
+            "ecef": [
+                6160491.197784066,
+                1522616.5726446304,
+                638646.7950232539
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "c2e9abc6-26b1-4d4f-b901-e6ddf3db8245"
+        },
+        {
+            "lat": -21.672148697,
+            "lon": -55.450431518,
+            "ecef": [
+                3363008.924900104,
+                -4884150.8412615,
+                -2340715.22637042
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "064b10eb-2b06-45d2-a612-31d931777c9c"
+        },
+        {
+            "lat": 50.282750086,
+            "lon": -80.545538946,
+            "ecef": [
+                670807.0132771014,
+                -4028250.2450443786,
+                4882945.690379372
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "23b9d364-0250-4f53-932a-e9a4c4b8b0fb"
+        },
+        {
+            "lat": -31.743012526,
+            "lon": 17.740426249,
+            "ecef": [
+                5170932.835021083,
+                1654276.1388843418,
+                -3336231.719263271
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "29e4c38a-ea0b-4ea7-8b91-fc8412ba7ce7"
+        },
+        {
+            "lat": -79.137149407,
+            "lon": 79.24933648,
+            "ecef": [
+                224945.8370229516,
+                1184748.9822215599,
+                -6242099.356597129
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "bf6b7621-da05-4d51-88b4-29d8a93fb00b"
+        },
+        {
+            "lat": 69.61012962,
+            "lon": -77.23772652,
+            "ecef": [
+                492344.4970720124,
+                -2173686.333708732,
+                5956025.3273642585
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "1418e28c-8dca-4f28-a06c-d62d672b1a91"
+        },
+        {
+            "lat": 80.783382159,
+            "lon": -104.972110885,
+            "ecef": [
+                -264786.438362293,
+                -990123.98853567,
+                6274143.349880477
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "4b5607c4-c62d-4b43-aad4-a5c2139efb68"
+        },
+        {
+            "lat": -79.137149407,
+            "lon": 141.051911587,
+            "ecef": [
+                -937859.111675964,
+                758057.4299585421,
+                -6242099.356597129
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "93e6eb03-b393-4b5f-a3b0-e05f9f8cbd73"
+        },
+        {
+            "lat": -79.137149407,
+            "lon": -150.965255795,
+            "ecef": [
+                -1054362.229624396,
+                -585278.6252806871,
+                -6242099.356597129
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "8851492f-873c-4876-9125-0373c08e7c35"
+        },
+        {
+            "lat": -75.907538338,
+            "lon": 124.643728727,
+            "ecef": [
+                -885627.4768735259,
+                1281696.2048527547,
+                -6164208.513595432
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "ee748fdf-d4e6-4a34-a707-60d4f52c315a"
+        },
+        {
+            "lat": -5.78535614,
+            "lon": -155.443416763,
+            "ecef": [
+                -5771890.451652952,
+                -2637289.070121917,
+                -638646.7950232539
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "d15fae16-6c35-47e6-ba45-08e3a701166d"
+        },
+        {
+            "lat": -33.177919619,
+            "lon": 120.870325898,
+            "ecef": [
+                -2741836.34996448,
+                4586663.876585804,
+                -3470490.878340247
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "95bfef03-c131-4fc7-b4ab-40afe12ec6c8"
+        },
+        {
+            "lat": -65.590122775,
+            "lon": -67.484501969,
+            "ecef": [
+                1012163.3799046691,
+                -2441710.2802836522,
+                -5785209.240804605
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "fa3feb24-d6b9-4cd9-af9d-a970607cf976"
+        },
+        {
+            "lat": 10.122695278,
+            "lon": 132.240245844,
+            "ecef": [
+                -4221337.280329788,
+                4648919.872903643,
+                1113610.9393534674
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "4d6d2d39-34cc-4cba-b4d4-da8427a25c7d"
+        },
+        {
+            "lat": -2.892852142,
+            "lon": -59.033537164,
+            "ecef": [
+                3277628.582379955,
+                -5462129.492480782,
+                -319741.86867422104
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "1a034a6e-02bd-47c0-8085-9ffb387139a2"
+        },
+        {
+            "lat": 53.104299804,
+            "lon": -8.20309303,
+            "ecef": [
+                3798141.144627961,
+                -547529.7964187291,
+                5077520.472584456
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "197e64be-c189-484e-981d-0a212b95c703"
+        },
+        {
+            "lat": 81.728337447,
+            "lon": -14.130502647,
+            "ecef": [
+                892768.6396328182,
+                -224753.32176744417,
+                6290184.72750939
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "f7eca854-adec-4954-93f7-990f3442cb06"
+        },
+        {
+            "lat": -74.711466605,
+            "lon": 110.54274141,
+            "ecef": [
+                -591995.8924791885,
+                1579771.3464849794,
+                -6130352.066641222
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "113f6cfb-72be-4d76-b5ff-57d3286ab539"
+        },
+        {
+            "lat": -80.029687575,
+            "lon": 69.784286092,
+            "ecef": [
+                382841.08100170444,
+                1039651.6179905669,
+                -6260117.74433633
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "da4d201d-b628-4103-ae62-23fade1d553a"
+        },
+        {
+            "lat": -80.029687575,
+            "lon": -174.335885581,
+            "ecef": [
+                -1102490.9340731665,
+                -109345.87499962709,
+                -6260117.74433633
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "9d396f2e-1424-4e0e-87c5-22508bf980c6"
+        },
+        {
+            "lat": 46.031131555,
+            "lon": -111.589317867,
+            "ecef": [
+                -1632169.0847933132,
+                -4124635.0834944826,
+                4567650.606710822
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "ba00185d-e095-406c-9798-91a4043b5c5a"
+        },
+        {
+            "lat": 69.61012962,
+            "lon": 109.715063179,
+            "ecef": [
+                -751851.8331003601,
+                2098102.524237753,
+                5956025.3273642585
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "75b165e0-691d-493e-a0e4-814693d1f43b"
+        },
+        {
+            "lat": 11.567921451,
+            "lon": 169.636024617,
+            "ecef": [
+                -6147462.68628803,
+                1124275.5906099258,
+                1270613.18828355
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "c4bf610d-66cd-4dc2-b12d-78a8b6df6133"
+        },
+        {
+            "lat": -74.711466605,
+            "lon": 155.021207088,
+            "ecef": [
+                -1529250.0600805052,
+                712412.0279943111,
+                -6130352.066641222
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "aeb4bba3-78f3-4ccb-88ee-3c6ddece07b9"
+        },
+        {
+            "lat": 15.901316985,
+            "lon": 142.782013412,
+            "ecef": [
+                -4886039.715518796,
+                3711124.1470377,
+                1736228.359457778
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "130553a5-2873-40e7-b863-e53430a05b7b"
+        },
+        {
+            "lat": -80.783382159,
+            "lon": -103.026172376,
+            "ecef": [
+                -231012.58885096252,
+                -998544.2175521062,
+                -6274143.349880477
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "59ecc32a-1393-4e41-9faa-6998eb0e2a3d"
+        },
+        {
+            "lat": 80.029687575,
+            "lon": 55.951336225,
+            "ecef": [
+                620309.8014798678,
+                917964.3404190406,
+                6260117.74433633
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "a184c99e-c902-4c29-b952-431ac45fb418"
+        },
+        {
+            "lat": 50.282750086,
+            "lon": -54.279444525,
+            "ecef": [
+                2384209.4608877455,
+                -3315467.890415349,
+                4882945.690379372
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "908366ac-bdc0-44ca-9591-2e14c90af6a5"
+        },
+        {
+            "lat": 58.706329607,
+            "lon": 33.450120804,
+            "ecef": [
+                2771003.7766143368,
+                1830620.2552761503,
+                5427016.131023443
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "d60a7137-0b6e-4285-b07b-bf0920d1263f"
+        },
+        {
+            "lat": 57.31190171,
+            "lon": 48.070168962,
+            "ecef": [
+                2307235.212104426,
+                2568763.817296271,
+                5344738.320918245
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "26d9969f-4e55-4716-b4d4-51aedd8c88a6"
+        },
+        {
+            "lat": -62.857585536,
+            "lon": 60.03727677,
+            "ecef": [
+                1457092.6027208567,
+                2527554.6492712423,
+                -5652754.094708056
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "671f3c72-34ae-4e18-9d6a-07c69e3e3b35"
+        },
+        {
+            "lat": 20.230333804,
+            "lon": 98.960952289,
+            "ecef": [
+                -932553.384780799,
+                5913993.168404533,
+                2191640.670809374
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "8f00b814-0c2a-422a-ab81-27b8e90854ad"
+        },
+        {
+            "lat": 66.94240291,
+            "lon": -43.355272634,
+            "ecef": [
+                1821519.069829225,
+                -1719833.4000340374,
+                5845900.585208194
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "f42d3239-65a4-4cf0-9552-17b73f84f7ed"
+        },
+        {
+            "lat": 64.228047475,
+            "lon": -160.29384772,
+            "ecef": [
+                -2617856.41427157,
+                -937645.4475534185,
+                5720813.936031409
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "c380e322-088f-4b6e-ab43-ebb393fa5d4b"
+        },
+        {
+            "lat": -66.94240291,
+            "lon": 98.018117924,
+            "ecef": [
+                -349433.44145897793,
+                2480656.1461867904,
+                -5845900.585208194
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "a8c35ae1-29d6-4915-9777-98d1dcaeec45"
+        },
+        {
+            "lat": 51.694966307,
+            "lon": 77.66917401,
+            "ecef": [
+                846034.0675361741,
+                3870257.3335999125,
+                4981837.067531569
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "df4f5627-d30a-424f-b7a9-c700361040c8"
+        },
+        {
+            "lat": 21.672148697,
+            "lon": 35.950002334,
+            "ecef": [
+                4800500.87782536,
+                3481371.826040866,
+                2340715.22637042
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "2036a46f-afd5-4eb3-a44a-c9e6769b00ca"
+        },
+        {
+            "lat": 75.907538338,
+            "lon": -92.437816337,
+            "ecef": [
+                -66265.80211462216,
+                -1556499.2877600132,
+                6164208.513595432
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "b4db2600-07a1-4f1e-bb98-b3b53be96701"
+        },
+        {
+            "lat": -73.47660389,
+            "lon": -109.447740369,
+            "ecef": [
+                -605827.6893843703,
+                -1715776.519681328,
+                -6092581.411969107
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "d4789305-5903-4665-83f4-b87f8c35021f"
+        },
+        {
+            "lat": 43.186099548,
+            "lon": -78.609562107,
+            "ecef": [
+                919892.0107359642,
+                -4566088.799708385,
+                4342599.312098233
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "53fa75ef-c7f5-4e75-ab8b-520612ca3a54"
+        },
+        {
+            "lat": -73.47660389,
+            "lon": -90.906967837,
+            "ecef": [
+                -28802.170338000913,
+                -1819364.3641938237,
+                -6092581.411969107
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "5807c851-4ef6-4bad-8e74-12eeb1a548a9"
+        },
+        {
+            "lat": 44.609571953,
+            "lon": 88.753339534,
+            "ecef": [
+                98952.6808070216,
+                4547089.125485266,
+                4456564.541970213
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "bc3c4a04-f081-4af7-ad98-17fab15f8dd3"
+        },
+        {
+            "lat": 48.867899154,
+            "lon": 65.64718297,
+            "ecef": [
+                1733336.0409767074,
+                3829497.532079134,
+                4780907.987759172
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "7766a8da-f39b-46d9-a2e7-99309dfd584a"
+        },
+        {
+            "lat": -79.137149407,
+            "lon": 129.147230044,
+            "ecef": [
+                -761312.540081382,
+                935218.6892827861,
+                -6242099.356597129
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "c9b5c0d2-0df2-47cd-81c9-45a5bb33dfef"
+        },
+        {
+            "lat": 24.553700864,
+            "lon": 154.062924698,
+            "ecef": [
+                -5220050.139893573,
+                2538895.7230526675,
+                2634188.9821292777
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "069254a1-0f97-4ec9-a6c0-9c40404ae4ec"
+        },
+        {
+            "lat": 18.78789184,
+            "lon": -71.328512205,
+            "ecef": [
+                1933780.1954201232,
+                -5722482.932543853,
+                2041136.0797413122
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "59aee690-436e-47a9-863a-64faa327ec1b"
+        },
+        {
+            "lat": -81.36186633,
+            "lon": 175.731053152,
+            "ecef": [
+                -958437.1117113911,
+                71542.87938676144,
+                -6284167.69645667
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "4dbc1ecd-4bb9-4a9c-aff9-6df68a2c05c2"
+        },
+        {
+            "lat": -66.94240291,
+            "lon": -68.849019211,
+            "ecef": [
+                903923.94890318,
+                -2336381.848119747,
+                -5845900.585208194
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "086244dd-cf3d-4a38-8f34-51614218e0f8"
+        },
+        {
+            "lat": -75.907538338,
+            "lon": -57.67386784,
+            "ecef": [
+                833072.9751310317,
+                -1316461.3961045926,
+                -6164208.513595432
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "fff9b3d7-21de-4b98-8ef3-509b135cc545"
+        },
+        {
+            "lat": -80.783382159,
+            "lon": 134.913741787,
+            "ecef": [
+                -723634.7385352852,
+                725816.874837821,
+                -6274143.349880477
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "5053d9fb-bc90-4970-aa0c-bf2148ad9994"
+        },
+        {
+            "lat": 53.104299804,
+            "lon": -62.280346248,
+            "ecef": [
+                1784951.8107148027,
+                -3397000.451266982,
+                5077520.472584456
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "4416178b-cdd1-481d-bbb4-33ec6424cdba"
+        },
+        {
+            "lat": 64.228047475,
+            "lon": -76.860371325,
+            "ecef": [
+                632124.7613247231,
+                -2707908.6907022204,
+                5720813.936031409
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "11610119-979c-42ce-a704-4ef35d8bd02d"
+        },
+        {
+            "lat": 81.728337447,
+            "lon": -89.838657153,
+            "ecef": [
+                2592.4425925312053,
+                -920621.0831817493,
+                6290184.72750939
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "ec6163d1-201e-471e-b561-14a7d847b8cf"
+        },
+        {
+            "lat": -78.137015886,
+            "lon": 128.400218215,
+            "ecef": [
+                -817055.3883586953,
+                1030859.2781063416,
+                -6220099.081135132
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "0f6ffe57-c844-4c81-9925-1669f0a89711"
+        },
+        {
+            "lat": -14.457277252,
+            "lon": 29.627314436,
+            "ecef": [
+                5369811.652547849,
+                3053864.55960079,
+                -1582023.406646751
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "6c733d91-17b0-40b2-8080-a43ca7bd7fd8"
+        },
+        {
+            "lat": -81.854154765,
+            "lon": 157.503004292,
+            "ecef": [
+                -837716.8999548982,
+                346942.2405752292,
+                -6292190.808420544
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "bca5cb9d-2a3a-4dd3-9d54-cb66c712b880"
+        },
+        {
+            "lat": -28.870061966,
+            "lon": 148.279100388,
+            "ecef": [
+                -4754797.275351602,
+                2939019.159525582,
+                -3061297.3342190115
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "ab903979-4c42-4dea-9782-a04d830d8e88"
+        },
+        {
+            "lat": -77.054145242,
+            "lon": 35.789504508,
+            "ecef": [
+                1162780.7824297568,
+                838300.1986870486,
+                -6194130.226933327
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "47a9575e-edb6-4044-8811-435f755b5952"
+        },
+        {
+            "lat": -70.920593967,
+            "lon": -148.107462534,
+            "ecef": [
+                -1775458.3753045392,
+                -1104804.6941340694,
+                -6005391.546088471
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "936ad88b-5ef2-4f83-8e23-7109c2128e0e"
+        },
+        {
+            "lat": -80.783382159,
+            "lon": -43.942067967,
+            "ecef": [
+                737983.9695162562,
+                -711222.2095459346,
+                -6274143.349880477
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "6a4d6c14-8be3-41d9-873e-144355c0c778"
+        },
+        {
+            "lat": 55.913127773,
+            "lon": 129.181288231,
+            "ecef": [
+                -2263563.853666494,
+                2777254.82409808,
+                5259027.397132301
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "5b1f4344-dc23-4a95-8b18-a70d8ef6ef46"
+        },
+        {
+            "lat": 72.210960545,
+            "lon": -84.008705608,
+            "ecef": [
+                204010.27569609936,
+                -1943869.222915535,
+                6050919.469498646
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "2fa84617-9242-47aa-8a23-0c00f4a6a646"
+        },
+        {
+            "lat": 23.113287718,
+            "lon": 40.926617066,
+            "ecef": [
+                4434465.782984214,
+                3844862.0269581554,
+                2488263.1539122686
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "bf52b5a8-51bb-401e-b84c-64099ee3afc4"
+        },
+        {
+            "lat": 4.339169442,
+            "lon": -82.219427441,
+            "ecef": [
+                861011.3053467444,
+                -6301425.630360016,
+                479351.1893595752
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "8615bc92-2080-45d6-a56b-9651acda6d7e"
+        },
+        {
+            "lat": -7.231368566,
+            "lon": 160.98538696,
+            "ecef": [
+                -5982470.554766488,
+                2061636.6623111302,
+                -797524.4820766177
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "bb69878a-06fc-41a5-a41e-9ababe5b17f6"
+        },
+        {
+            "lat": -81.728337447,
+            "lon": 110.247179757,
+            "ecef": [
+                -318601.4083893988,
+                863737.8318272418,
+                -6290184.72750939
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "bd35cae4-159e-4f81-9384-26abee9b0c0b"
+        },
+        {
+            "lat": -15.901316985,
+            "lon": 132.824853541,
+            "ecef": [
+                -4170745.7282354077,
+                4500078.511177264,
+                -1736228.359457778
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "9fdb9448-7d09-490d-b65e-8faa0f9f8fbc"
+        },
+        {
+            "lat": -68.283137446,
+            "lon": -24.009121575,
+            "ecef": [
+                2162105.6710265214,
+                -963043.9375111766,
+                -5902850.868671499
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "2a29cd6d-64f4-4b1d-b5c0-eebc0d8f15a7"
+        },
+        {
+            "lat": 72.210960545,
+            "lon": -121.090250673,
+            "ecef": [
+                -1009303.0525500015,
+                -1673784.662524153,
+                6050919.469498646
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "1f0f3aea-41d0-4ffa-80db-28b43016ed50"
+        },
+        {
+            "lat": -69.61012962,
+            "lon": 3.878153308,
+            "ecef": [
+                2223643.972536485,
+                150741.05131436713,
+                -5956025.3273642585
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "7776f920-10bc-4cf5-b849-885d65f74a69"
+        },
+        {
+            "lat": 21.672148697,
+            "lon": -76.839697237,
+            "ecef": [
+                1350117.585819377,
+                -5774248.087293654,
+                2340715.22637042
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "7d878b41-0686-4b2a-83ce-ad7fcedff094"
+        },
+        {
+            "lat": -78.137015886,
+            "lon": -164.123823365,
+            "ecef": [
+                -1265214.4491279954,
+                -359837.12512975815,
+                -6220099.081135132
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "16533420-76f2-4e19-a1a9-d4c8fbcd5f22"
+        },
+        {
+            "lat": -78.137015886,
+            "lon": 55.782192464,
+            "ecef": [
+                739696.8431385647,
+                1087703.5162004153,
+                -6220099.081135132
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "da30a726-767f-497a-8a94-be118f310f64"
+        },
+        {
+            "lat": -34.611692937,
+            "lon": -58.756108055,
+            "ecef": [
+                2725682.507108826,
+                -4492865.637902196,
+                -3602496.324577703
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "306c98e7-268f-4b3d-a8df-11ee8612e7c5"
+        },
+        {
+            "lat": 61.479880919,
+            "lon": 111.010063289,
+            "ecef": [
+                -1094688.3491794572,
+                2850264.2369337436,
+                5581071.449799858
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "f648f303-1830-45ac-937a-2a67cf8f74ea"
+        },
+        {
+            "lat": -8.677162929,
+            "lon": -55.634349479,
+            "ecef": [
+                3559343.971522551,
+                -5204981.92979717,
+                -955880.3620192634
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "25f4c77c-6167-41fa-af68-6715034a551d"
+        },
+        {
+            "lat": -7.231368566,
+            "lon": 12.659206702,
+            "ecef": [
+                6173918.318050698,
+                1386734.389878418,
+                -797524.4820766177
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "afd60ce0-febd-49a1-a1f9-d6919a6ebc34"
+        },
+        {
+            "lat": -23.113287718,
+            "lon": -65.062239383,
+            "ecef": [
+                2474649.298951325,
+                -5321988.503745784,
+                -2488263.1539122686
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "a985ff55-5b62-4aec-904d-9c33fc4a1b8c"
+        },
+        {
+            "lat": -64.228047475,
+            "lon": -55.429757431,
+            "ecef": [
+                1577820.105631894,
+                -2289723.761794031,
+                -5720813.936031409
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "a3829f7f-f3fb-40c4-bcc0-dcae06ac2365"
+        },
+        {
+            "lat": 51.694966307,
+            "lon": -123.189195088,
+            "ecef": [
+                -2168628.3021969236,
+                -3315375.809561595,
+                4981837.067531569
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "13307b2d-54b2-49ab-955d-af0381127f86"
+        },
+        {
+            "lat": -10.122695278,
+            "lon": 25.941728405,
+            "ecef": [
+                5646775.659110756,
+                2747010.9345713938,
+                -1113610.9393534674
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "5aa36341-c21f-4f00-9e50-a37bf313c52b"
+        },
+        {
+            "lat": 54.510464388,
+            "lon": 102.184968068,
+            "ecef": [
+                -783295.5354765097,
+                3627492.612375307,
+                5169936.376900278
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "0c4845e8-fe3c-4f0c-a2bf-49b671fc9b5f"
+        },
+        {
+            "lat": 62.857585536,
+            "lon": 129.045985033,
+            "ecef": [
+                -1837844.6587669984,
+                2265828.4066094076,
+                5652754.094708056
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "7bc6c58b-e85c-4da6-a8d8-c5277b0d2004"
+        },
+        {
+            "lat": -27.432142103,
+            "lon": 150.189405385,
+            "ecef": [
+                -4915358.972990076,
+                2816259.770466239,
+                -2920798.4503236194
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "e0a6dfb1-3d1f-4a80-8add-1bb81166c853"
+        },
+        {
+            "lat": -77.054145242,
+            "lon": -165.068864591,
+            "ecef": [
+                -1385060.548287226,
+                -369342.1837334468,
+                -6194130.226933327
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "8ee2d495-cc48-4ac2-904b-e4d47dfa3130"
+        },
+        {
+            "lat": -80.783382159,
+            "lon": 49.935201014,
+            "ecef": [
+                659692.2658053127,
+                784387.3310112962,
+                -6274143.349880477
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "757b9780-61d2-4a0f-a02f-27d24f4acce1"
+        },
+        {
+            "lat": 27.432142103,
+            "lon": 21.898148263,
+            "ecef": [
+                5256248.211014306,
+                2112800.9069265206,
+                2920798.4503236194
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "9de86f40-55d0-4627-9eed-1de9b501a9a5"
+        },
+        {
+            "lat": -75.907538338,
+            "lon": -175.098760543,
+            "ecef": [
+                -1552212.6606755536,
+                -133105.3919487905,
+                -6164208.513595432
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "50079c3c-7d3b-4c48-9c38-f6d6a908297b"
+        },
+        {
+            "lat": 13.012797025,
+            "lon": 77.248594148,
+            "ecef": [
+                1371871.5888833564,
+                6062109.027763952,
+                1426784.6296683608
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "16859961-74af-4ef2-b165-1e3d0804ed2e"
+        },
+        {
+            "lat": -80.029687575,
+            "lon": -130.228921285,
+            "ecef": [
+                -715529.7316045888,
+                -845848.6763498671,
+                -6260117.74433633
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "767f001c-5d11-4219-b54b-902e106552bd"
+        },
+        {
+            "lat": 44.609571953,
+            "lon": 85.663210779,
+            "ecef": [
+                343927.72750278044,
+                4535143.312663892,
+                4456564.541970213
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "3505367c-b0d0-4d27-8c42-19743431d1d5"
+        },
+        {
+            "lat": -77.054145242,
+            "lon": 103.772337126,
+            "ecef": [
+                -341255.92186824745,
+                1392246.6616575364,
+                -6194130.226933327
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "2dc3bfc0-31b1-4f37-a8c2-28b880d84aa9"
+        },
+        {
+            "lat": 37.475546728,
+            "lon": -9.356235431,
+            "ecef": [
+                5000634.223854648,
+                -823925.7758829503,
+                3859410.5928277886
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "47b9bd2a-57b4-4414-a718-512fad73905e"
+        },
+        {
+            "lat": -69.61012962,
+            "lon": 27.054118973,
+            "ecef": [
+                1984871.9415117211,
+                1013705.4586755922,
+                -5956025.3273642585
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "3c5da406-2466-4c3f-8bd9-93f98d86e475"
+        },
+        {
+            "lat": 72.210960545,
+            "lon": 127.665114134,
+            "ecef": [
+                -1194315.5345320157,
+                1547209.7958464941,
+                6050919.469498646
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "e2b49281-8930-4317-8b67-fbd393529557"
+        },
+        {
+            "lat": 11.567921451,
+            "lon": -17.316765083,
+            "ecef": [
+                5966160.460435303,
+                -1860167.3159378285,
+                1270613.18828355
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "52abb723-318d-4eee-b4f1-736e7bcfd369"
+        },
+        {
+            "lat": 54.510464388,
+            "lon": 122.270804978,
+            "ecef": [
+                -1981435.7431975703,
+                3137860.2493281867,
+                5169936.376900278
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "c1aee595-6fc7-45fa-aba7-8f666b5afaa4"
+        },
+        {
+            "lat": -80.029687575,
+            "lon": 172.60369674,
+            "ecef": [
+                -1098681.8507220275,
+                142621.7759915288,
+                -6260117.74433633
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "c7b00cf4-5aa7-4652-9563-f1543e9d98ea"
+        },
+        {
+            "lat": -8.677162929,
+            "lon": 154.494405886,
+            "ecef": [
+                -5691089.223806089,
+                2715192.4137724023,
+                -955880.3620192634
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "44566f8c-7f6f-4a77-928b-638b8de88d34"
+        },
+        {
+            "lat": -13.012797025,
+            "lon": -47.306963247,
+            "ecef": [
+                4214478.4701118395,
+                -4568300.422021993,
+                -1426784.6296683608
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "cd1bcdf4-7967-4ecc-a1d4-d7b4a3ce20a1"
+        },
+        {
+            "lat": 50.282750086,
+            "lon": -68.185023924,
+            "ecef": [
+                1517553.8744861716,
+                -3791281.0926906816,
+                4882945.690379372
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "9aaa9e34-5295-444a-bc05-b432edc4c807"
+        },
+        {
+            "lat": -70.920593967,
+            "lon": -156.457344333,
+            "ecef": [
+                -1917075.1683130695,
+                -835265.6186250722,
+                -6005391.546088471
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "80daefa7-4e11-46d2-8867-68a16bd2da33"
+        },
+        {
+            "lat": -81.854154765,
+            "lon": 7.631759657,
+            "ecef": [
+                898686.903411923,
+                120417.49209020354,
+                -6292190.808420544
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "7dc7a9b4-f837-4016-be90-cd98cd63799a"
+        },
+        {
+            "lat": 68.283137446,
+            "lon": 38.500108699,
+            "ecef": [
+                1852342.357828773,
+                1473425.379059088,
+                5902850.868671499
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "949bbd15-8445-445b-8166-4f41cb90dfe9"
+        },
+        {
+            "lat": 44.609571953,
+            "lon": -124.465544586,
+            "ecef": [
+                -2573854.891309258,
+                -3749810.9481184063,
+                4456564.541970213
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "c81f23a3-3924-4194-8014-fe89ce0f303b"
+        },
+        {
+            "lat": -5.78535614,
+            "lon": 28.419244181,
+            "ecef": [
+                5581117.746896415,
+                3020122.136693302,
+                -638646.7950232539
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "e0679949-f380-4fef-84da-e12f1ef5087c"
+        },
+        {
+            "lat": -77.054145242,
+            "lon": 113.894615664,
+            "ecef": [
+                -580630.9290012033,
+                1310600.6620606836,
+                -6194130.226933327
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "161d4bd2-b00f-4d6c-9f86-4c7ba611f035"
+        },
+        {
+            "lat": -73.47660389,
+            "lon": -167.3059077,
+            "ecef": [
+                -1775116.413008197,
+                -399847.43963602855,
+                -6092581.411969107
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "57e6badf-1bbf-41cb-bf73-6b22459e3c1d"
+        },
+        {
+            "lat": 40.333933825,
+            "lon": 116.673945495,
+            "ecef": [
+                -2185662.0625453107,
+                4350632.793231435,
+                4106320.340841015
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "ba4cde19-25eb-4631-9c7b-4fa128b8ffd8"
+        },
+        {
+            "lat": -81.36186633,
+            "lon": 86.117319246,
+            "ecef": [
+                65079.88841516361,
+                958897.6425148266,
+                -6284167.69645667
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "7176e1ac-4eaa-4c42-bc2a-0abd530b983f"
+        },
+        {
+            "lat": -68.283137446,
+            "lon": 94.894958485,
+            "ecef": [
+                -201964.70926580514,
+                2358254.6118842326,
+                -5902850.868671499
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "805c704e-e8b7-4153-9aa7-86d7dd3bd658"
+        },
+        {
+            "lat": -81.36186633,
+            "lon": -62.208861011,
+            "ecef": [
+                448114.37907182606,
+                -850243.2498795235,
+                -6284167.69645667
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "e7e227c5-bf7e-4840-b572-f98e73be4cca"
+        },
+        {
+            "lat": 66.94240291,
+            "lon": 123.511680156,
+            "ecef": [
+                -1383108.7995840893,
+                2088724.1785686356,
+                5845900.585208194
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "bb66979f-cb4d-4cd1-9a31-38d749e4a2f2"
+        },
+        {
+            "lat": 34.611692937,
+            "lon": -78.169213833,
+            "ecef": [
+                1077393.698953945,
+                -5143385.031985812,
+                3602496.324577703
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "6c322ebc-4013-4bb8-b9c1-0534566f1e46"
+        },
+        {
+            "lat": -80.783382159,
+            "lon": 13.225314007,
+            "ecef": [
+                997735.2626283276,
+                234481.8038193032,
+                -6274143.349880477
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "5cb86a14-1a90-44c1-a973-8f5514a4c031"
+        },
+        {
+            "lat": -33.177919619,
+            "lon": 123.960454653,
+            "ecef": [
+                -2985101.9185081623,
+                4432191.176256113,
+                -3470490.878340247
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "af403944-959f-4359-b9f2-0c01ba57f8aa"
+        },
+        {
+            "lat": 31.743012526,
+            "lon": 52.372878472,
+            "ecef": [
+                3314577.619744689,
+                4299854.780183732,
+                3336231.719263271
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "f322c7d2-cb90-44f5-bf56-bb093167b757"
+        },
+        {
+            "lat": -74.711466605,
+            "lon": -147.811410938,
+            "ecef": [
+                -1427748.928309196,
+                -898704.4239343312,
+                -6130352.066641222
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "d11673eb-7ce1-4d3c-a93d-f310c167ab53"
+        },
+        {
+            "lat": 72.210960545,
+            "lon": 55.047088383,
+            "ecef": [
+                1119764.9758442848,
+                1601990.6826384144,
+                6050919.469498646
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "17356324-ebc4-4ea2-92ab-bd4740a124a1"
+        },
+        {
+            "lat": 18.78789184,
+            "lon": -14.161130231,
+            "ecef": [
+                5856832.312108549,
+                -1477779.4237625608,
+                2041136.0797413122
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "80e3e050-6a05-4be5-9b77-206f35a2ed31"
+        },
+        {
+            "lat": 33.177919619,
+            "lon": 75.938257793,
+            "ecef": [
+                1298345.1387803205,
+                5183575.212859283,
+                3470490.878340247
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "3abd5d88-949a-498b-b8af-c68186d2a4db"
+        },
+        {
+            "lat": -69.61012962,
+            "lon": 84.003391756,
+            "ecef": [
+                232836.3367997054,
+                2216551.966775175,
+                -5956025.3273642585
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "165f201b-814b-4989-bf4e-183f47aebaf6"
+        },
+        {
+            "lat": 2.892852142,
+            "lon": -57.805947814,
+            "ecef": [
+                3393896.0827535396,
+                -5390656.462448018,
+                319741.86867422104
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "6a8501e1-a89e-4a42-95b1-b84ef2803f65"
+        },
+        {
+            "lat": -66.94240291,
+            "lon": 90.292796035,
+            "ecef": [
+                -12801.88097804442,
+                2505113.7214640747,
+                -5845900.585208194
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "9690dbc0-605d-4a8e-8246-3290003604f1"
+        },
+        {
+            "lat": -72.210960545,
+            "lon": 108.351809413,
+            "ecef": [
+                -615390.26435652,
+                1855139.5017418656,
+                -6050919.469498646
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "3a05c689-2660-4320-b040-d89000c6b93e"
+        },
+        {
+            "lat": 69.61012962,
+            "lon": 23.191458029,
+            "ecef": [
+                2048651.455650409,
+                877691.6283129646,
+                5956025.3273642585
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "e51ccb74-dc34-474d-812f-488690ac8cf2"
+        },
+        {
+            "lat": -81.36186633,
+            "lon": -94.029765598,
+            "ecef": [
+                -67541.27160786302,
+                -958727.4155494956,
+                -6284167.69645667
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "c8cc9dba-f10c-40e7-b693-b79e14846198"
+        },
+        {
+            "lat": 81.854154765,
+            "lon": -59.578540773,
+            "ecef": [
+                459123.07406993996,
+                -781885.2381404663,
+                6292190.808420544
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "7270f9e0-f709-43c6-9411-6d59d7c7404b"
+        },
+        {
+            "lat": -80.029687575,
+            "lon": 105.320766779,
+            "ecef": [
+                -292732.3016447412,
+                1068527.294769174,
+                -6260117.74433633
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "f6406c1a-d578-4d7f-9e07-229d7125db9f"
+        },
+        {
+            "lat": 51.694966307,
+            "lon": -103.103358179,
+            "ecef": [
+                -898139.1549916371,
+                -3858498.610857158,
+                4981837.067531569
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "3d2e758e-1ab8-477b-bbff-3098259aaa9f"
+        },
+        {
+            "lat": 7.231368566,
+            "lon": 134.707316903,
+            "ecef": [
+                -4451473.484226697,
+                4497186.174182704,
+                797524.4820766177
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "75ff40fd-b76d-4894-be77-21d6cb3d5548"
+        },
+        {
+            "lat": -81.728337447,
+            "lon": -172.499601359,
+            "ecef": [
+                -912747.8249941804,
+                -120171.99143613369,
+                -6290184.72750939
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "75152379-e255-46a1-ada9-d98728db4b81"
+        },
+        {
+            "lat": -68.283137446,
+            "lon": -0.899032932,
+            "ecef": [
+                2366595.733157022,
+                -37137.502138036056,
+                -5902850.868671499
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "0c625c1b-9f2f-4297-ab08-568ead5c7a73"
+        },
+        {
+            "lat": -36.044260891,
+            "lon": -56.075365242,
+            "ecef": [
+                2881541.9412870426,
+                -4284206.627858669,
+                -3732163.7742859065
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "74d8f8fe-7516-434c-a6d6-3ac74a2efb52"
+        },
+        {
+            "lat": -36.044260891,
+            "lon": 174.139227033,
+            "ecef": [
+                -5136122.748822065,
+                527212.9537643334,
+                -3732163.7742859065
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "bbfe0987-e022-4cdf-b921-a418c7d56746"
+        },
+        {
+            "lat": 51.694966307,
+            "lon": 35.952435813,
+            "ecef": [
+                3206973.625419021,
+                2325937.582477761,
+                4981837.067531569
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "cc0e01b1-48a7-4bed-b8f6-e39d19af7c52"
+        },
+        {
+            "lat": 58.706329607,
+            "lon": 85.982309645,
+            "ecef": [
+                232690.3545767982,
+                3312927.3532519783,
+                5427016.131023443
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "86f1de94-f8a7-40d1-92e1-ae4acdbde369"
+        },
+        {
+            "lat": -7.231368566,
+            "lon": -53.778561538,
+            "ecef": [
+                3739109.7420119904,
+                -5104836.726402174,
+                -797524.4820766177
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "d655595b-b137-4b6f-80d6-e4550f2a9eb4"
+        },
+        {
+            "lat": -68.283137446,
+            "lon": -75.06212306,
+            "ecef": [
+                610116.2429489923,
+                -2286900.24451262,
+                -5902850.868671499
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "b23df005-1881-43db-a5ca-e4026e9ed164"
+        },
+        {
+            "lat": 81.36186633,
+            "lon": -32.99972268,
+            "ecef": [
+                806051.8141717225,
+                -523450.6218996181,
+                6284167.69645667
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "02f31087-f06e-4ef7-8c75-7b51a496176c"
+        },
+        {
+            "lat": 51.694966307,
+            "lon": 32.862307057,
+            "ecef": [
+                3327694.399879262,
+                2149677.988147971,
+                4981837.067531569
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "b389b8b3-95ac-4418-bd29-298ba49c69cd"
+        },
+        {
+            "lat": 50.282750086,
+            "lon": 128.038152042,
+            "ecef": [
+                -2516332.314803691,
+                3216341.674517267,
+                4882945.690379372
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "be33c338-7dcc-4176-82a7-cf5bd1a0a73b"
+        },
+        {
+            "lat": -73.47660389,
+            "lon": -88.507624438,
+            "ecef": [
+                47389.32100338759,
+                -1818975.1254399864,
+                -6092581.411969107
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "e4f60a48-7f65-4d44-8b2d-e499eb3a27d0"
+        },
+        {
+            "lat": 53.104299804,
+            "lon": -124.082921356,
+            "ecef": [
+                -2150450.726432114,
+                -3178242.7071684953,
+                5077520.472584456
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "c9a57a26-fb41-42c4-9673-16d9f9cd4825"
+        },
+        {
+            "lat": 66.94240291,
+            "lon": 69.434426937,
+            "ecef": [
+                880005.6867212956,
+                2345495.392654256,
+                5845900.585208194
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "1ef8ba38-f3aa-4910-bd0a-7e9df18cf37c"
+        },
+        {
+            "lat": -81.36186633,
+            "lon": -141.926761306,
+            "ecef": [
+                -756602.9706653894,
+                -592682.0610385723,
+                -6284167.69645667
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "e1fa0a7b-4bb9-445f-90a1-36ccb3f0690d"
+        },
+        {
+            "lat": -72.210960545,
+            "lon": 109.896873791,
+            "ecef": [
+                -665187.0083713951,
+                1837872.1370872778,
+                -6050919.469498646
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "e6652293-90bf-4645-80cd-cd4abe14e1da"
+        },
+        {
+            "lat": -81.36186633,
+            "lon": -151.822594917,
+            "ecef": [
+                -847202.9366470351,
+                -453836.16518878494,
+                -6284167.69645667
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "c720d9b5-ff25-4648-87e0-fb7611975342"
+        },
+        {
+            "lat": -74.711466605,
+            "lon": -81.373642697,
+            "ecef": [
+                253040.88107541975,
+                -1667964.9146165429,
+                -6130352.066641222
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "970d234c-30e8-417a-90f8-769d93488abf"
+        },
+        {
+            "lat": -78.137015886,
+            "lon": 87.721670197,
+            "ecef": [
+                52291.84623082394,
+                1314349.9997039137,
+                -6220099.081135132
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "86ca4ced-b4ee-49bc-abc5-7206097fef9d"
+        },
+        {
+            "lat": 81.36186633,
+            "lon": 55.068946848,
+            "ecef": [
+                550318.5792762659,
+                787952.7536597449,
+                6284167.69645667
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "a31fa2f4-1762-41b9-8aa3-2954b871ee0b"
+        },
+        {
+            "lat": 75.907538338,
+            "lon": 113.055745894,
+            "ecef": [
+                -610118.6164837125,
+                1433470.0775207423,
+                6164208.513595432
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "85e255b7-e657-4e41-8915-e5887c1872e6"
+        },
+        {
+            "lat": -80.029687575,
+            "lon": 35.792869783,
+            "ecef": [
+                898658.383718855,
+                647962.8766100513,
+                -6260117.74433633
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "c7773377-c801-4e1e-98d8-9939b0961853"
+        },
+        {
+            "lat": -75.907538338,
+            "lon": 32.765713333,
+            "ecef": [
+                1310031.2629149014,
+                843148.4326694269,
+                -6164208.513595432
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "aedf3bea-cd8f-42de-8286-455c37fc42fd"
+        },
+        {
+            "lat": -73.47660389,
+            "lon": 106.17048715,
+            "ecef": [
+                -506749.95983221586,
+                1747604.2838482123,
+                -6092581.411969107
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "a7a196f1-4af2-43f2-be41-8e2aa8c22c31"
+        },
+        {
+            "lat": -77.054145242,
+            "lon": -62.242723392,
+            "ecef": [
+                667600.7023641386,
+                -1268509.2326465785,
+                -6194130.226933327
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "5e07a44a-3e6d-44f4-bec4-e241535e22cd"
+        },
+        {
+            "lat": -14.457277252,
+            "lon": 137.781820874,
+            "ecef": [
+                -4574971.181312819,
+                4150976.3456783975,
+                -1582023.406646751
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "1e84a4a9-494a-4449-951b-a8da89b4f952"
+        },
+        {
+            "lat": -64.228047475,
+            "lon": 89.806294072,
+            "ecef": [
+                9401.025643611587,
+                2780694.6635287553,
+                -5720813.936031409
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "a4d1a76b-d21d-4b29-afa5-d3cf390630d3"
+        },
+        {
+            "lat": -79.137149407,
+            "lon": 47.258818026,
+            "ecef": [
+                818439.6468493246,
+                885656.4373018079,
+                -6242099.356597129
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "0dae29f8-7e71-4439-99c8-9787c0562907"
+        },
+        {
+            "lat": -48.867899154,
+            "lon": -65.061775244,
+            "ecef": [
+                1772371.9824641636,
+                -3811587.954504662,
+                -4780907.987759172
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "3098ea58-72d3-4c7e-b7d9-949468b4f02c"
+        },
+        {
+            "lat": -66.94240291,
+            "lon": 128.919221132,
+            "ecef": [
+                -1573793.3654114907,
+                1949085.192753497,
+                -5845900.585208194
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "8d392c7b-603e-4ff7-a326-1d719018d100"
+        },
+        {
+            "lat": 46.031131555,
+            "lon": 19.741154236,
+            "ecef": [
+                4175128.459004659,
+                1498296.6475828341,
+                4567650.606710822
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "6ace9e92-f53a-47d2-9925-d06254daff05"
+        },
+        {
+            "lat": 57.31190171,
+            "lon": 9.44355952,
+            "ecef": [
+                3406014.3604811025,
+                566522.7702586887,
+                5344738.320918245
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "f4fcb1f6-df57-48b9-910e-a87b40693678"
+        },
+        {
+            "lat": -80.029687575,
+            "lon": 28.912709616,
+            "ecef": [
+                969808.5005582009,
+                535643.7737321431,
+                -6260117.74433633
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "8204c89d-0d5f-4470-b79c-eabf0b9910b9"
+        },
+        {
+            "lat": -79.137149407,
+            "lon": -156.689679828,
+            "ecef": [
+                -1107482.2545896657,
+                -477193.70934450655,
+                -6242099.356597129
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "257b1dd5-5332-40f9-bdd3-00dc6d53140b"
+        },
+        {
+            "lat": -77.054145242,
+            "lon": 174.152126394,
+            "ecef": [
+                -1425999.748306359,
+                146051.66530000084,
+                -6194130.226933327
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "50c546ea-44b6-4a77-9112-6df8dc1cbebf"
+        },
+        {
+            "lat": -78.137015886,
+            "lon": -16.835833287,
+            "ecef": [
+                1259010.2942729318,
+                -380976.9518208308,
+                -6220099.081135132
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "eef865ad-dac5-496f-8f96-6bf3f61385af"
+        },
+        {
+            "lat": 77.054145242,
+            "lon": -73.137534119,
+            "ecef": [
+                415811.25887926115,
+                -1371826.2893296462,
+                6194130.226933327
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "7d9e04e7-1686-43c7-aaf0-a63411e5a553"
+        },
+        {
+            "lat": 62.857585536,
+            "lon": 71.878603059,
+            "ecef": [
+                907425.7808911022,
+                2772765.733005709,
+                5652754.094708056
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "2918169d-7e87-473b-a921-d643e3b3c0f3"
+        },
+        {
+            "lat": 13.012797025,
+            "lon": 123.422650487,
+            "ecef": [
+                -3423509.050683818,
+                5187560.438276216,
+                1426784.6296683608
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "84be68a1-0dcd-42a7-8acd-116b66dbca3e"
+        },
+        {
+            "lat": -73.47660389,
+            "lon": -35.28465024,
+            "ecef": [
+                1485319.3390844106,
+                -1051067.4172746607,
+                -6092581.411969107
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "c619e757-d028-4bc2-a7a2-41920c68810a"
+        },
+        {
+            "lat": 64.228047475,
+            "lon": -178.834620252,
+            "ecef": [
+                -2780135.3794252025,
+                -56554.956712338884,
+                5720813.936031409
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "e8ba7dbd-eab3-4ecd-9c77-01c81398b713"
+        },
+        {
+            "lat": 57.31190171,
+            "lon": -70.89978812,
+            "ecef": [
+                1129832.587484601,
+                -3262722.8195608226,
+                5344738.320918245
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "8f653144-1892-4c20-b930-2e9c73a7728d"
+        },
+        {
+            "lat": 55.913127773,
+            "lon": 42.65768308,
+            "ecef": [
+                2634887.865294867,
+                2427803.866650563,
+                5259027.397132301
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "3daf9211-afcc-4686-ac8e-b952f2040f48"
+        },
+        {
+            "lat": -13.012797025,
+            "lon": 40.761706281,
+            "ecef": [
+                4707740.395926897,
+                4058124.9223552262,
+                -1426784.6296683608
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "7e0222d7-2b6e-4124-9e51-db0621ec583f"
+        },
+        {
+            "lat": -34.611692937,
+            "lon": 120.471359756,
+            "ecef": [
+                -2664858.243219613,
+                4529207.139593621,
+                -3602496.324577703
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "02236cdd-1665-4251-b8d0-0f5887787823"
+        },
+        {
+            "lat": -10.122695278,
+            "lon": 38.302243427,
+            "ecef": [
+                4927852.337019089,
+                3892096.5768485265,
+                -1113610.9393534674
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "fa8a3e70-813e-42b4-8149-189b71cac979"
+        },
+        {
+            "lat": 62.857585536,
+            "lon": 159.947272586,
+            "ecef": [
+                -2740608.841497013,
+                1000357.2041350597,
+                5652754.094708056
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "ebd44b4c-bb72-471e-ba90-cf8af1183dc4"
+        },
+        {
+            "lat": -81.36186633,
+            "lon": -168.192855727,
+            "ecef": [
+                -940768.4318533204,
+                -196659.1933393061,
+                -6284167.69645667
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "adc052d7-3819-444d-bb67-00076fa34333"
+        },
+        {
+            "lat": 34.611692937,
+            "lon": 133.504605909,
+            "ecef": [
+                -3617620.3070468237,
+                3811562.6826596726,
+                3602496.324577703
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "2e0cd6e4-3af9-40f0-ab47-d5362296d7ab"
+        },
+        {
+            "lat": 70.920593967,
+            "lon": -67.616142617,
+            "ecef": [
+                796324.8883838451,
+                -1933575.0636476893,
+                6005391.546088471
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "41a82a44-dd6d-4894-bef5-2b30d2a1ba96"
+        },
+        {
+            "lat": -15.901316985,
+            "lon": 29.305540236,
+            "ecef": [
+                5350394.856557294,
+                3003181.8818177735,
+                -1736228.359457778
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "a0e9d5cb-2ff7-4c32-b5eb-fdc934eab129"
+        },
+        {
+            "lat": 17.344870589,
+            "lon": 0.961037323,
+            "ecef": [
+                6089063.228268489,
+                102143.05353948976,
+                1889299.0990227698
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "7c755094-576f-457e-9375-9ab9cc59bd30"
+        },
+        {
+            "lat": 62.857585536,
+            "lon": -101.168607242,
+            "ecef": [
+                -565105.4178325864,
+                -2862220.680641654,
+                5652754.094708056
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "5cf3ed4d-8f95-4c87-a682-4a12a8849d51"
+        },
+        {
+            "lat": -80.029687575,
+            "lon": -93.147376221,
+            "ecef": [
+                -60828.65537684059,
+                -1106229.0245595633,
+                -6260117.74433633
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "93d183e3-8352-4e3c-81b5-3c9d44b205c4"
+        },
+        {
+            "lat": -48.867899154,
+            "lon": 69.358825614,
+            "ecef": [
+                1481797.4903822816,
+                3933672.7592220674,
+                -4780907.987759172
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "1372c074-d8a7-41bb-a17f-62ee35c45030"
+        },
+        {
+            "lat": -74.711466605,
+            "lon": 88.911840122,
+            "ecef": [
+                32038.47541519702,
+                1686745.4401836295,
+                -6130352.066641222
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "4284da50-eb83-4b80-9c78-0974786dcf59"
+        },
+        {
+            "lat": 55.913127773,
+            "lon": 123.00103072,
+            "ecef": [
+                -1951417.9401872074,
+                3004801.77388078,
+                5259027.397132301
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "f45b888a-b98b-4b8e-9627-8438b6371031"
+        },
+        {
+            "lat": -78.137015886,
+            "lon": -49.282185218,
+            "ecef": [
+                858073.6248198947,
+                -996975.4326423259,
+                -6220099.081135132
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "0128ab85-6ee2-4ad7-972d-122a9e48c783"
+        },
+        {
+            "lat": -73.47660389,
+            "lon": -100.86813946,
+            "ecef": [
+                -343082.99641055247,
+                -1786955.5988576026,
+                -6092581.411969107
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "41a1fc22-0909-4bcd-a872-fdd044f7bd7a"
+        },
+        {
+            "lat": 72.210960545,
+            "lon": -113.364928784,
+            "ecef": [
+                -775145.4447813259,
+                -1794267.8974508252,
+                6050919.469498646
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "a917cc93-bfd4-4861-832d-1f309412d319"
+        },
+        {
+            "lat": -65.590122775,
+            "lon": 116.739437591,
+            "ecef": [
+                -1189258.0400067763,
+                2360527.2959112665,
+                -5785209.240804605
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "cd8f11e2-cd33-4ca7-9267-5e95a1943612"
+        },
+        {
+            "lat": -75.907538338,
+            "lon": -4.315831731,
+            "ecef": [
+                1553491.594296788,
+                -117239.30986041373,
+                -6164208.513595432
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "8bc691b5-b71f-4c26-8fea-655e893987c5"
+        },
+        {
+            "lat": 20.230333804,
+            "lon": -98.807288054,
+            "ecef": [
+                -916689.0346346234,
+                -5916472.954825556,
+                2191640.670809374
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "267c004e-8f28-47e0-9ebb-eb326853e590"
+        },
+        {
+            "lat": 46.031131555,
+            "lon": -103.863995978,
+            "ecef": [
+                -1062904.820552679,
+                -4306602.354036701,
+                4567650.606710822
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "a4a62a5e-177a-4f0f-989b-7a4cf9711f96"
+        },
+        {
+            "lat": -79.137149407,
+            "lon": -70.166074677,
+            "ecef": [
+                409160.85792628716,
+                -1134380.0830453623,
+                -6242099.356597129
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "8b738889-e16e-47a0-bcce-a728cce270a3"
+        },
+        {
+            "lat": -77.054145242,
+            "lon": -176.57748734,
+            "ecef": [
+                -1430902.9318502208,
+                -85575.52646139622,
+                -6194130.226933327
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "9f302aa6-600f-4bb3-aa80-f5b553e54378"
+        },
+        {
+            "lat": -13.012797025,
+            "lon": 36.126513148,
+            "ecef": [
+                5020285.207876818,
+                3664414.54429705,
+                -1426784.6296683608
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "fdcb31fb-9764-48f2-8ad2-a5add747eacc"
+        },
+        {
+            "lat": -75.907538338,
+            "lon": -178.188889299,
+            "ecef": [
+                -1557130.9836940118,
+                -49237.06883478261,
+                -6164208.513595432
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "1666fb42-4ff5-442c-8078-abc3dd05d46a"
+        },
+        {
+            "lat": -75.907538338,
+            "lon": -84.659179371,
+            "ecef": [
+                145010.14868458852,
+                -1551145.7849299002,
+                -6164208.513595432
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "1493d08e-f11b-41b2-a677-02cbd202759e"
+        },
+        {
+            "lat": 68.283137446,
+            "lon": 26.139593678,
+            "ecef": [
+                2124809.80917503,
+                1042754.9247525265,
+                5902850.868671499
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "129cf7e1-36af-4e7f-812e-239d47c699ae"
+        },
+        {
+            "lat": -70.920593967,
+            "lon": 101.56840674,
+            "ecef": [
+                -419351.5133726777,
+                2048655.6965121673,
+                -6005391.546088471
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "7572efea-a0dc-4e2e-83ab-32a5665d5b37"
+        },
+        {
+            "lat": 13.012797025,
+            "lon": 6.175632774,
+            "ecef": [
+                6179330.850222995,
+                668631.2618812509,
+                1426784.6296683608
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "c79fbca6-08e6-4dda-a484-b9e2b34c48a6"
+        },
+        {
+            "lat": -81.854154765,
+            "lon": -125.243776824,
+            "ecef": [
+                -523227.8193701861,
+                -740520.8787080382,
+                -6292190.808420544
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "8e318689-546d-4ba3-8e76-e2154f562c14"
+        },
+        {
+            "lat": -20.230333804,
+            "lon": 34.499991917,
+            "ecef": [
+                4934099.168854384,
+                3391111.3817319656,
+                -2191640.670809374
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "f6c58154-30c9-495c-884c-e04276c49a77"
+        },
+        {
+            "lat": 62.857585536,
+            "lon": -84.172899087,
+            "ecef": [
+                296201.9323857003,
+                -2902398.2795625227,
+                5652754.094708056
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "42dc309c-b8e3-4632-8739-2e1f8bf23112"
+        },
+        {
+            "lat": 23.113287718,
+            "lon": -16.240764908,
+            "ecef": [
+                5634984.522423545,
+                -1641462.8289576557,
+                2488263.1539122686
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "d8607290-5fe2-41a3-b6cf-58400ce0dbf7"
+        },
+        {
+            "lat": -11.567921451,
+            "lon": 42.623202851,
+            "ecef": [
+                4598468.957475244,
+                4231947.108611056,
+                -1270613.18828355
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "ccf0ca9e-82f7-4a81-a404-4e0c91749de6"
+        },
+        {
+            "lat": -68.283137446,
+            "lon": 135.066632304,
+            "ecef": [
+                -1675587.1556644712,
+                1671694.4224451792,
+                -5902850.868671499
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "98ef0abf-8d02-40e2-8ac8-0733ae28cf20"
+        },
+        {
+            "lat": 27.432142103,
+            "lon": 97.606302769,
+            "ecef": [
+                -749848.3684775953,
+                5615140.278959387,
+                2920798.4503236194
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "f32b619e-6984-4140-97b5-f992a2888a09"
+        },
+        {
+            "lat": 47.450629751,
+            "lon": 139.248631041,
+            "ecef": [
+                -3273305.55158346,
+                2820596.7864688565,
+                4675787.695262972
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "82b1cbfb-b594-47a6-a9ad-8263af01533f"
+        },
+        {
+            "lat": 66.94240291,
+            "lon": 114.24129389,
+            "ecef": [
+                -1028563.7870371421,
+                2284253.747204976,
+                5845900.585208194
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "c0231bf0-195f-4039-8880-c1c409694726"
+        },
+        {
+            "lat": -74.711466605,
+            "lon": -81.045241423,
+            "ecef": [
+                262596.9192448495,
+                -1666487.1742351665,
+                -6130352.066641222
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "5994a955-7f5d-44f4-a89b-19dcb12db3cf"
+        },
+        {
+            "lat": -37.475546728,
+            "lon": -71.946768861,
+            "ecef": [
+                1570592.9695627282,
+                -4818551.03209573,
+                -3859410.5928277886
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "b1ef387e-68d0-49ba-87d6-a5011c7897db"
+        },
+        {
+            "lat": 18.78789184,
+            "lon": -103.774864136,
+            "ecef": [
+                -1438261.6314784372,
+                -5866661.762610127,
+                2041136.0797413122
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "44c6d5e4-539d-4358-8042-f9024d5f084a"
+        },
+        {
+            "lat": 81.728337447,
+            "lon": -60.482433977,
+            "ecef": [
+                453582.94499350036,
+                -801131.9564019128,
+                6290184.72750939
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "4186f9d4-67c5-4687-9912-7f9e59ed998b"
+        },
+        {
+            "lat": 61.479880919,
+            "lon": 145.001479598,
+            "ecef": [
+                -2501122.9790530056,
+                1751208.9098179457,
+                5581071.449799858
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "8c886546-31b3-41ea-af1e-0ed6ac4f900f"
+        },
+        {
+            "lat": -31.743012526,
+            "lon": 135.165318953,
+            "ecef": [
+                -3850017.400860901,
+                3827863.8874768694,
+                -3336231.719263271
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "4fc7774f-396f-45ee-9cd5-d550c4897155"
+        },
+        {
+            "lat": -72.210960545,
+            "lon": -112.592396595,
+            "ecef": [
+                -750883.1918765083,
+                -1804555.951070842,
+                -6050919.469498646
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "ff17e55c-741b-423c-8370-91d7fdde0000"
+        },
+        {
+            "lat": 54.510464388,
+            "lon": -61.591855966,
+            "ecef": [
+                1765552.4408424601,
+                -3264211.8692526827,
+                5169936.376900278
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "8c77b266-18e3-46c5-b57e-1255f83bdcca"
+        },
+        {
+            "lat": -73.47660389,
+            "lon": -93.142817571,
+            "ecef": [
+                -99759.17116276616,
+                -1816855.6251071503,
+                -6092581.411969107
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "d69077b2-8eb9-446e-b092-e601b15e04bf"
+        },
+        {
+            "lat": 51.694966307,
+            "lon": 91.574753409,
+            "ecef": [
+                -108870.76560093416,
+                3960153.1066504456,
+                4981837.067531569
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "4428e78f-cffb-4d33-8184-957bf8830b51"
+        },
+        {
+            "lat": -74.711466605,
+            "lon": -50.472355144,
+            "ecef": [
+                1073723.5324422028,
+                -1301251.0978927293,
+                -6130352.066641222
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "649db878-cb58-4701-8bcc-bbb1f69e144c"
+        },
+        {
+            "lat": -81.854154765,
+            "lon": 12.26695279,
+            "ecef": [
+                886016.6063814558,
+                192647.59531770344,
+                -6292190.808420544
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "bd62367d-e423-4ee0-8ed8-b4e557af3ec0"
+        },
+        {
+            "lat": 66.94240291,
+            "lon": -148.419650316,
+            "ecef": [
+                -2134150.7585109863,
+                -1311929.565781313,
+                5845900.585208194
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "b2288c87-57da-4724-87d4-9261f13f0d97"
+        },
+        {
+            "lat": 60.095870866,
+            "lon": 26.616032959,
+            "ecef": [
+                2850029.934149789,
+                1428186.3244757738,
+                5505810.027648779
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "733c409f-84d2-4bc7-b600-048e1b071d1d"
+        },
+        {
+            "lat": 36.044260891,
+            "lon": 21.124292281,
+            "ecef": [
+                4816153.737202728,
+                1860745.4337476264,
+                3732163.7742859065
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "e38969a4-4f9a-4e17-a574-5cec29638f36"
+        },
+        {
+            "lat": 50.282750086,
+            "lon": 129.583216419,
+            "ecef": [
+                -2602140.2836801955,
+                3147323.947389368,
+                4882945.690379372
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "15e63c95-f884-4d0e-92f5-b960921995c9"
+        },
+        {
+            "lat": -13.012797025,
+            "lon": 31.491320015,
+            "ecef": [
+                5299991.624955324,
+                3246734.7129517626,
+                -1426784.6296683608
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "2eb3c080-42f1-47a8-aafa-9c6fb8d4ba3e"
+        },
+        {
+            "lat": 38.90546766,
+            "lon": -76.905881316,
+            "ecef": [
+                1125943.1127500155,
+                -4840703.101348406,
+                3984155.8447849653
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "96000db2-8ef3-4f98-a050-ed6dbde11d98"
+        },
+        {
+            "lat": -80.783382159,
+            "lon": -122.740351229,
+            "ecef": [
+                -554309.4252144864,
+                -862089.5729173144,
+                -6274143.349880477
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "30606eb6-015e-4a15-8526-0b5ec5637ca9"
+        },
+        {
+            "lat": 62.857585536,
+            "lon": 8.530963574,
+            "ecef": [
+                2885194.0624010134,
+                432789.30236599944,
+                5652754.094708056
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "e8af674a-d952-4e0b-9ffa-7b905466cb7b"
+        },
+        {
+            "lat": -77.054145242,
+            "lon": -33.738392488,
+            "ecef": [
+                1192039.3974045957,
+                -796145.9954945392,
+                -6194130.226933327
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "308f837b-b003-4509-bd61-19b26da1ba98"
+        },
+        {
+            "lat": -65.590122775,
+            "lon": 87.383214415,
+            "ecef": [
+                120676.29764777928,
+                2640428.190966181,
+                -5785209.240804605
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "049784b0-d63a-49bd-a9e9-7d7871e4f5e2"
+        },
+        {
+            "lat": -68.283137446,
+            "lon": -51.886157395,
+            "ecef": [
+                1460904.2113845085,
+                -1862233.4556711954,
+                -5902850.868671499
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "a063e42a-288f-4f7b-a486-2426ee4346db"
+        },
+        {
+            "lat": -77.054145242,
+            "lon": -6.620405795,
+            "ecef": [
+                1423900.9401078864,
+                -165264.8899995992,
+                -6194130.226933327
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "eb64ffa1-c8bf-4d9a-b8fb-3fb45c422438"
+        },
+        {
+            "lat": -79.137149407,
+            "lon": -0.638177682,
+            "ecef": [
+                1205840.1110805047,
+                -13431.566488470036,
+                -6242099.356597129
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "0875c7e5-045e-4066-8110-79fd5d058e02"
+        },
+        {
+            "lat": 51.694966307,
+            "lon": 59.128401478,
+            "ecef": [
+                2032785.0544575076,
+                3400360.332977948,
+                4981837.067531569
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "57708f9b-97b5-4571-9b9f-c3fc1de4b052"
+        },
+        {
+            "lat": 37.475546728,
+            "lon": 55.536468432,
+            "ecef": [
+                2867919.752286961,
+                4178544.3182277,
+                3859410.5928277886
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "0efb2f7e-4fcd-4595-b83c-e4112c40ba22"
+        },
+        {
+            "lat": 47.450629751,
+            "lon": -63.154802435,
+            "ecef": [
+                1951244.7615384879,
+                -3855248.28596475,
+                4675787.695262972
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "30a6b026-984c-4068-b7ea-f0e02de50813"
+        },
+        {
+            "lat": 33.177919619,
+            "lon": -81.658308731,
+            "ecef": [
+                775243.9462761248,
+                -5287168.326290159,
+                3470490.878340247
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "fd7f31af-fe71-4fb8-b1aa-1d7d952ca77c"
+        },
+        {
+            "lat": -73.47660389,
+            "lon": -174.340444231,
+            "ecef": [
+                -1810722.6024933716,
+                -179443.3379488016,
+                -6092581.411969107
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "d994259b-09da-4a4d-8228-ee3942bc8297"
+        },
+        {
+            "lat": 78.137015886,
+            "lon": 105.996784739,
+            "ecef": [
+                -362499.6131273534,
+                1264454.1863533154,
+                6220099.081135132
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "9cbba631-0e7c-4e17-994c-8b49aa3ac753"
+        },
+        {
+            "lat": -79.137149407,
+            "lon": 84.340363091,
+            "ecef": [
+                118925.80881316651,
+                1200036.429641664,
+                -6242099.356597129
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "4fab531f-278e-48fd-9c05-41167331116e"
+        },
+        {
+            "lat": -15.901316985,
+            "lon": 166.81626985,
+            "ecef": [
+                -5973907.303917588,
+                1399377.7404808851,
+                -1736228.359457778
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "e2c8d9c5-4889-457b-b9fd-f8e4ebae3a16"
+        },
+        {
+            "lat": -75.907538338,
+            "lon": -111.751121058,
+            "ecef": [
+                -577323.1667012012,
+                -1446989.6856983532,
+                -6164208.513595432
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "a4bf47b4-781b-4804-8555-12531dafe6a9"
+        },
+        {
+            "lat": 75.907538338,
+            "lon": -49.176013762,
+            "ecef": [
+                1018463.6182471856,
+                -1178903.3241255083,
+                6164208.513595432
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "c7b05b1e-58cb-419f-87a8-5e76dfc934a5"
+        },
+        {
+            "lat": 0.0,
+            "lon": 111.537339056,
+            "ecef": [
+                -2341461.8788744905,
+                5932806.069689666,
+                0.0
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "3f20400f-cdb2-4577-97b8-bb3ded6c9118"
+        },
+        {
+            "lat": 70.920593967,
+            "lon": 100.795874551,
+            "ecef": [
+                -391691.7358529105,
+                2054123.5207952424,
+                6005391.546088471
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "89472dbb-f845-4920-b5f4-449e43cc3ed6"
+        },
+        {
+            "lat": 61.479880919,
+            "lon": -106.844013965,
+            "ecef": [
+                -884732.0676121783,
+                -2922259.052635721,
+                5581071.449799858
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "5ba065e4-4f54-4313-8d0f-3063630d1867"
+        },
+        {
+            "lat": -81.36186633,
+            "lon": -26.04693298,
+            "ecef": [
+                863488.7627318429,
+                -422027.5314863395,
+                -6284167.69645667
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "6663fe85-a23e-4869-a398-a360a3a51f48"
+        },
+        {
+            "lat": -79.137149407,
+            "lon": -88.70684721,
+            "ecef": [
+                27214.916318475724,
+                -1205607.7839823184,
+                -6242099.356597129
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "5387c660-fe8f-468e-8e3c-145d739fa491"
+        },
+        {
+            "lat": -81.728337447,
+            "lon": 108.702115379,
+            "ecef": [
+                -295196.4442053366,
+                872014.3111703263,
+                -6290184.72750939
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "3ea79fad-f6d0-4117-b459-cff5e55dc4fb"
+        },
+        {
+            "lat": -77.054145242,
+            "lon": -102.414397211,
+            "ecef": [
+                -308166.1977548492,
+                -1399942.8437147073,
+                -6194130.226933327
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "9e9ac420-dc1d-4fe7-89a7-bf6d8177bb89"
+        },
+        {
+            "lat": 43.186099548,
+            "lon": 46.540652485,
+            "ecef": [
+                3203839.661878628,
+                3380943.6048552557,
+                4342599.312098233
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "482bc6df-952b-467f-a533-2e2665a99666"
+        },
+        {
+            "lat": 17.344870589,
+            "lon": 16.4116811,
+            "ecef": [
+                5841794.579870527,
+                1720627.8760479237,
+                1889299.0990227698
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "2e820bcd-d1a6-455c-ade9-c24680687ba9"
+        },
+        {
+            "lat": 28.870061966,
+            "lon": -178.594980216,
+            "ecef": [
+                -5588125.366206629,
+                -137060.72124244986,
+                3061297.3342190115
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "9ee4fc16-2303-43db-a5a7-33971375ab41"
+        },
+        {
+            "lat": 79.137149407,
+            "lon": 21.765255795,
+            "ecef": [
+                1119946.2697632913,
+                447158.95754448144,
+                6242099.356597129
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "1cb667b3-4b5e-4912-b262-23da8d33bcff"
+        },
+        {
+            "lat": -77.054145242,
+            "lon": -171.249122102,
+            "ecef": [
+                -1416772.9355595158,
+                -218084.43358656886,
+                -6194130.226933327
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "df8c6179-c2df-45d1-85f9-31fbb645444d"
+        },
+        {
+            "lat": 47.450629751,
+            "lon": -81.695574967,
+            "ecef": [
+                624080.903963676,
+                -4275607.382720427,
+                4675787.695262972
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "87b0b0b6-21f7-4f3c-8beb-7c6b16e9b3e7"
+        },
+        {
+            "lat": 44.609571953,
+            "lon": -0.860394371,
+            "ecef": [
+                4547652.890536219,
+                -68295.93943143886,
+                4456564.541970213
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "f52a525b-db6a-4b50-897a-61860ef30ae7"
+        },
+        {
+            "lat": -69.61012962,
+            "lon": -59.469486177,
+            "ecef": [
+                1132197.4093176061,
+                -1919751.1316531897,
+                -5956025.3273642585
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "8b4cc361-1a48-432b-9851-ba1f063b1840"
+        },
+        {
+            "lat": -77.054145242,
+            "lon": -136.40581352,
+            "ecef": [
+                -1038171.3903651306,
+                -988436.4093526877,
+                -6194130.226933327
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "64f495fd-05c4-46f4-9ab7-d9401c3217d8"
+        },
+        {
+            "lat": 60.095870866,
+            "lon": 57.517320513,
+            "ecef": [
+                1712017.6438206863,
+                2689122.977890029,
+                5505810.027648779
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "b784ff55-e033-4e70-8e6c-20f2d1bab7c0"
+        },
+        {
+            "lat": -31.743012526,
+            "lon": 27.010812515,
+            "ecef": [
+                4836902.329837607,
+                2465674.710823142,
+                -3336231.719263271
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "dbb728fe-1937-42cf-ac93-3838afa84826"
+        },
+        {
+            "lat": -80.783382159,
+            "lon": -96.474256808,
+            "ecef": [
+                -115566.48622176782,
+                -1018381.9312403013,
+                -6274143.349880477
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "e111f053-a3c0-4d54-bba1-adc498d8105d"
+        },
+        {
+            "lat": -2.892852142,
+            "lon": 30.580196741,
+            "ecef": [
+                5484101.71088311,
+                3240730.803592201,
+                -319741.86867422104
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "691e1d2e-8ad8-47bc-b6df-87c5b921342b"
+        },
+        {
+            "lat": -78.137015886,
+            "lon": 109.352571484,
+            "ecef": [
+                -435894.1835724374,
+                1241066.7265024972,
+                -6220099.081135132
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "4e2f0d26-f483-435a-bb0d-58683f6b40aa"
+        },
+        {
+            "lat": -65.590122775,
+            "lon": -53.217643954,
+            "ecef": [
+                1582677.9991124272,
+                -2116968.1508205077,
+                -5785209.240804605
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "244e8113-a527-4f68-9e77-acb8d1e4048b"
+        },
+        {
+            "lat": 20.230333804,
+            "lon": 52.609020958,
+            "ecef": [
+                3635650.9447670626,
+                4756786.01780824,
+                2191640.670809374
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "3a5bef72-068d-4917-92a6-f35ec8ba88eb"
+        },
+        {
+            "lat": -74.711466605,
+            "lon": -84.135370178,
+            "ecef": [
+                172380.14101981555,
+                -1678219.8100574266,
+                -6130352.066641222
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "60318918-74af-455c-a5f1-37dddfb70624"
+        },
+        {
+            "lat": -28.870061966,
+            "lon": 140.553778499,
+            "ecef": [
+                -4316567.085170492,
+                3551503.815142567,
+                -3061297.3342190115
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "9e2faf53-7e75-46d6-ad25-9ee884a8a9c7"
+        },
+        {
+            "lat": -27.432142103,
+            "lon": -47.578834958,
+            "ecef": [
+                3821459.0387278367,
+                -4181928.2326967227,
+                -2920798.4503236194
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "2def1b71-3952-4378-a3fd-a7e1647676a3"
+        },
+        {
+            "lat": 41.760847076,
+            "lon": -86.812884452,
+            "ecef": [
+                264904.6895302118,
+                -4757362.149663479,
+                4225826.68373174
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "244a7030-7555-47e8-a424-d3da1be71b3a"
+        },
+        {
+            "lat": 69.61012962,
+            "lon": 135.9811576,
+            "ecef": [
+                -1602717.5389253164,
+                1548745.2571583164,
+                5956025.3273642585
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "91d760f3-2525-4621-a9f1-d42d3b610727"
+        },
+        {
+            "lat": -14.457277252,
+            "lon": -175.866247795,
+            "ecef": [
+                -6161385.563019567,
+                -445302.0054282888,
+                -1582023.406646751
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "20a5298d-6821-441a-a6f6-d8a32b156d58"
+        },
+        {
+            "lat": -79.137149407,
+            "lon": -127.78929013,
+            "ecef": [
+                -738935.6332385635,
+                -952997.8543518876,
+                -6242099.356597129
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "72b58491-7cbb-40f3-8106-175b8db925fe"
+        },
+        {
+            "lat": -78.137015886,
+            "lon": 169.610082214,
+            "ecef": [
+                -1293821.656667736,
+                237225.37731335053,
+                -6220099.081135132
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "7e4aec56-98e4-4ae4-b12f-2e2c191c6689"
+        },
+        {
+            "lat": -81.36186633,
+            "lon": 143.284701221,
+            "ecef": [
+                -770436.042620351,
+                574585.4026409955,
+                -6284167.69645667
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "a6b70d80-46a6-4ea2-90e8-551768babe1f"
+        },
+        {
+            "lat": 2.892852142,
+            "lon": -74.801655969,
+            "ecef": [
+                1669984.0224409369,
+                -6147264.520211766,
+                319741.86867422104
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "0fcc57cf-059c-49cd-9ca3-d3147c47af48"
+        },
+        {
+            "lat": -74.711466605,
+            "lon": -120.000252139,
+            "ecef": [
+                -843531.2725991847,
+                -1461024.1736653082,
+                -6130352.066641222
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "6f718c55-3af0-4a1e-81ac-e39f9b13df58"
+        },
+        {
+            "lat": 61.479880919,
+            "lon": -162.466331561,
+            "ecef": [
+                -2911398.3283125535,
+                -919841.6037947015,
+                5581071.449799858
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "53064392-39d3-45a0-a1ea-20930e2ddea1"
+        },
+        {
+            "lat": -81.36186633,
+            "lon": -65.298989767,
+            "ecef": [
+                401628.93383305037,
+                -873163.3754371225,
+                -6284167.69645667
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "bc7b9531-e033-4eef-9520-bc6f7f0948a0"
+        },
+        {
+            "lat": -78.137015886,
+            "lon": -174.432399811,
+            "ecef": [
+                -1309184.3589665121,
+                -127619.2506691239,
+                -6220099.081135132
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "d1c0759b-1ccf-49ff-ac6e-a1446e71e903"
+        },
+        {
+            "lat": 61.479880919,
+            "lon": 92.469290756,
+            "ecef": [
+                -131546.05333973272,
+                3050417.0924684186,
+                5581071.449799858
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "29f36524-8e19-4d02-9536-ce11a2b2af59"
+        },
+        {
+            "lat": -5.78535614,
+            "lon": 124.213235597,
+            "ecef": [
+                -3568118.0393909332,
+                5247718.2357897265,
+                -638646.7950232539
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "6a222436-9853-403b-b1b6-06101cf18e5b"
+        },
+        {
+            "lat": 65.590122775,
+            "lon": 139.142871067,
+            "ecef": [
+                -1999154.4498920552,
+                1729105.3426381254,
+                5785209.240804605
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "717b6b63-25cd-4a00-b1ff-8d8f02355fc0"
+        },
+        {
+            "lat": -80.783382159,
+            "lon": -71.753226765,
+            "ecef": [
+                320912.47498287493,
+                -973382.0185388353,
+                -6274143.349880477
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "5b226731-7432-46ec-8759-860aa752e2cd"
+        },
+        {
+            "lat": 68.283137446,
+            "lon": -77.379719627,
+            "ecef": [
+                517137.9974681895,
+                -2309701.896314039,
+                5902850.868671499
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "76d9c8ce-1551-4a83-93f9-e78b703f6ba1"
+        },
+        {
+            "lat": 24.553700864,
+            "lon": -167.31046586,
+            "ecef": [
+                -5662949.710462263,
+                -1275113.9291504133,
+                2634188.9821292777
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "525c908b-19ce-4763-b35e-83edb1415b7f"
+        },
+        {
+            "lat": -80.783382159,
+            "lon": -68.66309801,
+            "ecef": [
+                372917.74835853145,
+                -954667.3366013812,
+                -6274143.349880477
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "34576c8e-ebde-4ba0-beb5-09d5ec84f97a"
+        },
+        {
+            "lat": -79.137149407,
+            "lon": -70.621908155,
+            "ecef": [
+                400123.108918245,
+                -1137599.3487069937,
+                -6242099.356597129
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "255a2156-7f8d-4946-8215-93d7ee01ba00"
+        },
+        {
+            "lat": 66.94240291,
+            "lon": -97.432525853,
+            "ecef": [
+                -324062.06207840954,
+                -2484097.9098146777,
+                5845900.585208194
+            ],
+            "look_angle_min": 5,
+            "look_angle_max": 50,
+            "image_duration": 3,
+            "reward": 1,
+            "satisfied": false,
+            "uuid": "48fe92aa-b0f5-4425-94e4-cc6206af5b89"
+        }
+    ]
+}

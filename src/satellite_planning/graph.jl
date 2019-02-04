@@ -37,24 +37,23 @@ function sp_construct_graph(collects::Array{Collect, 1}, constraint_list::Array{
                 # Skip insertion if same collect, image, or starts before the current
                 # collection ends (no instantaneous manevers)
                 continue
-            elseif horizon > 0 && end_collect.sow > (start_collect.sow + horizon)
+            elseif horizon > 0 && end_collect.sow > (start_collect.eow + horizon)
                 # Since we know collects are sorted we can break building the
                 # transition grarph if the distance from the next to the next start
                 # is greater than the look-ahead horizon
-                @warn "Found Horizon. Stopping Look Ahead"
                 break
             else
                 # Set transition valid by default
                 valid_transition = true
 
                 for constraint in constraint_list
+                    # If not valid transition break early
+                    if valid_transition == false
+                        continue
+                    end
+
                     # Use logical and to evaulate path feasibility on graph
                     valid_transition = valid_transition && constraint(start_collect, end_collect)
-
-                    # If not valid transition break early
-                    if !valid_transition
-                        break
-                    end
                 end
 
                 if valid_transition
@@ -88,13 +87,13 @@ function sp_solve_graph(graph::Dict{Collect, Array{Collect, 1}}; allow_repeats=f
     end
 
     # Iterate over nodes updating optimal weights
-    for node_i in keys(optimal_path)
-        for node_j in graph[node_i]
+    for node_i in sort!(collect(keys(optimal_path)), by = x -> x.sow) # Subtle, but this needs to be sorted in time order to give optimal policy
+        for node_j in sort!(graph[node_i], by = x -> x.sow) # Also needs to be sorted for same reason, and Julia dicts don't order keys by default
             if (optimal_path[node_i][2] + node_j.image.reward) > optimal_path[node_j][2]
-                if allow_repeats == false
+                if allow_repeats == true
                     # If repeat images are allowed always update if reward is higher
                     optimal_path[node_j] = (node_i, optimal_path[node_i][2] + node_j.image.reward, push!(copy(optimal_path[node_i][3]), node_j.image))
-                elseif allow_repeats == true && !(node_j.image in optimal_path[node_i][3])
+                elseif allow_repeats == false && !(node_j.image in optimal_path[node_i][3])
                     # If repeat images are not allowed only update if the image is unique
                     optimal_path[node_j] = (node_i, optimal_path[node_i][2] + node_j.image.reward, push!(copy(optimal_path[node_i][3]), node_j.image))
                 end

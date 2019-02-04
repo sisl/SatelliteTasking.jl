@@ -311,30 +311,45 @@ function compute_collects_by_number(opportunity_list::Array{Opportunity,1}, max_
 
     # Compute Collects for each opportunity
     for opportunity in opportunity_list
-        # If maximum number of collects per opportunity is not set, set as the 
-        # maximum possible of non-overlapping collects over the opportunity window
-        if max_collects == 0
-            max_collects = convert(typeof(max_collects), floor(opportunity.duration/opportunity.dwell_time))
-        end
-
-        # Time in opportunity window not taken up by a collect
-        empty_span = opportunity.duration - max_collects*opportunity.dwell_time
-
-        # Spacing between collects
-        collect_spacing = empty_span/(max_collects + 1)
-
-        # Start time of next collect window
         next_collect_start = deepcopy(opportunity.sow)
+        num_collects       = 0
 
-        # Create collects for opportunities
-        for i in 1:max_collects
-            next_collect_start += collect_spacing
+        # Stupider algorithm for dividing up collect windows
+        while num_collects < max_collects && (next_collect_start+opportunity.dwell_time) < opportunity.eow
             push!(collects, Collect(next_collect_start, 
                                     next_collect_start+opportunity.dwell_time,
                                     orbit=opportunity.orbit,
                                     image=opportunity.image,
                                     opportunity=opportunity))
+
+            next_collect_start += opportunity.dwell_time
+            num_collects       += 1
         end
+
+        # # If maximum number of collects per opportunity is not set, set as the 
+        # # maximum possible of non-overlapping collects over the opportunity window
+        # if max_collects == 0
+        #     max_collects = convert(typeof(max_collects), floor(opportunity.duration/opportunity.dwell_time))
+        # end
+
+        # # Time in opportunity window not taken up by a collect
+        # empty_span = opportunity.duration - max_collects*opportunity.dwell_time
+
+        # # Spacing between collects
+        # collect_spacing = empty_span/(max_collects + 1)
+
+        # # Start time of next collect window
+        # next_collect_start = deepcopy(opportunity.sow)
+
+        # # Create collects for opportunities
+        # for i in 1:max_collects
+        #     next_collect_start += collect_spacing
+        #     push!(collects, Collect(next_collect_start, 
+        #                             next_collect_start+opportunity.dwell_time,
+        #                             orbit=opportunity.orbit,
+        #                             image=opportunity.image,
+        #                             opportunity=opportunity))
+        # end
     end
     
     # Sort collects so they are in ascending order

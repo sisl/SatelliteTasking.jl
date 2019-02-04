@@ -98,10 +98,10 @@ function constraint_agility_single_axis(start_collect::Collect, end_collect::Col
     t_slew = slew_time_single_axis(z_start, z_end)
 
     # Check if slew time is less than the time available to complete the slew
-    if t_slew <= (end_collect.sow - start_collect.eow)
-        return true
-    else
+    if t_slew > (end_collect.sow - start_collect.eow)
         return false
+    else
+        return true
     end
 end
 
