@@ -6,11 +6,13 @@ using Reexport
 # Base Module Includes
 include("data_structures.jl")
 include("collection.jl")
+include("constraints.jl")
 include("simulation.jl")
 
 # Export Values
 @reexport using SatelliteTasking.DataStructures
 @reexport using SatelliteTasking.Collection
+@reexport using SatelliteTasking.Constraints
 @reexport using SatelliteTasking.Simulation
 
 # Export satellite planning submodule

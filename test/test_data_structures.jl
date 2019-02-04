@@ -11,6 +11,26 @@ let
 end
 
 let
+    # Test Orbit constructor
+    epc0 = Epoch(2019, 1, 1, 12, 0, 0, 0.0, tsys=:UTC) 
+    oe0  = [R_EARTH + 500e3, 0.0, 90.0, 0, 0, 0]
+    eci0 = sOSCtoCART(oe0, use_degrees=true)
+
+    orb = Orbit(epc0, epc0+60.0, eci0, dtmax=1)
+
+    @test orb.t[end]   == 60.0
+
+    epc = epc0 + 0.5
+
+    # Test interpolation
+    eci = interpolate(orb, epc)
+
+    for i in 1:6
+        @test isapprox(eci[i], ((orb.eci[i, 2] - orb.eci[i, 1])*0.5 + orb.eci[i, 1]), atol=10)
+    end
+end
+
+let
     img = Image(10, 20, look_angle_min=6, look_angle_max=40, reward=2.0)
 
     @test img.lon            == 10

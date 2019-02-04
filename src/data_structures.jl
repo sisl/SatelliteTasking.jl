@@ -11,6 +11,7 @@ using LinearAlgebra
 using Statistics
 using JSON
 using UUIDs
+using Printf
 
 #########
 # Orbit #
@@ -48,7 +49,7 @@ Attributes:
 - `ecef::Array{Float64, 2}` Earth Centered Earth Fixed state of statellite output. State entries alightex with column output.
 - `oe::Array{Float64, 2}` Osculating orbital element state of statellite output. State entries alightex with column output.
 """
-struct Orbit
+mutable struct Orbit
     id::Int32
     t::Array{Float64, 1}
     epc::Array{Epoch, 1}
@@ -83,6 +84,76 @@ struct Orbit
     end
 end
 
+function Base.show(io::IO, orb::Orbit)
+
+    s = @sprintf "Orbit(%d)" orb.id
+
+    print(io, s)
+end
+
+# Helpfer function 
+function searchsortednearest(a,x)
+    idx = searchsortedfirst(a,x)
+    if (idx==1); return idx; end
+    if (idx>length(a)); return length(a); end
+    if (a[idx]==x); return idx; end
+    if (abs(a[idx]-x) < abs(a[idx-1]-x))
+       return idx
+    else
+       return idx-1
+    end
+ end
+
+export interpolate
+"""
+Interpolate orbit information to a given `Epoch`.
+
+This interpolation is not particularly accurate, care should be used to determine
+that the use-case can handle the interprolation errors introduced.
+
+Arguments:
+- `orbit::Orbit` Orbit data to interpolate
+- `epc::Epoch` Epoch to interpolate state output to.
+
+Returns:
+- `eci::Arrray{Float64, 1}` Earth intertial state information interpolated to time of Epoch
+"""
+function interpolate(orbit::Orbit, epc::Epoch)
+    # Check validity of input
+    if epc < orbit.epc[1]
+        throw(ArgumentError("Invaid interpolation time. Cannot interpolate before start of Orbit."))
+    end
+
+    if epc > orbit.epc[end]
+        throw(ArgumentError("Invaid interpolation time. Cannot interpolate after end of Orbit."))
+    end
+
+    # Exit early if epoch is end of interpolation (corner case)
+    if epc == orbit.epc[end]
+        return orbit.eci[:, end]
+    end
+
+    # Get Uppler and lower time bounds
+    idx_l = searchsortedfirst(orbit.epc, epc)
+    idx_u = idx_l + 1
+
+    # Epoch
+    epc_l = orbit.epc[idx_l]
+    epc_u = orbit.epc[idx_u]
+
+    # Earth Intertial State
+    eci_l = orbit.eci[:, idx_l]
+    eci_u = orbit.eci[:, idx_u]
+
+    # Interpolate
+    eci = zeros(typeof(eci_l[1]), 6)
+    for i in 1:length(eci)
+        eci[i] = (eci_u[i] - eci_l[i])/(epc_u - epc_l)*(epc - epc_l) + eci_l[i]
+    end
+
+    return eci
+end
+
 #########
 # Image #
 #########
@@ -103,7 +174,7 @@ Attributes:
 - `reward::Float64` Reward for for image collection
 - `id::UUID` Unique image identifier
 """
-struct Image
+mutable struct Image
     lon::Float64
     lat::Float64
     ecef::Array{Float64, 1}
@@ -126,6 +197,13 @@ struct Image
         new(lon, lat, ecef, look_angle_min, look_angle_max,
             require_zero_doppler, dwell_time, reward, id)
     end
+end
+
+function Base.show(io::IO, img::Image)
+
+    s = @sprintf "Image(Ptr: %d Lon: %.3f Lat: %0.3f %f)" UInt64(pointer_from_objref(img)) img.lon img.lat img.reward
+
+    print(io, s)
 end
 
 export load_images
@@ -223,6 +301,23 @@ mutable struct Opportunity
     end
 end
 
+function Base.show(io::IO, opp::Opportunity)
+
+    orbit = "nothing"
+    if opp.orbit != nothing 
+        orbit = string(opp.orbit.id)
+    end
+
+    image = "nothing"
+    if opp.image != nothing 
+        image = string(UInt64(pointer_from_objref(opp.image)))
+    end
+    
+    s = @sprintf "Opportunity(Ptr: %d, Orbit: %s, Image: %s, Start: %s, End: %s)" UInt64(pointer_from_objref(opp)) orbit image string(opp.sow) string(opp.eow)
+
+    print(io, s)
+end
+
 ###########
 # Collect #
 ###########
@@ -259,6 +354,28 @@ mutable struct Collect
         mid      = sow + duration/2.0
         new(id, orbit, image, opportunity, sow, mid, eow, duration)
     end
+end
+
+function Base.show(io::IO, col::Collect)
+
+    orbit = "nothing"
+    if col.orbit != nothing 
+        orbit = string(col.orbit.id)
+    end
+
+    image = "nothing"
+    if col.image != nothing 
+        image = string(UInt64(pointer_from_objref(col.image)))
+    end
+
+    opportunity = "nothing"
+    if col.opportunity != nothing 
+        opportunity = string(UInt64(pointer_from_objref(col.opportunity)))
+    end
+
+    s = @sprintf "Collect(Ptr: %d, Orbit: %s, Image: %s, Opportunity: %s, Start: %s, End: %s)" UInt64(pointer_from_objref(col)) orbit image opportunity string(col.sow) string(col.eow)
+
+    print(io, s)
 end
 
 end # Close DataStructures

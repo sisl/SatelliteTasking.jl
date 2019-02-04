@@ -72,6 +72,9 @@ end
     @time @testset "SatelliteTasking.Collection" begin
         include(joinpath(testdir, "test_collection.jl"))
     end
+    @time @testset "SatelliteTasking.Constraints" begin
+        include(joinpath(testdir, "test_constraints.jl"))
+    end
     @time @testset "SatelliteTasking.Simulation" begin
         include(joinpath(testdir, "test_simulation.jl"))
     end

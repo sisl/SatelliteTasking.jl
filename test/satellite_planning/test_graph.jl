@@ -56,7 +56,9 @@ let
     collects      = compute_collects_by_number(opportunities, 1)
 
     # Build graph of feasible transitions
-    graph = sp_construct_graph(collects, Function[], 0)
+    graph = sp_construct_graph(collects, Function[], horizon=0)
 
     @test typeof(graph) == Dict{Collect, Array{Collect, 1}}
+
+    path, reward, image_list = sp_solve_graph(graph, allow_repeats=false)
 end

@@ -17,7 +17,7 @@ Arguments:
 Returns:
 - `collect_graph` Graph of feasible collect transitions
 """
-function sp_construct_graph(collects::Array{Collect, 1}, constraint_list::Array{Function, 1}, horizon=0::Real)
+function sp_construct_graph(collects::Array{Collect, 1}, constraint_list::Array{Function, 1}; horizon=0::Real)
     
     # Sort Collects to ensure they are in time-asecnding order
     sort!(collects, by = x -> x.sow)
@@ -41,6 +41,7 @@ function sp_construct_graph(collects::Array{Collect, 1}, constraint_list::Array{
                 # Since we know collects are sorted we can break building the
                 # transition grarph if the distance from the next to the next start
                 # is greater than the look-ahead horizon
+                @warn "Found Horizon. Stopping Look Ahead"
                 break
             else
                 # Set transition valid by default
@@ -78,65 +79,79 @@ Arguments:
 Returns:
 - `collect_policy::Array{Collect}` List of collects to take in the order which they should be taken
 """
-function sp_solve_graph(graph::Dict{Collect, Array{Collect, 1}}, image_lookup::Dict{UUID, Image}, allow_repeats=false::Bool)
-    optimal_path = Dict{Collect, Union{Union{Collect, Nothing}, Float64, Array{UUID}}}
+function sp_solve_graph(graph::Dict{Collect, Array{Collect, 1}}; allow_repeats=false::Bool)
+    optimal_path = Dict{Collect, Tuple{Union{Collect, Nothing}, Float64, Array{Image}}}()
 
     # Initialize nodes in optimal path
     for node in keys(graph)
-        optimal_path[node] = (nothing, image_lookup[node.image_id].reward, [node.image_id])
+        optimal_path[node] = (nothing, node.image.reward, [node.image])
     end
+
+    # Iterate over nodes updating optimal weights
+    for node_i in keys(optimal_path)
+        for node_j in graph[node_i]
+            if (optimal_path[node_i][2] + node_j.image.reward) > optimal_path[node_j][2]
+                if allow_repeats == false
+                    # If repeat images are allowed always update if reward is higher
+                    optimal_path[node_j] = (node_i, optimal_path[node_i][2] + node_j.image.reward, push!(copy(optimal_path[node_i][3]), node_j.image))
+                elseif allow_repeats == true && !(node_j.image in optimal_path[node_i][3])
+                    # If repeat images are not allowed only update if the image is unique
+                    optimal_path[node_j] = (node_i, optimal_path[node_i][2] + node_j.image.reward, push!(copy(optimal_path[node_i][3]), node_j.image))
+                end
+            end
+        end
+    end
+    
+    # Find node with highest reward:
+    current_max = 0.0
+    end_node = nothing
+    for node in keys(graph)
+        if optimal_path[node][2] > current_max
+            current_max = optimal_path[node][2]
+            end_node    = node
+        end
+    end
+
+    @debug end_node
+
+    # end_node = sort!(collect(zip(keys(optimal_path), values(optimal_path))), by = x -> x[2][2], rev=true)[1]
+
+    # Extract values
+    reward     = optimal_path[end_node][2] # Reward from optimal path
+    image_list = optimal_path[end_node][3] # Images observed on optimal path
+    path       = Union{Collect, Nothing}[end_node]  # Optimal Path (terminating node)
+
+    while path[end] != nothing
+        push!(path, optimal_path[path[end]][1])
+    end
+    
+    # Remove last element since it's going to be nothing
+    pop!(path)
+
+    return (path, reward, image_list)
 end
-
-
-# def graph_compute_longest_path(graph, repeat_images=False):
-#     optimal_path = {}
-
-#     # Initialize Optimal Path
-#     for node in graph.keys():
-#         optimal_path[node] = (None, node.image.reward, [node.image])
-
-#     # Iterate over nodes updating optimal weights
-#     for node_i in optimal_path.keys():
-#         for node_j in graph[node_i]:
-#             if optimal_path[node_i][1] + node_j.image.reward > optimal_path[node_j][1]:
-#                 if repeat_images:
-#                     # If repeat images are allowed always update if reward is higher
-#                     optimal_path[node_j] = (node_i, optimal_path[node_i][1] + node_j.image.reward, optimal_path[node_i][2] + [node_j.image])
-#                 elif not repeat_images and node_j.image not in optimal_path[node_i][2]:
-#                     # If repeat images are not allowed only update if the image is unique
-#                     optimal_path[node_j] = (node_i, optimal_path[node_i][1] + node_j.image.reward, optimal_path[node_i][2] + [node_j.image])
-
-#     # Backtrack to calculate optimal path (sort the nodes in the optimal path by highest reward)
-#     end_node = sorted(zip(optimal_path.keys(), optimal_path.values()), key=lambda x: x[1][1], reverse=True)[0]
-
-#     reward     = end_node[1][1] # Reward from optimal path
-#     image_list = end_node[1][2] # Images observed on optimal path
-#     path       = [end_node[0]]  # Optimal Path (terminating node)
-
-#     while path[-1] != None:
-#         path.append(optimal_path[path[-1]][0])
-
-#     # Delete the earliest point in the list (since the second-to-last already points to the path start)
-#     del path[-1]
-
-#     # Reverse the path and image list
-#     path.reverse()
-#     image_list.reverse()
-
-#     return path, reward, image_list
 
 export sp_graph_policy
 """
+Solve for optimal collect plan using a graph traversal algorithm.
 
+Arguments:
+- `collects::Array{Collect,1}` Array of collects to plan the optimal tasking schedule for
+- `constraints::Array{Any, 1}` Array of constraint function which may limit feasible transitions
+- `horizon::Real` Look-ahead horizon for constructing graphs. Transition further than this apart are not considered. Not used if 0
+- `allow_repeats::Bool` Allow images to be collected multiple times over the course of a plan
+
+Returns:
+- `collect_policy::Array{Collect}` List of collects to take in the order which they should be taken
 """
 function sp_graph_policy(collects::Array{Collect, 1}, constraint_list; horizon=0::Real, allow_repeats=false::Bool)
     # Construct graph
-    graph  = sp_construct_graph(collects, constraint_list, horizon)
+    graph  = sp_construct_graph(collects, constraint_list, horizon=horizon)
 
     # Solve graph for taskign policy
-    policy = sp_solve_graph(graph, allow_repeats=allow_repeats)
+    path, reward, image_list = sp_solve_graph(graph, allow_repeats=allow_repeats)
 
-    return policy
+    return path, reward, image_list
 end
 
 

@@ -343,4 +343,31 @@ function compute_collects_by_number(opportunity_list::Array{Opportunity,1}, max_
     return collects
 end
 
+export group_image_collects
+"""
+Create dictionary lookup of the possible collects that exist for each image.
+
+Arguments:
+- `collects::Array{Collect, 1}` Array of collects for all images
+
+Returns:
+- `image_collects::Dict{Image, Array{Collect, 1}}` Lookup table which returns the array of collects for each image
+"""
+function group_image_collects(collects::Array{Collect, 1})
+    # Initialize dictionary storing collects for each image
+    image_collects = Dict{Image, Array{Tuple{Int64, Collect}, 1}}()
+
+    # Create collect array for each unique image
+    for col in collects
+        image_collects[col.image] = Tuple{Int64, Collect}[]
+    end
+
+    # Populate lookup with collects
+    for (i, col) in enumerate(collects)
+        push!(image_collects[col.image], (i, col))
+    end
+
+    return image_collects
+end
+
 end # End module

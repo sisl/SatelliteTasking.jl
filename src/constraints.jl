@@ -2,18 +2,27 @@ __precompile__(true)
 module Constraints
 
 using LinearAlgebra
-using SatelliteDynamics: EPoch
+using SatelliteDynamics: Epoch, rECEFtoECI
 
-using SatelliteTasking.DataStructures: Collect
+using SatelliteTasking.DataStructures: Collect, interpolate
 
 ##########################
 # Spacecraft Slew Models #
 ##########################
 
 """
-Compute 
+Compute the required slew time to maneuver from pointing aligned with the start
+vector to the end vector.
+
+Arguments:
+- `z_start::Array{<:Real, 1}` Initial pointing vector
+- `z_end::Array{<:Real, 1}` Final pointing vector
+- `slew_rate::Real` Slew rate [deg/s]
+
+Returns:
+- `slew_time::Float64` Time required to slew from start to end axis
 """
-function slew_time_single_axis(z_start::Array{<:Real, 1}, z_end::Array{<:Real, 1})
+function slew_time_single_axis(z_start::Array{<:Real, 1}, z_end::Array{<:Real, 1}; slew_rate=1.0::Real)
 
     # Use the dot product to get the angle between two vectors
     proj = dot(z_start, z_end)/(norm(z_start)*norm(z_end))
@@ -26,61 +35,74 @@ function slew_time_single_axis(z_start::Array{<:Real, 1}, z_end::Array{<:Real, 1
     # Compute slew angle
     slew_angle = acos(proj)*180.0/pi
 
-    return slew_angle
+    # Compute slew time
+    slew_time = slew_angle/slew_rate
+
+    return slew_time
 end 
 
 #####################
 # Constraint Models #
 #####################
 
-# """
-# Compute line of sight vector 
-# """
-# function compute_los_vector(col::Collect, epc::Epoch):
+
+export compute_los_vector
+"""
+Compute line of sight vector 
+"""
+function compute_los_vector(col::Collect, epc::Epoch)
     
-#     # Compute starting and ending attitude
-#     r_eci_target  = rot_ecef_to_eci(epc) @ col.image.ecef
-#     r_eci_sat     = _np.array(col.sat.tle.state(epc))[0:3]
+    # Compute starting and ending attitude
+    r_eci_target  = rECEFtoECI(epc) * col.image.ecef
+    r_eci_sat     = interpolate(col.orbit, epc)[1:3] # Interpolate satellite state to Epoch
 
-#     # Compute initial look angle
-#     z_los = r_eci_target - r_eci_sat
+    # Compute initial look angle
+    z_los = r_eci_target - r_eci_sat # Compute look angle 
 
-#     # Normalize vector
-#     z_los = z_los/_np.linalg.norm(z_los)
+    # Normalize vector
+    z_los = z_los/norm(z_los)
 
-#     return z_los
+    return z_los
+end
 
-# export constraint_single_axis_slew
-# function constraint_single_axis_slew(start_collect::Collect, end_collect::Collect)
-# end
+export constraint_agility_single_axis
+"""
+Computes whether it is feasible for a spacecraft to slew from the start collect
+to the end collect. The transition is based on the spacecraft ability to satisfy
+single_axis pointing constraints.
 
-# def constraint_single_axis_slew(opp_s, opp_e):
-#     '''Computes whether it is feasible to transition from the start opportunity
-#     to the end opportunity, given that the transition must satisfy single-axis
-#     pointing constraints.
+Arguments:
+- `start_collect::Collect` Initial collect. Spacecraft is assumed pointing here.
+- `end_collect::Collect` End collect. Spacecraft is assumed pointing here.
 
-#     Returns True if the transition is feasible, returns false otherwise.
-#     '''
+Returns:
+- `feasible::Bool` `true` if the transition from start to end is feasible. `false` otherwise
+"""
+function constraint_agility_single_axis(start_collect::Collect, end_collect::Collect; max_slew_time=180.0::Float64)
 
-#     # Can't go backwards in time
-#     if opp_e.aos < opp_s.los:
-#         return False
+    # Can't go backwards in time
+    if end_collect.sow < start_collect.eow
+        return false
+    end
 
-#     # Exit early if time separation is large enough to guarantee feasibility
-#     if (opp_e.aos - opp_s.los) > MAX_SLEW_TIME:
-#         return True
+    # Exit early if time separation is large enough to guarantee feasibility
+    if (end_collect.sow - start_collect.eow) > max_slew_time
+        return true
+    end
 
-#     # Compute start and end line of sight vectors
-#     z_start = _compute_los_vector(opp_s, opp_s.los)
-#     z_end   = _compute_los_vector(opp_e, opp_e.aos)
+    # Compute start and end line of sight vectors
+    z_start = compute_los_vector(start_collect, start_collect.eow)
+    z_end   = compute_los_vector(end_collect, end_collect.sow)
 
-#     # Compute slew time between orientations
-#     t_slew = slew_time_single_axis(z_start, z_end)
+    # Compute slew time between orientations
+    t_slew = slew_time_single_axis(z_start, z_end)
 
-#     # Check if slew time is less than the time available to complete the slew
-#     if t_slew <= (opp_e.aos - opp_s.los):
-#         return True
-#     else:
-#         return False
+    # Check if slew time is less than the time available to complete the slew
+    if t_slew <= (end_collect.sow - start_collect.eow)
+        return true
+    else
+        return false
+    end
+end
 
 end # Constraints module
