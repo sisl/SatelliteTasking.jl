@@ -7,7 +7,7 @@ using Gurobi
 
 # SatelliteTasking imports
 using SatelliteTasking.DataStructures: Image, Opportunity, Collect
-using SatelliteTasking.Collects: group_image_collects
+using SatelliteTasking.Collection: group_image_collects
 
 export sp_milp_policy
 """
@@ -95,15 +95,17 @@ function sp_milp_policy(collects::Array{Collect, 1}, constraint_list; horizon=0:
     status = solve(milp)
 
     # Extract Optimal Path, Reward, and Images
-    collects_taken = []
+    collect_idx    = []
+    collects_taken = Collect[]
     for i in 1:length(collects)
         if getvalue(x[i]) != 0.0 # If opportunity taken
-            push!(collects_taken, i)
+            push!(collect_idx, i)
+            push!(collects_taken, collects[i])
         end
     end
 
     # Get images taken
-    image_list = [col.image for col in collects_taken]
+    image_list = [collects[col_idx].image for col_idx in collect_idx]
 
     # Get Path
     path = sort!(collects_taken, by = x -> x.sow)
