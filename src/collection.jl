@@ -236,15 +236,15 @@ Returns:
 function opportunity_diff(opportunity_list_a::Array{Opportunity, 1}, opportunity_list_b::Array{Opportunity, 1})
     opp_diffs = Array{Float64, 1}[]
     opp_miss  = 0
-    for opp_a in opportunity_list_a
-        matching_b = find_matching_opportunity(opportunity_list_b, opp_a)
-        if matching_b != nothing
-            sow_diff = matching_b.sow - opp_a.sow
-            eow_diff = matching_b.eow - opp_a.eow
-            dur_diff = matching_b.duration - opp_a.duration
+    for opp_b in opportunity_list_b
+        matching_a = find_matching_opportunity(opportunity_list_a, opp_b)
+        if matching_a != nothing
+            sow_diff = opp_b.sow - matching_a.sow
+            eow_diff = opp_b.eow - matching_a.eow
+            dur_diff = opp_b.duration - matching_a.duration
             push!(opp_diffs, [sow_diff, eow_diff, dur_diff])
         else
-            @debug "Unable to find matching opportunity for $opp_a"
+            @debug "Unable to find matching opportunity for $opp_b"
             opp_miss += 1
         end
     end
@@ -265,28 +265,17 @@ Returns:
 - `opportunity_stats::Tuple{Array{Float64, 1}, Array{Float64, 1}}` Mean and standard deviation of the differences in start time, end time, and collection window duration.
 - `opportunity_miss::Int` Number of opportunities missing from opportunity_list_b that are epected to be present in a
 """
-function opportunity_stats(opportunity_list_a::Array{Opportunity, 1}, opportunity_list_b::Array{Opportunity, 1}; epc_min=nothing, epc_max=nothing)
-    opportunities = copy(opportunity_list_a) # Filter on true opportunities in case perturbed move around
-
-    # Extract Opportunities from each list
-    if epc_min != nothing
-        opportunities = filter(x -> x.sow > epc_min, opportunities)
-    end
-
-    if epc_max != nothing
-        opportunities = filter(x -> x.sow < epc_max, opportunities)
-    end
-
-    @debug "Found $(length(opportunities)) opportunities in window"
-    
+function opportunity_stats(opportunity_list_a::Array{Opportunity, 1}, opportunity_list_b::Array{Opportunity, 1})    
     # Compute the difference between all opportunities and the list of "true" opportunities
-    opp_diffs, opp_miss = opportunity_diff(opportunities, opportunity_list_b)
+    opp_diffs, opp_miss = opportunity_diff(opportunity_list_a, opportunity_list_b)
+
+    @warn opp_diffs
 
     # Concatenate the matrix into a single matrix to easily compute statistic
     opp_errors = hcat(opp_diffs...)
 
     # Compute mean and standard deviation
-    opp_mean, opp_sdev = nothing, nothing
+    opp_mean, opp_sdev = zeros(Float64, 3), zeros(Float64, 3)
     if length(opp_errors) > 0
         opp_mean = mean(opp_errors, dims=2)
         opp_sdev = std(opp_errors, dims=2)
