@@ -236,6 +236,7 @@ Returns:
 function opportunity_diff(opportunity_list_a::Array{Opportunity, 1}, opportunity_list_b::Array{Opportunity, 1})
     opp_diffs = Array{Float64, 1}[]
     opp_miss  = 0
+
     for opp_b in opportunity_list_b
         matching_a = find_matching_opportunity(opportunity_list_a, opp_b)
         if matching_a != nothing
@@ -268,8 +269,6 @@ Returns:
 function opportunity_stats(opportunity_list_a::Array{Opportunity, 1}, opportunity_list_b::Array{Opportunity, 1})    
     # Compute the difference between all opportunities and the list of "true" opportunities
     opp_diffs, opp_miss = opportunity_diff(opportunity_list_a, opportunity_list_b)
-
-    @warn opp_diffs
 
     # Concatenate the matrix into a single matrix to easily compute statistic
     opp_errors = hcat(opp_diffs...)

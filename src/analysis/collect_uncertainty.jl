@@ -95,7 +95,7 @@ function compute_perturbed_opportunities(true_orbit::Orbit, perturbed_orbits::Ar
         # Extract Opportunities from each list
         window_opportunities = filter(x -> epc_window_start <= x.sow < epc_window_end, all_opportunities)
 
-        @warn "Found $(length(window_opportunities)) opportunities in window"
+        @debug "Found $(length(window_opportunities)) opportunities in window"
         
         # TODO: Refactor the use of collect stats here to be efficient. This duplicates a bit of work
         win_mean, win_sdev, win_miss = opportunity_stats(true_opportunities, window_opportunities)
