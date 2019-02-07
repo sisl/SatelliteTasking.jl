@@ -8,7 +8,7 @@
                 2051576.3169924426,
                 5259027.397132301
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -23,7 +23,7 @@
                 574958.941296068,
                 -6220099.081135132
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -38,7 +38,7 @@
                 1107252.644893276,
                 -6220099.081135132
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -53,7 +53,7 @@
                 -5269761.309897645,
                 479351.1893595752
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -68,7 +68,7 @@
                 -4359382.667442376,
                 -4106320.340841015
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -83,7 +83,7 @@
                 987309.6896913464,
                 -6260117.74433633
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -98,7 +98,7 @@
                 -404879.81261200807,
                 -6274143.349880477
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -113,7 +113,7 @@
                 1522616.5726446304,
                 638646.7950232539
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -128,7 +128,7 @@
                 -4884150.8412615,
                 -2340715.22637042
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -143,7 +143,7 @@
                 -4028250.2450443786,
                 4882945.690379372
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -158,7 +158,7 @@
                 1654276.1388843418,
                 -3336231.719263271
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -173,7 +173,7 @@
                 1184748.9822215599,
                 -6242099.356597129
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -188,7 +188,7 @@
                 -2173686.333708732,
                 5956025.3273642585
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -203,7 +203,7 @@
                 -990123.98853567,
                 6274143.349880477
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -218,7 +218,7 @@
                 758057.4299585421,
                 -6242099.356597129
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -233,7 +233,7 @@
                 -585278.6252806871,
                 -6242099.356597129
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -248,7 +248,7 @@
                 1281696.2048527547,
                 -6164208.513595432
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -263,7 +263,7 @@
                 -2637289.070121917,
                 -638646.7950232539
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -278,7 +278,7 @@
                 4586663.876585804,
                 -3470490.878340247
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -293,7 +293,7 @@
                 -2441710.2802836522,
                 -5785209.240804605
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -308,7 +308,7 @@
                 4648919.872903643,
                 1113610.9393534674
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -323,7 +323,7 @@
                 -5462129.492480782,
                 -319741.86867422104
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -338,7 +338,7 @@
                 -547529.7964187291,
                 5077520.472584456
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -353,7 +353,7 @@
                 -224753.32176744417,
                 6290184.72750939
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -368,7 +368,7 @@
                 1579771.3464849794,
                 -6130352.066641222
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -383,7 +383,7 @@
                 1039651.6179905669,
                 -6260117.74433633
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -398,7 +398,7 @@
                 -109345.87499962709,
                 -6260117.74433633
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -413,7 +413,7 @@
                 -4124635.0834944826,
                 4567650.606710822
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -428,7 +428,7 @@
                 2098102.524237753,
                 5956025.3273642585
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -443,7 +443,7 @@
                 1124275.5906099258,
                 1270613.18828355
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -458,7 +458,7 @@
                 712412.0279943111,
                 -6130352.066641222
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -473,7 +473,7 @@
                 3711124.1470377,
                 1736228.359457778
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -488,7 +488,7 @@
                 -998544.2175521062,
                 -6274143.349880477
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -503,7 +503,7 @@
                 917964.3404190406,
                 6260117.74433633
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -518,7 +518,7 @@
                 -3315467.890415349,
                 4882945.690379372
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -533,7 +533,7 @@
                 1830620.2552761503,
                 5427016.131023443
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -548,7 +548,7 @@
                 2568763.817296271,
                 5344738.320918245
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -563,7 +563,7 @@
                 2527554.6492712423,
                 -5652754.094708056
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -578,7 +578,7 @@
                 5913993.168404533,
                 2191640.670809374
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -593,7 +593,7 @@
                 -1719833.4000340374,
                 5845900.585208194
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -608,7 +608,7 @@
                 -937645.4475534185,
                 5720813.936031409
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -623,7 +623,7 @@
                 2480656.1461867904,
                 -5845900.585208194
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -638,7 +638,7 @@
                 3870257.3335999125,
                 4981837.067531569
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -653,7 +653,7 @@
                 3481371.826040866,
                 2340715.22637042
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -668,7 +668,7 @@
                 -1556499.2877600132,
                 6164208.513595432
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -683,7 +683,7 @@
                 -1715776.519681328,
                 -6092581.411969107
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -698,7 +698,7 @@
                 -4566088.799708385,
                 4342599.312098233
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -713,7 +713,7 @@
                 -1819364.3641938237,
                 -6092581.411969107
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -728,7 +728,7 @@
                 4547089.125485266,
                 4456564.541970213
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -743,7 +743,7 @@
                 3829497.532079134,
                 4780907.987759172
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -758,7 +758,7 @@
                 935218.6892827861,
                 -6242099.356597129
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -773,7 +773,7 @@
                 2538895.7230526675,
                 2634188.9821292777
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -788,7 +788,7 @@
                 -5722482.932543853,
                 2041136.0797413122
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -803,7 +803,7 @@
                 71542.87938676144,
                 -6284167.69645667
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -818,7 +818,7 @@
                 -2336381.848119747,
                 -5845900.585208194
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -833,7 +833,7 @@
                 -1316461.3961045926,
                 -6164208.513595432
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -848,7 +848,7 @@
                 725816.874837821,
                 -6274143.349880477
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -863,7 +863,7 @@
                 -3397000.451266982,
                 5077520.472584456
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -878,7 +878,7 @@
                 -2707908.6907022204,
                 5720813.936031409
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -893,7 +893,7 @@
                 -920621.0831817493,
                 6290184.72750939
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -908,7 +908,7 @@
                 1030859.2781063416,
                 -6220099.081135132
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -923,7 +923,7 @@
                 3053864.55960079,
                 -1582023.406646751
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -938,7 +938,7 @@
                 346942.2405752292,
                 -6292190.808420544
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -953,7 +953,7 @@
                 2939019.159525582,
                 -3061297.3342190115
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -968,7 +968,7 @@
                 838300.1986870486,
                 -6194130.226933327
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -983,7 +983,7 @@
                 -1104804.6941340694,
                 -6005391.546088471
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -998,7 +998,7 @@
                 -711222.2095459346,
                 -6274143.349880477
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1013,7 +1013,7 @@
                 2777254.82409808,
                 5259027.397132301
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1028,7 +1028,7 @@
                 -1943869.222915535,
                 6050919.469498646
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1043,7 +1043,7 @@
                 3844862.0269581554,
                 2488263.1539122686
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1058,7 +1058,7 @@
                 -6301425.630360016,
                 479351.1893595752
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1073,7 +1073,7 @@
                 2061636.6623111302,
                 -797524.4820766177
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1088,7 +1088,7 @@
                 863737.8318272418,
                 -6290184.72750939
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1103,7 +1103,7 @@
                 4500078.511177264,
                 -1736228.359457778
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1118,7 +1118,7 @@
                 -963043.9375111766,
                 -5902850.868671499
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1133,7 +1133,7 @@
                 -1673784.662524153,
                 6050919.469498646
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1148,7 +1148,7 @@
                 150741.05131436713,
                 -5956025.3273642585
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1163,7 +1163,7 @@
                 -5774248.087293654,
                 2340715.22637042
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1178,7 +1178,7 @@
                 -359837.12512975815,
                 -6220099.081135132
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1193,7 +1193,7 @@
                 1087703.5162004153,
                 -6220099.081135132
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1208,7 +1208,7 @@
                 -4492865.637902196,
                 -3602496.324577703
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1223,7 +1223,7 @@
                 2850264.2369337436,
                 5581071.449799858
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1238,7 +1238,7 @@
                 -5204981.92979717,
                 -955880.3620192634
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1253,7 +1253,7 @@
                 1386734.389878418,
                 -797524.4820766177
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1268,7 +1268,7 @@
                 -5321988.503745784,
                 -2488263.1539122686
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1283,7 +1283,7 @@
                 -2289723.761794031,
                 -5720813.936031409
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1298,7 +1298,7 @@
                 -3315375.809561595,
                 4981837.067531569
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1313,7 +1313,7 @@
                 2747010.9345713938,
                 -1113610.9393534674
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1328,7 +1328,7 @@
                 3627492.612375307,
                 5169936.376900278
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1343,7 +1343,7 @@
                 2265828.4066094076,
                 5652754.094708056
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1358,7 +1358,7 @@
                 2816259.770466239,
                 -2920798.4503236194
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1373,7 +1373,7 @@
                 -369342.1837334468,
                 -6194130.226933327
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1388,7 +1388,7 @@
                 784387.3310112962,
                 -6274143.349880477
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1403,7 +1403,7 @@
                 2112800.9069265206,
                 2920798.4503236194
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1418,7 +1418,7 @@
                 -133105.3919487905,
                 -6164208.513595432
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1433,7 +1433,7 @@
                 6062109.027763952,
                 1426784.6296683608
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1448,7 +1448,7 @@
                 -845848.6763498671,
                 -6260117.74433633
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1463,7 +1463,7 @@
                 4535143.312663892,
                 4456564.541970213
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1478,7 +1478,7 @@
                 1392246.6616575364,
                 -6194130.226933327
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1493,7 +1493,7 @@
                 -823925.7758829503,
                 3859410.5928277886
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1508,7 +1508,7 @@
                 1013705.4586755922,
                 -5956025.3273642585
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1523,7 +1523,7 @@
                 1547209.7958464941,
                 6050919.469498646
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1538,7 +1538,7 @@
                 -1860167.3159378285,
                 1270613.18828355
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1553,7 +1553,7 @@
                 3137860.2493281867,
                 5169936.376900278
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1568,7 +1568,7 @@
                 142621.7759915288,
                 -6260117.74433633
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1583,7 +1583,7 @@
                 2715192.4137724023,
                 -955880.3620192634
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1598,7 +1598,7 @@
                 -4568300.422021993,
                 -1426784.6296683608
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1613,7 +1613,7 @@
                 -3791281.0926906816,
                 4882945.690379372
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1628,7 +1628,7 @@
                 -835265.6186250722,
                 -6005391.546088471
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1643,7 +1643,7 @@
                 120417.49209020354,
                 -6292190.808420544
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1658,7 +1658,7 @@
                 1473425.379059088,
                 5902850.868671499
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1673,7 +1673,7 @@
                 -3749810.9481184063,
                 4456564.541970213
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1688,7 +1688,7 @@
                 3020122.136693302,
                 -638646.7950232539
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1703,7 +1703,7 @@
                 1310600.6620606836,
                 -6194130.226933327
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1718,7 +1718,7 @@
                 -399847.43963602855,
                 -6092581.411969107
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1733,7 +1733,7 @@
                 4350632.793231435,
                 4106320.340841015
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1748,7 +1748,7 @@
                 958897.6425148266,
                 -6284167.69645667
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1763,7 +1763,7 @@
                 2358254.6118842326,
                 -5902850.868671499
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1778,7 +1778,7 @@
                 -850243.2498795235,
                 -6284167.69645667
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1793,7 +1793,7 @@
                 2088724.1785686356,
                 5845900.585208194
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1808,7 +1808,7 @@
                 -5143385.031985812,
                 3602496.324577703
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1823,7 +1823,7 @@
                 234481.8038193032,
                 -6274143.349880477
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1838,7 +1838,7 @@
                 4432191.176256113,
                 -3470490.878340247
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1853,7 +1853,7 @@
                 4299854.780183732,
                 3336231.719263271
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1868,7 +1868,7 @@
                 -898704.4239343312,
                 -6130352.066641222
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1883,7 +1883,7 @@
                 1601990.6826384144,
                 6050919.469498646
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1898,7 +1898,7 @@
                 -1477779.4237625608,
                 2041136.0797413122
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1913,7 +1913,7 @@
                 5183575.212859283,
                 3470490.878340247
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1928,7 +1928,7 @@
                 2216551.966775175,
                 -5956025.3273642585
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1943,7 +1943,7 @@
                 -5390656.462448018,
                 319741.86867422104
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1958,7 +1958,7 @@
                 2505113.7214640747,
                 -5845900.585208194
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1973,7 +1973,7 @@
                 1855139.5017418656,
                 -6050919.469498646
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -1988,7 +1988,7 @@
                 877691.6283129646,
                 5956025.3273642585
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2003,7 +2003,7 @@
                 -958727.4155494956,
                 -6284167.69645667
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2018,7 +2018,7 @@
                 -781885.2381404663,
                 6292190.808420544
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2033,7 +2033,7 @@
                 1068527.294769174,
                 -6260117.74433633
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2048,7 +2048,7 @@
                 -3858498.610857158,
                 4981837.067531569
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2063,7 +2063,7 @@
                 4497186.174182704,
                 797524.4820766177
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2078,7 +2078,7 @@
                 -120171.99143613369,
                 -6290184.72750939
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2093,7 +2093,7 @@
                 -37137.502138036056,
                 -5902850.868671499
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2108,7 +2108,7 @@
                 -4284206.627858669,
                 -3732163.7742859065
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2123,7 +2123,7 @@
                 527212.9537643334,
                 -3732163.7742859065
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2138,7 +2138,7 @@
                 2325937.582477761,
                 4981837.067531569
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2153,7 +2153,7 @@
                 3312927.3532519783,
                 5427016.131023443
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2168,7 +2168,7 @@
                 -5104836.726402174,
                 -797524.4820766177
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2183,7 +2183,7 @@
                 -2286900.24451262,
                 -5902850.868671499
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2198,7 +2198,7 @@
                 -523450.6218996181,
                 6284167.69645667
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2213,7 +2213,7 @@
                 2149677.988147971,
                 4981837.067531569
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2228,7 +2228,7 @@
                 3216341.674517267,
                 4882945.690379372
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2243,7 +2243,7 @@
                 -1818975.1254399864,
                 -6092581.411969107
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2258,7 +2258,7 @@
                 -3178242.7071684953,
                 5077520.472584456
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2273,7 +2273,7 @@
                 2345495.392654256,
                 5845900.585208194
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2288,7 +2288,7 @@
                 -592682.0610385723,
                 -6284167.69645667
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2303,7 +2303,7 @@
                 1837872.1370872778,
                 -6050919.469498646
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2318,7 +2318,7 @@
                 -453836.16518878494,
                 -6284167.69645667
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2333,7 +2333,7 @@
                 -1667964.9146165429,
                 -6130352.066641222
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2348,7 +2348,7 @@
                 1314349.9997039137,
                 -6220099.081135132
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2363,7 +2363,7 @@
                 787952.7536597449,
                 6284167.69645667
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2378,7 +2378,7 @@
                 1433470.0775207423,
                 6164208.513595432
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2393,7 +2393,7 @@
                 647962.8766100513,
                 -6260117.74433633
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2408,7 +2408,7 @@
                 843148.4326694269,
                 -6164208.513595432
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2423,7 +2423,7 @@
                 1747604.2838482123,
                 -6092581.411969107
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2438,7 +2438,7 @@
                 -1268509.2326465785,
                 -6194130.226933327
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2453,7 +2453,7 @@
                 4150976.3456783975,
                 -1582023.406646751
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2468,7 +2468,7 @@
                 2780694.6635287553,
                 -5720813.936031409
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2483,7 +2483,7 @@
                 885656.4373018079,
                 -6242099.356597129
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2498,7 +2498,7 @@
                 -3811587.954504662,
                 -4780907.987759172
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2513,7 +2513,7 @@
                 1949085.192753497,
                 -5845900.585208194
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2528,7 +2528,7 @@
                 1498296.6475828341,
                 4567650.606710822
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2543,7 +2543,7 @@
                 566522.7702586887,
                 5344738.320918245
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2558,7 +2558,7 @@
                 535643.7737321431,
                 -6260117.74433633
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2573,7 +2573,7 @@
                 -477193.70934450655,
                 -6242099.356597129
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2588,7 +2588,7 @@
                 146051.66530000084,
                 -6194130.226933327
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2603,7 +2603,7 @@
                 -380976.9518208308,
                 -6220099.081135132
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2618,7 +2618,7 @@
                 -1371826.2893296462,
                 6194130.226933327
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2633,7 +2633,7 @@
                 2772765.733005709,
                 5652754.094708056
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2648,7 +2648,7 @@
                 5187560.438276216,
                 1426784.6296683608
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2663,7 +2663,7 @@
                 -1051067.4172746607,
                 -6092581.411969107
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2678,7 +2678,7 @@
                 -56554.956712338884,
                 5720813.936031409
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2693,7 +2693,7 @@
                 -3262722.8195608226,
                 5344738.320918245
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2708,7 +2708,7 @@
                 2427803.866650563,
                 5259027.397132301
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2723,7 +2723,7 @@
                 4058124.9223552262,
                 -1426784.6296683608
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2738,7 +2738,7 @@
                 4529207.139593621,
                 -3602496.324577703
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2753,7 +2753,7 @@
                 3892096.5768485265,
                 -1113610.9393534674
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2768,7 +2768,7 @@
                 1000357.2041350597,
                 5652754.094708056
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2783,7 +2783,7 @@
                 -196659.1933393061,
                 -6284167.69645667
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2798,7 +2798,7 @@
                 3811562.6826596726,
                 3602496.324577703
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2813,7 +2813,7 @@
                 -1933575.0636476893,
                 6005391.546088471
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2828,7 +2828,7 @@
                 3003181.8818177735,
                 -1736228.359457778
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2843,7 +2843,7 @@
                 102143.05353948976,
                 1889299.0990227698
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2858,7 +2858,7 @@
                 -2862220.680641654,
                 5652754.094708056
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2873,7 +2873,7 @@
                 -1106229.0245595633,
                 -6260117.74433633
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2888,7 +2888,7 @@
                 3933672.7592220674,
                 -4780907.987759172
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2903,7 +2903,7 @@
                 1686745.4401836295,
                 -6130352.066641222
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2918,7 +2918,7 @@
                 3004801.77388078,
                 5259027.397132301
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2933,7 +2933,7 @@
                 -996975.4326423259,
                 -6220099.081135132
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2948,7 +2948,7 @@
                 -1786955.5988576026,
                 -6092581.411969107
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2963,7 +2963,7 @@
                 -1794267.8974508252,
                 6050919.469498646
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2978,7 +2978,7 @@
                 2360527.2959112665,
                 -5785209.240804605
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -2993,7 +2993,7 @@
                 -117239.30986041373,
                 -6164208.513595432
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3008,7 +3008,7 @@
                 -5916472.954825556,
                 2191640.670809374
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3023,7 +3023,7 @@
                 -4306602.354036701,
                 4567650.606710822
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3038,7 +3038,7 @@
                 -1134380.0830453623,
                 -6242099.356597129
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3053,7 +3053,7 @@
                 -85575.52646139622,
                 -6194130.226933327
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3068,7 +3068,7 @@
                 3664414.54429705,
                 -1426784.6296683608
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3083,7 +3083,7 @@
                 -49237.06883478261,
                 -6164208.513595432
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3098,7 +3098,7 @@
                 -1551145.7849299002,
                 -6164208.513595432
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3113,7 +3113,7 @@
                 1042754.9247525265,
                 5902850.868671499
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3128,7 +3128,7 @@
                 2048655.6965121673,
                 -6005391.546088471
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3143,7 +3143,7 @@
                 668631.2618812509,
                 1426784.6296683608
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3158,7 +3158,7 @@
                 -740520.8787080382,
                 -6292190.808420544
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3173,7 +3173,7 @@
                 3391111.3817319656,
                 -2191640.670809374
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3188,7 +3188,7 @@
                 -2902398.2795625227,
                 5652754.094708056
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3203,7 +3203,7 @@
                 -1641462.8289576557,
                 2488263.1539122686
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3218,7 +3218,7 @@
                 4231947.108611056,
                 -1270613.18828355
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3233,7 +3233,7 @@
                 1671694.4224451792,
                 -5902850.868671499
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3248,7 +3248,7 @@
                 5615140.278959387,
                 2920798.4503236194
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3263,7 +3263,7 @@
                 2820596.7864688565,
                 4675787.695262972
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3278,7 +3278,7 @@
                 2284253.747204976,
                 5845900.585208194
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3293,7 +3293,7 @@
                 -1666487.1742351665,
                 -6130352.066641222
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3308,7 +3308,7 @@
                 -4818551.03209573,
                 -3859410.5928277886
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3323,7 +3323,7 @@
                 -5866661.762610127,
                 2041136.0797413122
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3338,7 +3338,7 @@
                 -801131.9564019128,
                 6290184.72750939
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3353,7 +3353,7 @@
                 1751208.9098179457,
                 5581071.449799858
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3368,7 +3368,7 @@
                 3827863.8874768694,
                 -3336231.719263271
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3383,7 +3383,7 @@
                 -1804555.951070842,
                 -6050919.469498646
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3398,7 +3398,7 @@
                 -3264211.8692526827,
                 5169936.376900278
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3413,7 +3413,7 @@
                 -1816855.6251071503,
                 -6092581.411969107
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3428,7 +3428,7 @@
                 3960153.1066504456,
                 4981837.067531569
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3443,7 +3443,7 @@
                 -1301251.0978927293,
                 -6130352.066641222
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3458,7 +3458,7 @@
                 192647.59531770344,
                 -6292190.808420544
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3473,7 +3473,7 @@
                 -1311929.565781313,
                 5845900.585208194
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3488,7 +3488,7 @@
                 1428186.3244757738,
                 5505810.027648779
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3503,7 +3503,7 @@
                 1860745.4337476264,
                 3732163.7742859065
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3518,7 +3518,7 @@
                 3147323.947389368,
                 4882945.690379372
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3533,7 +3533,7 @@
                 3246734.7129517626,
                 -1426784.6296683608
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3548,7 +3548,7 @@
                 -4840703.101348406,
                 3984155.8447849653
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3563,7 +3563,7 @@
                 -862089.5729173144,
                 -6274143.349880477
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3578,7 +3578,7 @@
                 432789.30236599944,
                 5652754.094708056
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3593,7 +3593,7 @@
                 -796145.9954945392,
                 -6194130.226933327
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3608,7 +3608,7 @@
                 2640428.190966181,
                 -5785209.240804605
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3623,7 +3623,7 @@
                 -1862233.4556711954,
                 -5902850.868671499
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3638,7 +3638,7 @@
                 -165264.8899995992,
                 -6194130.226933327
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3653,7 +3653,7 @@
                 -13431.566488470036,
                 -6242099.356597129
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3668,7 +3668,7 @@
                 3400360.332977948,
                 4981837.067531569
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3683,7 +3683,7 @@
                 4178544.3182277,
                 3859410.5928277886
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3698,7 +3698,7 @@
                 -3855248.28596475,
                 4675787.695262972
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3713,7 +3713,7 @@
                 -5287168.326290159,
                 3470490.878340247
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3728,7 +3728,7 @@
                 -179443.3379488016,
                 -6092581.411969107
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3743,7 +3743,7 @@
                 1264454.1863533154,
                 6220099.081135132
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3758,7 +3758,7 @@
                 1200036.429641664,
                 -6242099.356597129
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3773,7 +3773,7 @@
                 1399377.7404808851,
                 -1736228.359457778
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3788,7 +3788,7 @@
                 -1446989.6856983532,
                 -6164208.513595432
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3803,7 +3803,7 @@
                 -1178903.3241255083,
                 6164208.513595432
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3818,7 +3818,7 @@
                 5932806.069689666,
                 0.0
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3833,7 +3833,7 @@
                 2054123.5207952424,
                 6005391.546088471
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3848,7 +3848,7 @@
                 -2922259.052635721,
                 5581071.449799858
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3863,7 +3863,7 @@
                 -422027.5314863395,
                 -6284167.69645667
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3878,7 +3878,7 @@
                 -1205607.7839823184,
                 -6242099.356597129
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3893,7 +3893,7 @@
                 872014.3111703263,
                 -6290184.72750939
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3908,7 +3908,7 @@
                 -1399942.8437147073,
                 -6194130.226933327
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3923,7 +3923,7 @@
                 3380943.6048552557,
                 4342599.312098233
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3938,7 +3938,7 @@
                 1720627.8760479237,
                 1889299.0990227698
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3953,7 +3953,7 @@
                 -137060.72124244986,
                 3061297.3342190115
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3968,7 +3968,7 @@
                 447158.95754448144,
                 6242099.356597129
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3983,7 +3983,7 @@
                 -218084.43358656886,
                 -6194130.226933327
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -3998,7 +3998,7 @@
                 -4275607.382720427,
                 4675787.695262972
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4013,7 +4013,7 @@
                 -68295.93943143886,
                 4456564.541970213
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4028,7 +4028,7 @@
                 -1919751.1316531897,
                 -5956025.3273642585
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4043,7 +4043,7 @@
                 -988436.4093526877,
                 -6194130.226933327
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4058,7 +4058,7 @@
                 2689122.977890029,
                 5505810.027648779
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4073,7 +4073,7 @@
                 2465674.710823142,
                 -3336231.719263271
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4088,7 +4088,7 @@
                 -1018381.9312403013,
                 -6274143.349880477
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4103,7 +4103,7 @@
                 3240730.803592201,
                 -319741.86867422104
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4118,7 +4118,7 @@
                 1241066.7265024972,
                 -6220099.081135132
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4133,7 +4133,7 @@
                 -2116968.1508205077,
                 -5785209.240804605
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4148,7 +4148,7 @@
                 4756786.01780824,
                 2191640.670809374
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4163,7 +4163,7 @@
                 -1678219.8100574266,
                 -6130352.066641222
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4178,7 +4178,7 @@
                 3551503.815142567,
                 -3061297.3342190115
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4193,7 +4193,7 @@
                 -4181928.2326967227,
                 -2920798.4503236194
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4208,7 +4208,7 @@
                 -4757362.149663479,
                 4225826.68373174
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4223,7 +4223,7 @@
                 1548745.2571583164,
                 5956025.3273642585
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4238,7 +4238,7 @@
                 -445302.0054282888,
                 -1582023.406646751
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4253,7 +4253,7 @@
                 -952997.8543518876,
                 -6242099.356597129
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4268,7 +4268,7 @@
                 237225.37731335053,
                 -6220099.081135132
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4283,7 +4283,7 @@
                 574585.4026409955,
                 -6284167.69645667
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4298,7 +4298,7 @@
                 -6147264.520211766,
                 319741.86867422104
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4313,7 +4313,7 @@
                 -1461024.1736653082,
                 -6130352.066641222
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4328,7 +4328,7 @@
                 -919841.6037947015,
                 5581071.449799858
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4343,7 +4343,7 @@
                 -873163.3754371225,
                 -6284167.69645667
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4358,7 +4358,7 @@
                 -127619.2506691239,
                 -6220099.081135132
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4373,7 +4373,7 @@
                 3050417.0924684186,
                 5581071.449799858
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4388,7 +4388,7 @@
                 5247718.2357897265,
                 -638646.7950232539
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4403,7 +4403,7 @@
                 1729105.3426381254,
                 5785209.240804605
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4418,7 +4418,7 @@
                 -973382.0185388353,
                 -6274143.349880477
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4433,7 +4433,7 @@
                 -2309701.896314039,
                 5902850.868671499
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4448,7 +4448,7 @@
                 -1275113.9291504133,
                 2634188.9821292777
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4463,7 +4463,7 @@
                 -954667.3366013812,
                 -6274143.349880477
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4478,7 +4478,7 @@
                 -1137599.3487069937,
                 -6242099.356597129
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
@@ -4493,7 +4493,7 @@
                 -2484097.9098146777,
                 5845900.585208194
             ],
-            "look_angle_min": 5,
+            "look_angle_min": 0,
             "look_angle_max": 50,
             "image_duration": 3,
             "reward": 1,
