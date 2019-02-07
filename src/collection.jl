@@ -243,6 +243,13 @@ function opportunity_diff(opportunity_list_a::Array{Opportunity, 1}, opportunity
             sow_diff = opp_b.sow - matching_a.sow
             eow_diff = opp_b.eow - matching_a.eow
             dur_diff = opp_b.duration - matching_a.duration
+
+            # if sow_diff > 0
+            #     println("Found non-zero diff")
+            #     println("Opp A: $matching_a")
+            #     println("Opp B: $opp_b")
+            #     println("Image Location: $(opp_b.image.lon), $(opp_b.image.lat)")
+            # end
             push!(opp_diffs, [sow_diff, eow_diff, dur_diff])
         else
             @debug "Unable to find matching opportunity for $opp_b"
@@ -301,6 +308,10 @@ function compute_collects_by_number(opportunity_list::Array{Opportunity,1}, max_
     for opportunity in opportunity_list
         next_collect_start = deepcopy(opportunity.sow)
         num_collects       = 0
+
+        if max_collects == 0
+            max_collects = floor((opportunity.eow - opportunity.sow)/opportunity.dwell_time)
+        end
 
         # Stupider algorithm for dividing up collect windows
         while num_collects < max_collects && (next_collect_start+opportunity.dwell_time) < opportunity.eow

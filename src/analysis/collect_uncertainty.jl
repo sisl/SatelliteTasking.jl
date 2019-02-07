@@ -50,9 +50,10 @@ function compute_perturbed_opportunities(true_orbit::Orbit, perturbed_orbits::Ar
 
     # Compute collections
     perturbed_opportunities = Array{Opportunity, 1}[]
-    opportunity_diffs       = Array{Float64, 1}[]
     for i in 1:num_orbits
-        @debug "Computing opportunities for perturbed orbit: $i"
+        # @debug "Computing opportunities for perturbed orbit: $i"
+        println("Computing opportunities for perturbed orbit: $i")
+
         push!(perturbed_opportunities, find_all_opportunities(perturbed_orbits[i], images, sort=true))
     end
 

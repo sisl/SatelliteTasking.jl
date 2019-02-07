@@ -45,5 +45,5 @@ let
 
     collects = compute_collects_by_number([opp])
 
-    @test length(collects) == 3
+    @test length(collects) == 2
 end

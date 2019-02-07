@@ -34,3 +34,42 @@ let
     array_isapprox(gidx[3], [50])
 end
 
+# let
+#     @time images = load_images("../data/landsat_test_600.json", dwell_time=5.0);
+
+#     # Configure simulation
+#     epc0 = Epoch(2019, 1, 1, 0, 0, 0, tsys=:UTC) # Start of time span
+#     epcf = Epoch(2019, 1, 1, 6, 0, 0, tsys=:UTC) # End of simulation time span
+
+#     # Set Simulation Time Step
+#     timestep = 1
+#     dtmax    = 5
+
+#     # Define Satellite Orbit
+#     oe   = [R_EARTH + 500*1e3, 0, 90.0, 0, 0, 0]
+#     eci0 = sOSCtoCART(oe, use_degrees=true)
+
+#     # Numer of perturbed orbits to simulate
+
+#     # Set Perturbation Values 
+#     pos_error = 5000 # Position knowledge error [m]
+#     vel_error = 5    # Velocity knowledge error [m/s]
+#     orb_mean  = zeros(Float64, 6)
+#     orb_sdev  = vcat((pos_error/sqrt(3)*ones(Float64, 3))..., (vel_error/sqrt(3)*ones(Float64, 3))...)
+
+#     # Simulate true and perturbed orbits
+#     true_orbit, perturbed_orbits, eci_errors = simulate_orbits(0, epc0, epcf, eci0, orb_mean, orb_sdev, timestep=timestep, dtmax=dtmax);
+    
+#     true_opportunities, perturbed_opportunities, mean_diff, sdev_diff, missing_opportunities = compute_perturbed_opportunities(true_orbit, [true_orbit], images, epc_step=3600);
+
+#     for i in 1:length(true_opportunities)
+#         println("Opp pair:")
+#         println(true_opportunities[i])
+#         println(perturbed_opportunities[1][i])
+#     end
+
+#     println(sdev_diff[1, :])
+#     println(sdev_diff[2, :])
+#     println(sdev_diff[3, :])
+# end
+

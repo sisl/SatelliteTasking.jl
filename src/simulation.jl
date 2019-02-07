@@ -78,7 +78,7 @@ function simulate_orbits(num_orbits::Integer,
     eci_errors       = rand(dist_eci, num_orbits)
 
     for i in 1:num_orbits
-        @info "Simulating perturbed orbit $i"
+        println("Simulating perturbed orbit $i")
         eci_perturbed = eci0 + eci_errors[:, i]
         orb = Orbit(epc0, epcf, eci_perturbed, timestep=timestep, dtmax=max(dtmax, timestep),
                     mass=mass, area_drag=area_drag, coef_drag=coef_drag, 
