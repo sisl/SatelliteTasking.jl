@@ -10,6 +10,7 @@ using SatelliteTasking.DataStructures: Collect, interpolate
 # Spacecraft Slew Models #
 ##########################
 
+export slew_time_single_axis
 """
 Compute the required slew time to maneuver from pointing aligned with the start
 vector to the end vector.

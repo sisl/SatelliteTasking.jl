@@ -125,7 +125,12 @@ function sp_solve_graph(graph::Dict{Collect, Array{Collect, 1}}; allow_repeats=f
     end
     
     # Remove last element since it's going to be nothing
-    pop!(path)
+    if path[end] == nothing
+        pop!(path)
+    end
+
+    # Reverse path since it's found from end to start and we want start to end
+    path = reverse!(path)
 
     return (path, reward, image_list)
 end
