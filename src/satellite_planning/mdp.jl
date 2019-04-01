@@ -142,7 +142,10 @@ function mdp_reward(s::MDPState, image_lookup::Dict{<:Integer, Image})
     r = 0.0
     for (i, img) in enumerate(s.images)
         if img
-            r += image_lookup[img].reward
+            r += image_lookup[i].reward
+        else
+        # if !img
+            r -= image_lookup[i].reward
         end
     end
     
