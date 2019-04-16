@@ -4,7 +4,7 @@ module Constraints
 using LinearAlgebra
 using SatelliteDynamics: Epoch, rECEFtoECI
 
-using SatelliteTasking.DataStructures: Collect, interpolate
+using SatelliteTasking.DataStructures: Opportunity, interpolate
 
 ##########################
 # Spacecraft Slew Models #
@@ -51,14 +51,14 @@ export compute_los_vector
 """
 Compute line of sight vector 
 """
-function compute_los_vector(col::Collect, epc::Epoch)
+function compute_los_vector(col::Opportunity, epc::Epoch)
     
     # Compute starting and ending attitude
-    r_eci_target  = rECEFtoECI(epc) * col.image.ecef
+    r_eci_location  = rECEFtoECI(epc) * col.location.ecef
     r_eci_sat     = interpolate(col.orbit, epc)[1:3] # Interpolate satellite state to Epoch
 
     # Compute initial look angle
-    z_los = r_eci_target - r_eci_sat # Compute look angle 
+    z_los = r_eci_location - r_eci_sat # Compute look angle 
 
     # Normalize vector
     z_los = z_los/norm(z_los)
@@ -73,13 +73,13 @@ to the end collect. The transition is based on the spacecraft ability to satisfy
 single_axis pointing constraints.
 
 Arguments:
-- `start_collect::Collect` Initial collect. Spacecraft is assumed pointing here.
-- `end_collect::Collect` End collect. Spacecraft is assumed pointing here.
+- `start_collect::Opportunity` Initial collect. Spacecraft is assumed pointing here.
+- `end_collect::Opportunity` End collect. Spacecraft is assumed pointing here.
 
 Returns:
 - `feasible::Bool` `true` if the transition from start to end is feasible. `false` otherwise
 """
-function constraint_agility_single_axis(start_collect::Collect, end_collect::Collect; max_slew_time=180.0::Float64)
+function constraint_agility_single_axis(start_collect::Opportunity, end_collect::Opportunity; max_slew_time=180.0::Float64)
 
     # Can't go backwards in time
     if end_collect.sow < start_collect.eow

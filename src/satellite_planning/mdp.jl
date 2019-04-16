@@ -5,7 +5,7 @@ module MDP
 using LinearAlgebra
 
 using SatelliteDynamics.Time: Epoch
-using SatelliteTasking.DataStructures: Image, Opportunity, Collect
+using SatelliteTasking.DataStructures: Image, Opportunity
 
 
 export MDPState
@@ -14,52 +14,52 @@ State
 
 Attributes:
 - `time::Epoch` Current planning time
-- `images::Array{Bool,1}` Boolean array of whether a specific image has been collected. Index indicates image.
+- `locations::Array{Bool,1}` Boolean array of whether a specific image has been opportunityed. Index indicates image.
 """
 mutable struct MDPState
-    time::Collect
-    images::Array{Bool, 1}
+    time::Opportunity
+    locations::Array{Bool, 1}
 end
 
-function MDPState(epc::Collect, image_list::Array{Image,1})    
+function MDPState(epc::Opportunity, image_list::Array{Image,1})    
     return MDPState(epc, falses(length(image_list)))
 end
 
 export mdp_construct_actions
 """
 Construct the possible action space for all states. The actions are all dependent
-on time alone, (not which images have already been collected).
+on time alone, (not which locations have already been opportunityed).
 
 Arguments:
-- `collects::Array{Collect, 1}` List of possible actions to take 
-- `constraint_list::Array{Collect, 1}` List of constraintt functions that limit feasibility in transition.
+- `opportunities::Array{Opportunity, 1}` List of possible actions to take 
+- `constraint_list::Array{Opportunity, 1}` List of constraintt functions that limit feasibility in transition.
 - `horizon::Real` Horizon to consider building actions. If 0 and infinite horizon will be used. Other times reduce problem complexity.
 
 Returns:
-- `actions::Dict{Epoch, Array{Collect, 1}}` List of possible actions to take 
+- `actions::Dict{Epoch, Array{Opportunity, 1}}` List of possible actions to take 
 """
-function mdp_construct_actions(collects::Array{Collect, 1}, constraint_list::Array{Function, 1}; horizon=0::Real)
+function mdp_construct_actions(opportunities::Array{Opportunity, 1}, constraint_list::Array{Function, 1}; horizon=0::Real)
     
-    # Sort Collects to ensure they are in time-asecnding order
-    sort!(collects, by = x -> x.sow)
+    # Sort Opportunitys to ensure they are in time-asecnding order
+    sort!(opportunities, by = x -> x.sow)
 
     # Initialize validate transition graph
-    actions = Dict{Collect, Array{Collect, 1}}()
+    actions = Dict{Opportunity, Array{Opportunity, 1}}()
 
-    for start_collect in collects
-        # List of valid edges/transitions for start_collect
-        actions[start_collect] = Array{Collect, 1}[]
+    for start_opportunity in opportunities
+        # List of valid edges/transitions for start_opportunity
+        actions[start_opportunity] = Array{Opportunity, 1}[]
         
-        for end_collect in collects
+        for end_opportunity in opportunities
             # Decide to insert edge
-            if (start_collect == end_collect || 
-                start_collect.image == end_collect.image ||
-                end_collect.sow < start_collect.eow)
-                # Skip insertion if same collect, image, or starts before the current
-                # collection ends (no instantaneous manevers)
+            if (start_opportunity == end_opportunity || 
+                start_opportunity.location == end_opportunity.location ||
+                end_opportunity.sow < start_opportunity.eow)
+                # Skip insertion if same opportunity, image, or starts before the current
+                # opportunity ends (no instantaneous manevers)
                 continue
-            elseif horizon > 0 && end_collect.sow > (start_collect.eow + horizon)
-                # Since we know collects are sorted we can break building the
+            elseif horizon > 0 && end_opportunity.sow > (start_opportunity.eow + horizon)
+                # Since we know opportunities are sorted we can break building the
                 # transition grarph if the distance from the next to the next start
                 # is greater than the look-ahead horizon
                 break
@@ -74,11 +74,11 @@ function mdp_construct_actions(collects::Array{Collect, 1}, constraint_list::Arr
                     end
 
                     # Use logical and to evaulate path feasibility on graph
-                    valid_transition = valid_transition && constraint(start_collect, end_collect)
+                    valid_transition = valid_transition && constraint(start_opportunity, end_opportunity)
                 end
 
                 if valid_transition
-                    push!(actions[start_collect], end_collect)
+                    push!(actions[start_opportunity], end_opportunity)
                 end
             end
         end
@@ -89,10 +89,10 @@ end
 
 export mdp_image_lookup
 """
-Given a list of images create the dictionary lookup of indices 
+Given a list of locations create the dictionary lookup of indices 
 
 Arguments:
-- `image_list::Array{Image, 1}` List of images (should match MDPState list)
+- `image_list::Array{Image, 1}` List of locations (should match MDPState list)
 
 Returns:
 - `image_lookup::Dict{Int64, Image}` Dictionary mapping array indices to image objects.
@@ -107,28 +107,28 @@ function mdp_image_lookup(image_list::Array{Image,1})
     return image_lookup
 end
 
-export compute_collect_probability
+export compute_opportunity_probability
 """
-Compute the probability that a collect will be possible given the apparent
-distribution of collection probabilities.
+Compute the probability that a opportunity will be possible given the apparent
+distribution of opportunity probabilities.
 """
-function compute_collect_probability(collects::Array{Collect}, opportunities::Array{Array{Opportunity,1},1})
-    collect_probability = Dict{Collect, Float64}()
-    for col in collects
+function compute_opportunity_probability(opportunities::Array{Opportunity}, observed_opporttunities::Array{Array{Opportunity,1},1})
+    opportunity_probability = Dict{Opportunity, Float64}()
+    for opp in opportunities
         num_present, num_missing = 0, 0
-        for opportunity_list in opportunities
-            if length(filter(x -> x.image == col.image && x.sow <= col.sow && x.eow >= col.eow, opportunity_list)) == 1
+        for opportunity_list in observed_opporttunities
+            if length(filter(x -> x.location == opp.location && x.sow <= opp.sow && x.eow >= opp.eow, opportunity_list)) == 1
                 num_present += 1
             else
                 num_missing += 1
             end
         end
         
-        # collect_probability[col] = num_present/(num_missing+num_present)
-        collect_probability[col] = 1
+        # opportunity_probability[opp] = num_present/(num_missing+num_present)
+        opportunity_probability[opp] = 1
     end
     
-    return collect_probability
+    return opportunity_probability
 end
 
 export mdp_reward
@@ -140,7 +140,7 @@ Arguments:
 """
 function mdp_reward(s::MDPState, image_lookup::Dict{<:Integer, Image})
     r = 0.0
-    for (i, img) in enumerate(s.images)
+    for (i, img) in enumerate(s.locations)
         if img
             r += image_lookup[i].reward
         else
@@ -156,12 +156,12 @@ export mdp_future_states
 """
 Compute possible future takes the system may assume given the action.
 """
-function mdp_future_states(state::MDPState, action::Collect, int_lookup::Dict{Image, <:Integer})
-    failure      = MDPState(state.time, copy(state.images))
+function mdp_future_states(state::MDPState, action::Opportunity, int_lookup::Dict{Image, <:Integer})
+    failure      = MDPState(state.time, copy(state.locations))
     failure.time = action
     
-    success = MDPState(failure.time, copy(failure.images))
-    success.images[int_lookup[action.image]] = true
+    success = MDPState(failure.time, copy(failure.locations))
+    success.locations[int_lookup[action.location]] = true
     
     return MDPState[success, failure]
 end
@@ -170,8 +170,8 @@ export mdp_transition
 """
 Return transition probabilities given the set of currrent states, action, and possible future states.
 """
-function mdp_transition(sp::MDPState, s::MDPState, a::Collect, collect_probabilities::Dict{Collect, Float64})
-    p = collect_probabilities[a]
+function mdp_transition(sp::MDPState, s::MDPState, a::Opportunity, opportunity_probabilities::Dict{Opportunity, Float64})
+    p = opportunity_probabilities[a]
     
     return p
 end
@@ -180,9 +180,9 @@ export mdp_select_action
 """
 MDP forward search algorithm to select the next decision.
 """
-function mdp_select_action(s::MDPState, d::Integer, actions::Dict{Collect, Array{Collect, 1}}, 
+function mdp_select_action(s::MDPState, d::Integer, actions::Dict{Opportunity, Array{Opportunity, 1}}, 
                             image_lookup::Dict{<:Integer, Image}, int_lookup::Dict{Image, <:Integer},
-                            collect_probabilities::Dict{Collect, Float64};
+                            opportunity_probabilities::Dict{Opportunity, Float64};
                             gamma::Real=0.7)
 
     if d == 0
@@ -195,8 +195,8 @@ function mdp_select_action(s::MDPState, d::Integer, actions::Dict{Collect, Array
         v = mdp_reward(s, image_lookup)
         
         for sp in mdp_future_states(s, a, int_lookup)
-            ap, vp = mdp_select_action(sp, d-1, actions, image_lookup, int_lookup, collect_probabilities, gamma=gamma)
-            v      = v + gamma*mdp_transition(sp, s, a, collect_probabilities)*vp
+            ap, vp = mdp_select_action(sp, d-1, actions, image_lookup, int_lookup, opportunity_probabilities, gamma=gamma)
+            v      = v + gamma*mdp_transition(sp, s, a, opportunity_probabilities)*vp
         end
         
         if v > vs
@@ -211,11 +211,11 @@ export mdp_transition_state
 """
 Transitions the MDP state to the next state given the action.
 """
-function mdp_transition_state(s::MDPState, a::Collect, int_lookup::Dict{Image, <:Integer})
-    sn = MDPState(a, deepcopy(s.images))
+function mdp_transition_state(s::MDPState, a::Opportunity, int_lookup::Dict{Image, <:Integer})
+    sn = MDPState(a, deepcopy(s.locations))
     
-    # Set state to collected
-    sn.images[int_lookup[a.image]] = true
+    # Set state to opportunityed
+    sn.locations[int_lookup[a.location]] = true
     
     return sn
 end
@@ -224,30 +224,30 @@ export mdp_forward_search
 """
 Generate tasking policy through forward search algorithm.
 """
-function mdp_forward_search(collects::Array{Collect, 1}, constraint_list, 
-                            images::Array{Image,1}, collect_probabilities; 
+function mdp_forward_search(opportunities::Array{Opportunity, 1}, constraint_list, 
+                            locations::Array{Image,1}, opportunity_probabilities; 
                             horizon=0::Real, search_depth=5::Integer, gamma=0.7::Real)
     # Compute action set
-    actions = mdp_construct_actions(collects, constraint_list, horizon=7200.0)
+    actions = mdp_construct_actions(opportunities, constraint_list, horizon=7200.0)
     
     # Compute Initial start
-    col_init = collect(keys(actions))[findmin(collect([a.sow for a  in keys(actions)]))[2]]
-    s_init   = MDPState(col_init, images)
+    opp_init = collect(keys(actions))[findmin(collect([a.sow for a  in keys(actions)]))[2]]
+    s_init   = MDPState(opp_init, locations)
     
     # Create lookups
-    image_lookup = mdp_image_lookup(images)
+    image_lookup = mdp_image_lookup(locations)
     int_lookup = Dict{Image, Int64}([v => k for (k,v) in image_lookup])
     
     # Compute initial action
-    a, v = mdp_select_action(s_init, search_depth, actions, image_lookup, int_lookup, collect_probabilities, gamma=gamma)
+    a, v = mdp_select_action(s_init, search_depth, actions, image_lookup, int_lookup, opportunity_probabilities, gamma=gamma)
 #     println("Optimal action: $a")
     s    = mdp_transition_state(s_init, a, int_lookup)
     
-    plan = Union{Collect, Nothing}[a]
+    plan = Union{Opportunity, Nothing}[a]
     
     # Perform forward search 
     while true
-        a, v = mdp_select_action(s, search_depth, actions, image_lookup, int_lookup, collect_probabilities, gamma=gamma)  
+        a, v = mdp_select_action(s, search_depth, actions, image_lookup, int_lookup, opportunity_probabilities, gamma=gamma)  
         
         if a == nothing
             # Exit early if no possible action left
@@ -280,7 +280,7 @@ function mdp_forward_search(collects::Array{Collect, 1}, constraint_list,
     num_pos = 0
     num_neg = 0
     
-    for (i, img_state) in enumerate(s.images)
+    for (i, img_state) in enumerate(s.locations)
         if img_state
             img     = image_lookup[i]
             reward += img.reward
@@ -291,7 +291,7 @@ function mdp_forward_search(collects::Array{Collect, 1}, constraint_list,
         end
     end
     
-    println("Number of all images: $(length(s.images)), Collected: $num_pos, Missed: $num_neg")
+    println("Number of all locations: $(length(s.locations)), Opportunityed: $num_pos, Missed: $num_neg")
     
     return plan, reward, image_list
 end
@@ -300,36 +300,36 @@ end
 # Compute transitions from 
 
 # Arguments:
-# - `collects::Array{Collect, 1}` Array of collects to compute feasible transitoins for
+# - `opportunities::Array{Opportunity, 1}` Array of opportunities to compute feasible transitoins for
 # - `constraint_list` List of constraints 
 # - `horizon::Real` Look-ahead horizon to compute possible transitions
 
 # Returns:
-# - `states::Array{Collect,1}` List of states of the decision problem
-# - `transitions::Dict{Collect, Array{Collect, 1}}` List of possible transitions for each state
+# - `states::Array{Opportunity,1}` List of states of the decision problem
+# - `transitions::Dict{Opportunity, Array{Opportunity, 1}}` List of possible transitions for each state
 # """
-# function mdp_compute_transitions(collects::Array{Collect, 1}, constraint_list; horizon=0::Real)
+# function mdp_compute_transitions(opportunities::Array{Opportunity, 1}, constraint_list; horizon=0::Real)
 
-#     # Sort Collects to ensure they are in time-asecnding order
-#     sort!(collects, by = x -> x.sow)
+#     # Sort Opportunitys to ensure they are in time-asecnding order
+#     sort!(opportunities, by = x -> x.sow)
 
 #     # Compute possible transitions
-#     transitions = Dict{Collect, Array{Collect, 1}}()
+#     transitions = Dict{Opportunity, Array{Opportunity, 1}}()
 
-#     for start_collect in collects
-#         # List of valid edges/transitions for start_collect
-#         transitions[start_collect] = Array{Collect, 1}[]
+#     for start_opportunity in opportunities
+#         # List of valid edges/transitions for start_opportunity
+#         transitions[start_opportunity] = Array{Opportunity, 1}[]
         
-#         for end_collect in collects
+#         for end_opportunity in opportunities
 #             # Decide to insert edge
-#             if (start_collect == end_collect || 
-#                 start_collect.image == end_collect.image ||
-#                 end_collect.sow < start_collect.eow)
-#                 # Skip insertion if same collect, image, or starts before the current
-#                 # collection ends (no instantaneous manevers)
+#             if (start_opportunity == end_opportunity || 
+#                 start_opportunity.location == end_opportunity.location ||
+#                 end_opportunity.sow < start_opportunity.eow)
+#                 # Skip insertion if same opportunity, image, or starts before the current
+#                 # opportunity ends (no instantaneous manevers)
 #                 continue
-#             elseif horizon > 0 && end_collect.sow > (start_collect.eow + horizon)
-#                 # Since we know collects are sorted we can break building the
+#             elseif horizon > 0 && end_opportunity.sow > (start_opportunity.eow + horizon)
+#                 # Since we know opportunities are sorted we can break building the
 #                 # transition grarph if the distance from the next to the next start
 #                 # is greater than the look-ahead horizon
 #                 break
@@ -344,22 +344,22 @@ end
 #                     end
 
 #                     # Use logical and to evaulate path feasibility on transitions
-#                     valid_transition = valid_transition && constraint(start_collect, end_collect)
+#                     valid_transition = valid_transition && constraint(start_opportunity, end_opportunity)
 #                 end
 
 #                 if valid_transition
-#                     push!(transitions[start_collect], end_collect)
+#                     push!(transitions[start_opportunity], end_opportunity)
 #                 end
 #             end
 #         end
 #     end
 
-#     states = sort!(collect(keys(transitions)), by = x -> x.sow)
+#     states = sort!(opportunity(keys(transitions)), by = x -> x.sow)
 
 #     return states, transitions
 # end
 
-# function _mdp_update_state_values(Uk::Dict{Collect, <:Real}, Ukp::Dict{Collect, <:Real}, states::Array{Collect, 1}, transitions::Dict{Collect, Array{Collect, 1}})
+# function _mdp_update_state_values(Uk::Dict{Opportunity, <:Real}, Ukp::Dict{Opportunity, <:Real}, states::Array{Opportunity, 1}, transitions::Dict{Opportunity, Array{Opportunity, 1}})
 #     # Perform initial update
 #     for s in states
 
@@ -370,7 +370,7 @@ end
 
 #         for a in transitions[s]
 #             # Transition probability to action state is always 1.0
-#             r_a = a.image.reward + Uk[a]
+#             r_a = a.location.reward + Uk[a]
 
 #             # Update optimal state value 
 #             if r_s == nothing || r_a > r_s
@@ -384,8 +384,8 @@ end
     
 # end
 
-# function _mdp_extract_policy(U::Dict{Collect, <:Real}, states::Array{Collect, 1}, transitions::Dict{Collect, Array{Collect, 1}})
-#     policy = Dict{Collect, Union{Collect, Nothing}}()
+# function _mdp_extract_policy(U::Dict{Opportunity, <:Real}, states::Array{Opportunity, 1}, transitions::Dict{Opportunity, Array{Opportunity, 1}})
+#     policy = Dict{Opportunity, Union{Opportunity, Nothing}}()
 
 #     for s in states
 #         r_s = nothing
@@ -396,7 +396,7 @@ end
 #         a_max = nothing
 #         for a in transitions[s]
 #             # Transition probability to action state is always 1.0
-#             r_a = a.image.reward + U[a]
+#             r_a = a.location.reward + U[a]
 
 #             # Update optimal state value 
 #             if r_s == nothing || r_a > r_s
@@ -411,11 +411,11 @@ end
 #     return policy
 # end
 
-# function mdp_value_iteration(states::Array{Collect, 1}, transitions::Dict{Collect, Array{Collect, 1}}, eps=1e-6::Real)
+# function mdp_value_iteration(states::Array{Opportunity, 1}, transitions::Dict{Opportunity, Array{Opportunity, 1}}, eps=1e-6::Real)
 
 #     # Initialize Initial value function 
-#     Uk  = Dict{Collect, Float64}(s => 0.0 for s in states)
-#     Ukp = Dict{Collect, Float64}(s => 0.0 for s in states)
+#     Uk  = Dict{Opportunity, Float64}(s => 0.0 for s in states)
+#     Ukp = Dict{Opportunity, Float64}(s => 0.0 for s in states)
 #     k   = 1
 
 #     # Perofrm first round of value ierations
@@ -443,7 +443,7 @@ end
 
 #     # Extract optimal path from policy
 #     max_s    = findmax(Ukp)[2]
-#     opt_path = Union{Collect,Nothing}[max_s]
+#     opt_path = Union{Opportunity,Nothing}[max_s]
 
 #     while policy[opt_path[end]] != nothing
 #         push!(opt_path, policy[opt_path[end]])
@@ -457,29 +457,29 @@ end
 
 # export sp_mdp_policy
 # """
-# Solve for optimal collect plan using Markov Decision Process Approach
+# Solve for optimal opportunity plan using Markov Decision Process Approach
 
 # Arguments:
-# - `collects::Array{Collect,1}` Array of collects to plan the optimal tasking schedule for
+# - `opportunities::Array{Opportunity,1}` Array of opportunities to plan the optimal tasking schedule for
 # - `constraints::Array{Any, 1}` Array of constraint function which may limit feasible transitions
 # - `horizon::Real` Look-ahead horizon for constructing graphs. Transition further than this apart are not considered. Not used if 0
-# - `allow_repeats::Bool` Allow images to be collected multiple times over the course of a plan
+# - `allow_repeats::Bool` Allow locations to be opportunityed multiple times over the course of a plan
 
 # Returns:
-# - `collect_policy::Array{Collect}` List of collects to take in the order which they should be taken
+# - `opportunity_policy::Array{Opportunity}` List of opportunities to take in the order which they should be taken
 # """
-# function sp_mdp_policy(collects::Array{Collect, 1}, constraint_list; horizon=0::Real, allow_repeats=false::Bool, eps=1e-6::Real)
+# function sp_mdp_policy(opportunities::Array{Opportunity, 1}, constraint_list; horizon=0::Real, allow_repeats=false::Bool, eps=1e-6::Real)
 #     # Compute States and Transitions
-#     states, transitions = mdp_compute_transitions(collects, constraint_list, horizon=horizon)
+#     states, transitions = mdp_compute_transitions(opportunities, constraint_list, horizon=horizon)
 
 #     # Solve graph for taskign policy
 #     Ukp, path = mdp_value_iteration(states, transitions, eps)
 
 #     reward     = findmax(Ukp)[2]
 #     image_list = []
-#     for col in path
-#         if !(col.image in image_list)
-#             push!(image_list, col.image)
+#     for opp in path
+#         if !(opp.location in image_list)
+#             push!(image_list, opp.location)
 #         end
 #     end
 

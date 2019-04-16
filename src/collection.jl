@@ -7,10 +7,13 @@ using Statistics
 
 # SatelliteDynamics imports
 using SatelliteDynamics.Constants: R_EARTH
-using SatelliteDynamics.Coordinates: sECEFtoGEOD, sGEODtoECEF
+using SatelliteDynamics.Coordinates: sECEFtoGEOD, sGEODtoECEF, sECEFtoENZ, sENZtoAZEL
 
 # Package imports
-using SatelliteTasking.DataStructures: Orbit, Image, Opportunity, Collect
+using SatelliteTasking.DataStructures: Orbit, Image, Location, GroundStation, Opportunity
+
+using SatelliteDynamics
+
 
 export image_view_geometry
 """
@@ -22,7 +25,7 @@ Arguments:
 
 Returns:
 - `look_angle::Float64` Look angle from the satellite to the image center. Equivalent to off-nadiar angle. [deg]
-- `range::Float64` Range from the observing satellite to the target. [m]
+- `range::Float64` Range from the observing satellite to the location. [m]
 """
 function image_view_geometry(sat_ecef::Array{<:Real, 1}, image::Image)
     # Satellite state
@@ -35,11 +38,11 @@ function image_view_geometry(sat_ecef::Array{<:Real, 1}, image::Image)
     
     # Look angle
     nadir_dir  = (sub_sat_ecef - r_sat)/norm(sub_sat_ecef - r_sat)
-    target_dir = (image.ecef - r_sat)/norm(image.ecef - r_sat)
-    look_angle = acos(dot(nadir_dir, target_dir))*180.0/pi
+    location_dir = (image.ecef - r_sat)/norm(image.ecef - r_sat)
+    look_angle = acos(dot(nadir_dir, location_dir))*180.0/pi
 
-    # Distance from sub-satellite point to target along direct line of sight
-    range = norm(r_sat - image.ecef) # range to target
+    # Distance from sub-satellite point to location along direct line of sight
+    range = norm(r_sat - image.ecef) # range to location
 
     return look_angle, range
 end
@@ -65,13 +68,61 @@ function image_visible(sat_ecef::Array{<:Real, 1}, image::Image)
     # max_range = -r*cos(theta_max) - sqrt(r^2*cos(theta_max)^2 - (r^2-R_EARTH^2)^2)
     
     # To be fixed, no idea why this is complex:
-    max_range = sqrt(r^2 - R_EARTH^2)
+    max_range = 1.5*sqrt(r^2 - R_EARTH^2)
 
     # @debug "max range: $max_range"
-
     if image.look_angle_min <= look_angle &&
        look_angle <= image.look_angle_max &&
        eow_range <= max_range
+
+        return true
+    else
+        return false
+    end
+end
+
+export station_view_geometry
+"""
+Compute the view geometry from an observer to a specific station. 
+
+Arguments:
+- `sat_ecef:Array{<:Real, 1}` Earth-fixed satellite position
+- `station::GroundStation` Station object
+
+Returns:
+- `elevation::Float64` Elevation of satellite with respect to station [deg]
+"""
+function station_view_geometry(sat_ecef::Array{<:Real, 1}, station::GroundStation)
+    # Satellite state
+    r_sat     = sat_ecef[1:3]
+    r_station = station.ecef
+
+    azimuth, elevation, range = sSEZtoAZEL(sECEFtoSEZ(r_station, r_sat), use_degrees=true)
+
+    return elevation, range
+end
+
+export station_visible
+"""
+Computes whether an station is visible from a given state and return boolean true/false
+result.
+
+Arguments:
+- `sat_ecef::Array{<:Real, 1}` Satellite position in Earth fixed frame
+- `station::GroundStation` Station being communicatted with
+
+Returns:
+- `visible::Bool` Indication of whether station is visible or not
+"""
+function station_visible(sat_ecef::Array{<:Real, 1}, station::GroundStation, time)
+    elevation, range = station_view_geometry(sat_ecef, station)
+
+    r = norm(sat_ecef[1:3])
+
+    if station.elevation_min <= elevation
+        dist = norm(sat_ecef[1:3] - station.ecef[1:3])
+        # println("$time - $elevation - $range - $(dist/1e3) - $(sECEFtoGEOD(sat_ecef, use_degrees=true))")
+
         return true
     else
         return false
@@ -118,7 +169,7 @@ Arguments:
 Returns:
 - `opportunities::Array{Opportunity, 1}`
 """
-function groups_extract_opportunities(orbit::Orbit, image::Image, index_groups)
+function groups_extract_opportunities(orbit::Orbit, location::Location, index_groups)
     # opportunities = Array{Opportunity, 1}(undef, length(index_groups))
     opportunities = Opportunity[]
     
@@ -126,8 +177,11 @@ function groups_extract_opportunities(orbit::Orbit, image::Image, index_groups)
         if length(group) > 0
             sow = orbit.epc[group[1]]
             eow = orbit.epc[group[end]]
-            push!(opportunities, Opportunity(sow, eow, orbit=orbit, 
-                                    image=image, dwell_time=image.dwell_time))
+            if typeof(location) == Image
+                push!(opportunities, Opportunity(sow, eow, orbit=orbit, location=location, collect_duration=location.collect_duration))
+            else
+                push!(opportunities, Opportunity(sow, eow, orbit=orbit, location=location))
+            end
         end
     end
     
@@ -136,45 +190,49 @@ end
 
 export find_opportunities
 """
-Find all opportunities a given image is visible for an orbit.
+Find all opportunities a given location is visible for an orbit.
 
 Arguments:
 - `orbit::Orbit` Orbit of observing satellite
-- `image::Image` Image under observation
+- `location::Location` Image under observation
 
 Returns:
 - `opportunities::Array{Opportunity, 1}` Array of collection opportunities given the orbit
 """
-function find_opportunities(orbit::Orbit, image::Image)
+function find_opportunities(orbit::Orbit, location::Location)
     visibility = Array{Bool, 1}(undef, length(orbit.t))
 
     for i in 1:length(orbit.t)
-        visibility[i] = image_visible(orbit.ecef[:, i], image)
+        if typeof(location) == Image
+            visibility[i] = image_visible(orbit.ecef[:, i], location)
+        elseif typeof(location) == GroundStation
+            visibility[i] = station_visible(orbit.ecef[:, i], location, orbit.epc[i])
+        end
     end
 
     visible_indices = group_indices(findall(visibility))
-    opportunities   = groups_extract_opportunities(orbit, image, visible_indices)
+    opportunities   = groups_extract_opportunities(orbit, location, visible_indices)
 
     return opportunities
 end
 
 export find_all_opportunities
 """
-Find all collection opportunities for a set of images.
+Find all collection opportunities for a set of locations.
 
 Arguments:
 - `orbit::Orbit` Orbit of observing satellite
-- `images::Array{Image, 1}` Array of images 
+- `locations::Array{Location, 1}` Array of locations 
 - `sort::Bool` Sort opportunities in ascending order by start of window
 
 Returns:
-- `opportunities::Array{Opportunity, 1}` Array of collection opportunities for all images
+- `opportunities::Array{Opportunity, 1}` Array of collection opportunities for all locations
 """
-function find_all_opportunities(orbit::Orbit, images::Array{Image, 1}; sort=true::Bool)
+function find_all_opportunities(orbit::Orbit, locations::Array{<:Location, 1}; sort=true::Bool)
     opportunities = Opportunity[]
-    for img in images
-        for col in find_opportunities(orbit, img)
-            push!(opportunities, col)
+    for tar in locations
+        for opp in find_opportunities(orbit, tar)
+            push!(opportunities, opp)
         end
     end
 
@@ -198,7 +256,7 @@ Returns:
 - `opportunity::Opportunity` The closest matching in `opportunity_list` to the input opportunity.
 """
 function find_matching_opportunity(opportunity_list::Array{Opportunity, 1}, col::Opportunity; match_max_seconds=600::Real)
-    opportunity_candidates = filter(x -> x.image == col.image, opportunity_list)
+    opportunity_candidates = filter(x -> x.location == col.location, opportunity_list)
 
     # Screen each candidate and return if below match threshold
     for c in opportunity_candidates
@@ -208,13 +266,6 @@ function find_matching_opportunity(opportunity_list::Array{Opportunity, 1}, col:
     end
 
     @debug "Missing opportunity: $col"
-
-    # Older method for matching opportunities
-    # for o in opportunity_list
-    #     if o.sow < col.mid && o.eow > col.mid && o.image == col.image
-    #        return o
-    #     end
-    # end
 
     # If no matching opportunity found return nothing
     return nothing
@@ -244,12 +295,6 @@ function opportunity_diff(opportunity_list_a::Array{Opportunity, 1}, opportunity
             eow_diff = opp_b.eow - matching_a.eow
             dur_diff = opp_b.duration - matching_a.duration
 
-            # if sow_diff > 0
-            #     println("Found non-zero diff")
-            #     println("Opp A: $matching_a")
-            #     println("Opp B: $opp_b")
-            #     println("Image Location: $(opp_b.image.lon), $(opp_b.image.lat)")
-            # end
             push!(opp_diffs, [sow_diff, eow_diff, dur_diff])
         else
             @debug "Unable to find matching opportunity for $opp_b"
@@ -290,98 +335,72 @@ function opportunity_stats(opportunity_list_a::Array{Opportunity, 1}, opportunit
     return opp_mean, opp_sdev, opp_miss
 end
 
-export compute_collects_by_number
+export split_opportunities
 """
 Compute discrete collection opportunities for 
 
 Arguments:
 - `opportunity_list::Array{Opportunity,1}` List of opportunities to compute collections for
-- `max_collects::Integer` Maximum number of collects to divide each opportunity into
+- `max_opps::Integer` Maximum number of collects to divide each opportunity into
 
 Returns:
-- `collects::Array{Collects,1}` Array of collection opportunities
+- `collects::Array{Opportunity,1}` Array of collection opportunities
 """
-function compute_collects_by_number(opportunity_list::Array{Opportunity,1}, max_collects=0::Integer)
-    collects = Collect[]
+function split_opportunities(opportunity_list::Array{Opportunity,1}, max_opps=0::Integer)
+    opps = Opportunity[]
 
-    # Compute Collects for each opportunity
+    # Compute Opportunity for each opportunity
     for opportunity in opportunity_list
-        next_collect_start = deepcopy(opportunity.sow)
-        num_collects       = 0
+        next_opp_start = deepcopy(opportunity.sow)
+        num_opps       = 0
 
-        if max_collects == 0
-            max_collects = floor((opportunity.eow - opportunity.sow)/opportunity.dwell_time)
+        if max_opps == 0
+            max_opps = floor((opportunity.eow - opportunity.sow)/opportunity.collect_duration)
         end
 
         # Stupider algorithm for dividing up collect windows
-        while num_collects < max_collects && (next_collect_start+opportunity.dwell_time) < opportunity.eow
-            push!(collects, Collect(next_collect_start, 
-                                    next_collect_start+opportunity.dwell_time,
+        while num_opps < max_opps && (next_opp_start+opportunity.collect_duration) < opportunity.eow
+            push!(opps, Opportunity(next_opp_start, 
+                                    next_opp_start+opportunity.collect_duration,
                                     orbit=opportunity.orbit,
-                                    image=opportunity.image,
-                                    opportunity=opportunity))
+                                    location=opportunity.location))
 
-            next_collect_start += opportunity.dwell_time
-            num_collects       += 1
+            next_opp_start += opportunity.collect_duration
+            num_opps       += 1
         end
-
-        # # If maximum number of collects per opportunity is not set, set as the 
-        # # maximum possible of non-overlapping collects over the opportunity window
-        # if max_collects == 0
-        #     max_collects = convert(typeof(max_collects), floor(opportunity.duration/opportunity.dwell_time))
-        # end
-
-        # # Time in opportunity window not taken up by a collect
-        # empty_span = opportunity.duration - max_collects*opportunity.dwell_time
-
-        # # Spacing between collects
-        # collect_spacing = empty_span/(max_collects + 1)
-
-        # # Start time of next collect window
-        # next_collect_start = deepcopy(opportunity.sow)
-
-        # # Create collects for opportunities
-        # for i in 1:max_collects
-        #     next_collect_start += collect_spacing
-        #     push!(collects, Collect(next_collect_start, 
-        #                             next_collect_start+opportunity.dwell_time,
-        #                             orbit=opportunity.orbit,
-        #                             image=opportunity.image,
-        #                             opportunity=opportunity))
-        # end
     end
     
-    # Sort collects so they are in ascending order
-    sort!(collects, by = x -> x.sow)
+    # Sort opps so they are in ascending order
+    sort!(opps, by = x -> x.sow)
     
-    return collects
+    return opps
 end
 
-export group_image_collects
+export group_image_opportunities
 """
-Create dictionary lookup of the possible collects that exist for each image.
+Create dictionary lookup of the possible opportunities that exist for each image.
 
 Arguments:
-- `collects::Array{Collect, 1}` Array of collects for all images
+- `opportunities::Array{Collect, 1}` Array of opportunities for all images
 
 Returns:
-- `image_collects::Dict{Image, Array{Collect, 1}}` Lookup table which returns the array of collects for each image
+- `image_opportunities::Dict{Image, Array{Collect, 1}}` Lookup table which returns the array of opportunities for each image
 """
-function group_image_collects(collects::Array{Collect, 1})
+function group_image_opportunities(opportunities::Array{Opportunity, 1})
     # Initialize dictionary storing collects for each image
-    image_collects = Dict{Image, Array{Tuple{Int64, Collect}, 1}}()
+    image_opportunities = Dict{Image, Array{Tuple{Int64, Opportunity}, 1}}()
 
     # Create collect array for each unique image
-    for col in collects
-        image_collects[col.image] = Tuple{Int64, Collect}[]
+    for opp in opportunities
+        image_opportunities[opp.location] = Tuple{Int64, Opportunity}[]
     end
 
-    # Populate lookup with collects
-    for (i, col) in enumerate(collects)
-        push!(image_collects[col.image], (i, col))
+    # Populate lookup with opportunities
+    for (i, opp) in enumerate(opportunities)
+        push!(image_opportunities[opp.location], (i, opp))
     end
 
-    return image_collects
+    return image_opportunities
 end
 
 end # End module

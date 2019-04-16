@@ -41,9 +41,9 @@ let
 end
 
 let
-    opp = Opportunity(Epoch(2018, 1, 1, 12, 0, 0, 0), Epoch(2018, 1, 1, 12, 0, 30, 0), dwell_time=10)
+    opp = Opportunity(Epoch(2018, 1, 1, 12, 0, 0, 0), Epoch(2018, 1, 1, 12, 0, 30, 0), collect_duration=10)
 
-    collects = compute_collects_by_number([opp])
+    collects = split_opportunities([opp])
 
     @test length(collects) == 2
 end

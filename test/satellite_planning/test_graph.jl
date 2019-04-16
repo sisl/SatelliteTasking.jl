@@ -1,7 +1,6 @@
 using Test
 using Random
 using LinearAlgebra
-using OrdinaryDiffEq
 using Logging
 using UUIDs
 using SatelliteDynamics
@@ -26,12 +25,12 @@ let
 
     # Compute collect opportunities
     opportunities = find_all_opportunities(orb, images, sort=true)
-    collects      = compute_collects_by_number([opportunities[end]], 1)
+    collects      = split_opportunities([opportunities[end]], 1)
 
     @test opportunities[end].sow <= collects[end].sow <= opportunities[end].eow
     @test opportunities[end].sow <= collects[end].eow <= opportunities[end].eow
 
-    collects = compute_collects_by_number([opportunities[end]], 3)
+    collects = split_opportunities([opportunities[end]], 3)
     for collect in collects
         @test opportunities[end].sow <= collect.sow <= opportunities[end].eow
         @test opportunities[end].sow <= collect.eow <= opportunities[end].eow
@@ -53,12 +52,12 @@ let
 
     # Compute collect opportunities
     opportunities = find_all_opportunities(orb, images, sort=true)
-    collects      = compute_collects_by_number(opportunities, 1)
+    collects      = split_opportunities(opportunities, 1)
 
     # Build graph of feasible transitions
     graph = sp_construct_graph(collects, Function[], horizon=0)
 
-    @test typeof(graph) == Dict{Collect, Array{Collect, 1}}
+    @test typeof(graph) == Dict{Opportunity, Array{Opportunity, 1}}
 
     path, reward, image_list = sp_solve_graph(graph, allow_repeats=false)
 end

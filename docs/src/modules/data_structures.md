@@ -6,6 +6,7 @@ throughout the `SatelliteTasking` module.
 ```@docs
 Orbit
 Image
+GroundStation
 load_images
-Collect
+Opportunity
 ```

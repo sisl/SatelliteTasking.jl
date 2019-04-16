@@ -13,12 +13,12 @@ let
 
     # Compute collect opportunities
     opportunities = find_all_opportunities(orb, images, sort=true)
-    collects      = compute_collects_by_number(opportunities, 1)
+    splitt_opps   = split_opportunities(opportunities, 1)
 
-    image_collects = group_image_collects(collects)
+    opportunities = group_image_opportunities(splitt_opps)
 
-    start_collect  = image_collects[images[1]][1][2]
-    end_collect    = image_collects[images[end]][end][2]
+    start_collect  = opportunities[images[1]][1][2]
+    end_collect    = opportunities[images[end]][end][2]
 
     @test constraint_agility_single_axis(start_collect, end_collect) == true
     @test constraint_agility_single_axis(start_collect, start_collect) == false

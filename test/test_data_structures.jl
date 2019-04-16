@@ -47,7 +47,7 @@ end
 
 let
     # Test Image loading
-    img_data = abspath(string(@__DIR__), "../data/landsat_test.json")
+    img_data = abspath(string(@__DIR__), "../data/landsat_test_150.json")
     images = load_images(img_data)
 
     @test length(images) == 150
@@ -62,15 +62,4 @@ let
 
     @test opp1.id != opp2.id
     @test opp1.orbit == opp2.orbit
-end
-
-let
-    # Test Collect constructor
-    sow  = Epoch(2018, 1, 1, 12, 1, 0, 0)
-    eow  = Epoch(2018, 1, 1, 12, 1, 1, 0)
-    col1 = Collect(sow, eow)
-    col2 = Collect(sow, eow)
-
-    @test col1.id != col2.id
-    @test col1.orbit == col2.orbit
 end

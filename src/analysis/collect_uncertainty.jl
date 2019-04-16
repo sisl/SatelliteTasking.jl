@@ -6,8 +6,8 @@ using Statistics
 using SatelliteDynamics.Time: Epoch
 
 # Package Imports
-using SatelliteTasking.DataStructures: Orbit, Image, Opportunity, Collect
-using SatelliteTasking.Collection: find_all_opportunities, opportunity_diff, opportunity_stats, find_matching_opportunity, compute_collects_by_number
+using SatelliteTasking.DataStructures: Orbit, Image, Opportunity
+using SatelliteTasking.Collection: find_all_opportunities, opportunity_diff, opportunity_stats, find_matching_opportunity
 using SatelliteTasking.Simulation: simulate_orbits
 
 export compute_perturbed_opportunities

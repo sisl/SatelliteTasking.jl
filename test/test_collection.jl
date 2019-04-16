@@ -35,7 +35,7 @@ let
 end
 
 # let
-#     @time images = load_images("../data/landsat_test_600.json", dwell_time=5.0);
+#     @time images = load_images("../data/landsat_test_600.json", collect_duration=5.0);
 
 #     # Configure simulation
 #     epc0 = Epoch(2019, 1, 1, 0, 0, 0, tsys=:UTC) # Start of time span

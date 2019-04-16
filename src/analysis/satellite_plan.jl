@@ -6,7 +6,7 @@ using Statistics
 using SatelliteDynamics.Time: Epoch
 
 # Package Imports
-using SatelliteTasking.DataStructures: Orbit, Image, Opportunity, Collect
+using SatelliteTasking.DataStructures: Orbit, Image, Opportunity
 
 # Evaluate plan
 
@@ -66,13 +66,13 @@ function sp_evaluate_plan(plan::Array{<:Any,1}, opportunities::Array{Opportunity
     unique_images = Image[]
     
     for collect in plan        
-        if length(filter(opp -> opp.image == collect.image 
+        if length(filter(opp -> opp.location == collect.location 
                             && opp.sow <= collect.sow <= opp.eow
                             && opp.sow <= collect.eow <= opp.eow, opportunities)) >= 1
-            if !(collect.image in unique_images) 
-                realized_reward += collect.image.reward
+            if !(collect.location in unique_images) 
+                realized_reward += collect.location.reward
                 push!(feasible_collects, collect)
-                push!(unique_images, collect.image)
+                push!(unique_images, collect.location)
             end
         else
             push!(infeasible_collects, collect)

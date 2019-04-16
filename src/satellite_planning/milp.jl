@@ -6,64 +6,65 @@ using JuMP
 using Gurobi
 
 # SatelliteTasking imports
-using SatelliteTasking.DataStructures: Image, Opportunity, Collect
-using SatelliteTasking.Collection: group_image_collects
+using SatelliteTasking.DataStructures: Image, Opportunity
+using SatelliteTasking.Collection: group_image_opportunities
 
 export sp_milp_policy
 """
-Solve for optimal collect plan using mixed-integer linear programming.
+Solve for optimal opportunity plan using mixed-integer linear programming.
 
 Arguments:
-- `collects::Array{Collect,1}` Array of collects to plan the optimal tasking schedule for
+- `opportunities::Array{Opportunity,1}` Array of opportunities to plan the optimal tasking schedule for
 - `constraints::Array{Any, 1}` Array of constraint function which may limit feasible transitions
 - `horizon::Real` Look-ahead horizon for constructing constraints. Transitions further than this apart are not considered. Not used if 0
-- `allow_repeats::Bool` Allow images to be collected multiple times over the course of a plan
+- `allow_repeats::Bool` Allow images to be opportunityed multiple times over the course of a plan
 
 Returns:
-- `collect_policy::Array{Collect}` List of collects to take in the order which they should be taken
+- `opportunity_policy::Array{Opportunity}` List of opportunities to take in the order which they should be taken
 """
-function sp_milp_policy(collects::Array{Collect, 1}, constraint_list; horizon=0::Real, allow_repeats=false::Bool)
+function sp_milp_policy(opportunities::Array{Opportunity, 1}, constraint_list; horizon=0::Real, allow_repeats=false::Bool)
     
-    # Sort Collects to ensure they are in time-asecnding order
-    collects = sort!(collects, by = x -> x.sow)
+    # Sort Opportunitys to ensure they are in time-asecnding order
+    opportunities = sort!(opportunities, by = x -> x.sow)
 
     # Initialize MILP problem
-    milp = Model(solver=GurobiSolver(Presolve=0, Heuristics=0.0))
+    # milp = Model(solver=GurobiSolver(Presolve=0, Heuristics=0.0))
+    milp = Model(with_optimizer(Gurobi.Optimizer))
 
     # Initialize Variables
-    @variable(milp, x[1:length(collects)], Bin)
+    @variable(milp, x[1:length(opportunities)], Bin)
 
     # Add Objective
-    @objective(milp, Max, sum(col.image.reward*x[i] for (i,col) in enumerate(collects)))
+    @objective(milp, Max, sum(opp.location.reward*x[i] for (i,opp) in enumerate(opportunities)))
 
     # Define non-repetition constraints if necessary
     if allow_repeats == false
-        # Group collects by image
-        image_collects = group_image_collects(collects) # Group collects by image
+        # Group opportunities by image
+        image_opportunities = group_image_opportunities(opportunities) # Group opportunities by image
         
-        # Add constraints to limit one collect per image
-        for img in keys(image_collects)
-            # Only add constraints for when there is more than one possible collect
-            if length(image_collects[img]) > 1
-                @constraint(milp, sum(x[i] for i in collect(e[1] for e in image_collects[img])) <= 1)
+        # Add constraints to limit one opportunity per image
+        for img in keys(image_opportunities)
+            # Only add constraints for when there is more than one possible opportunity
+            if length(image_opportunities[img]) > 1
+                @constraint(milp, sum(x[i] for i in collect(e[1] for e in image_opportunities[img])) <= 1)
             end
         end
     end
 
     # Add satellite model-derived constraints
-    for i in 1:length(collects)
-        for j in  i:length(collects)
+    for i in 1:length(opportunities)
+        for j in  i:length(opportunities)
             # Since all constraints are reciprocal they only need to be checked in one direction
-            col_start = collects[i]
-            col_end   = collects[j]
+            opp_start = opportunities[i]
+            opp_end   = opportunities[j]
             
             # Skip adding constraints if a planning horizon is being used
-            if horizon > 0 && col_end.sow > (col_start.eow + horizon)
+            if horizon > 0 && opp_end.sow > (opp_start.eow + horizon)
                 # Condition to exit early is only considering transitions within a certain horizon may be invalid
                 continue
             end
 
-            if col_start == col_end || col_start.image == col_end.image || col_start.opportunity == col_end.opportunity || j < i
+            if opp_start == opp_end || opp_start.location == opp_end.location j < i
                 # Skip if the same opportunity, or same image because this is already covered
                 continue
             else
@@ -77,7 +78,7 @@ function sp_milp_policy(collects::Array{Collect, 1}, constraint_list; horizon=0:
                     # evaluated with start dependent on the end, we only add a constraint if neither transition is valid
                     # Otherwise the problem would be over constrained just due to the final opportunity not
                     # being able to take images before the current
-                    valid_transition = valid_transition && (cons(col_start, col_end) || cons(col_end, col_start))
+                    valid_transition = valid_transition && (cons(opp_start, opp_end) || cons(opp_end, opp_start))
                     
                     # Add constraint as soon as invalid to short-circuit additional evaluations
                     if !valid_transition
@@ -92,26 +93,26 @@ function sp_milp_policy(collects::Array{Collect, 1}, constraint_list; horizon=0:
     end
 
     # Solve Problem
-    status = solve(milp)
+    optimize!(milp)
 
     # Extract Optimal Path, Reward, and Images
-    collect_idx    = []
-    collects_taken = Collect[]
-    for i in 1:length(collects)
-        if getvalue(x[i]) != 0.0 # If opportunity taken
-            push!(collect_idx, i)
-            push!(collects_taken, collects[i])
+    opportunity_idx    = []
+    opportunities_taken = Opportunity[]
+    for i in 1:length(opportunities)
+        if value(x[i]) != 0.0 # If opportunity taken
+            push!(opportunity_idx, i)
+            push!(opportunities_taken, opportunities[i])
         end
     end
 
     # Get images taken
-    image_list = [collects[col_idx].image for col_idx in collect_idx]
+    image_list = [opportunities[opp_idx].location for opp_idx in opportunity_idx]
 
     # Get Path
-    path = sort!(collects_taken, by = x -> x.sow)
+    path = sort!(opportunities_taken, by = x -> x.sow)
 
     # Get reward
-    reward = getobjectivevalue(milp)
+    reward = objective_value(milp)
 
     return path, reward, image_list
 end
