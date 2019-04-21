@@ -3,11 +3,13 @@ module MDP
 
 # Julia Packages
 using Random
+using Printf
 
 using SatelliteDynamics.Time: Epoch
 using SatelliteTasking.DataStructures: Image, Opportunity
 
 
+export MDPState
 """
 MDPState 
 
@@ -21,21 +23,41 @@ mutable struct MDPState
     locations::BitArray{1}
 end
 
+function Base.show(io::IO, state::MDPState)
+
+    seen = ""
+
+    for l in state.locations
+        if l == true
+            seen = seen * "1"
+        else
+            seen = seen * "0"
+        end
+    end
+
+    s = @sprintf "MDPState(Opportunity: %s, Locations: %s)" string(UInt64(pointer_from_objref(state.time)), base=16) seen
+
+    print(io, s)
+end
+
+# Comparison operators for MDP state, relies on same allocation of opportunities
+function Base.:(==)(state_left::MDPState, state_right::MDPState)
+    return ((state_left.time == state_right.time) && (state_left.locations == state_right.locations))
+end
+
+function Base.:(!=)(state_left::MDPState, state_right::MDPState)
+    return ((state_left.time != state_right.time) || (state_left.locations != state_right.locations))
+end
+
 # State constructor from image length
 function MDPState(epc::Opportunity, image_list::Array{Image,1})    
     return MDPState(epc, BitArray(false for _ in 1:length(image_list)))
 end
 
-"""
-
-"""
-function mdp_compute_actions(state::MDPState, opportunities::Array{Opportunity, 1}, 
+function mdp_compute_actions(current_opp::Opportunity, opportunities::Array{Opportunity, 1}, 
     constraint_list::Array{Function, 1}; breadth=0::Real)
 
     # NOTE: Assumes a time-ascending ordered order of opportunities
-
-    # Get current opportunitity
-    current_opp = state.time
 
     # Limit search to future opportunities
     future_opportunities = filter(x -> x.sow > current_opp.eow, opportunities)
@@ -132,25 +154,26 @@ end
 """
 Compute the reward for being in a given state.
 """
-function mdp_reward(state::MDPState, position_lookup::Dict{<:Integer, Image})
+function mdp_reward(state::MDPState, image_lookup::Dict{<:Integer, Image}, position_lookup::Dict{Image, <:Integer})
     
     r = 0.0
     
     for (i, img) in enumerate(state.locations)
         if img
-            r += position_lookup[i].reward
+            r += image_lookup[i].reward
         else
-            r -= position_lookup[i].reward
+            r -= image_lookup[i].reward
         end
     end
     
     return r
+    # return state.time.location.reward*state.locations[position_lookup[state.time.location]]
 end
 
 function forward_search(state::MDPState, d::Integer, opportunities::Array{Opportunity, 1},
             constraint_list::Array{Function, 1},
             image_lookup::Dict{<:Integer, Image}, position_lookup::Dict{Image, <:Integer}; probabilities::Union{Dict{Opportunity, <:Real}, Nothing}=nothing,
-            depth::Real=3, breadth::Real=3, gamma::Real=0.7)
+            depth::Real=3, breadth::Real=3, gamma::Real=0.95)
 
     if d == 0
         return nothing, 0
@@ -159,8 +182,8 @@ function forward_search(state::MDPState, d::Integer, opportunities::Array{Opport
     # Initialize current optimal action and value
     astar, vstar = nothing, -Inf 
 
-    for a in mdp_compute_actions(state, opportunities, constraint_list, breadth=breadth)
-        v = mdp_reward(state, image_lookup)
+    for a in mdp_compute_actions(state.time, opportunities, constraint_list, breadth=breadth)
+        v = mdp_reward(state, image_lookup, position_lookup)
         
         for sp in reachable_states(state, a, position_lookup)
             # Continue forward search of space
@@ -186,16 +209,36 @@ function forward_search(state::MDPState, d::Integer, opportunities::Array{Opport
     if astar == nothing
         future_states = filter(x -> x.sow > state.time.eow, opportunities)
         if length(future_states) > 0
-            # Make action to take next image
-            astar = future_states[1]
+            # Look through possible future transitions and take the first feasible 
+            for fstate in future_states
+                # Check if valid transition
+                valid_transition = true
+                for constraint in constraint_list
+                    # If not valid transititon break early
+                    if valid_transition == false
+                        continue
+                    end
 
-            # Simple vstar
-            vstar = 0
+                    # Use logical AND ot evaluate continued feasibility
+                    valid_transition = valid_transition && constraint(state.time, fstate)
+                end
+                
+                if valid_transition
+                    # Make action to take next image
+                    astar = future_states[1]
 
-            # More complex vstar
-            success = MDPState(astar, deepcopy(state.locations))
-            success.locations[position_lookup[astar.location]] = true
-            vstar = mdp_reward(success, image_lookup)
+                    # Simple vstar
+                    vstar = 0
+
+                    # More complex vstar
+                    success = MDPState(astar, deepcopy(state.locations))
+                    success.locations[position_lookup[astar.location]] = true
+                    vstar = mdp_reward(success, image_lookup, position_lookup)
+
+                    # Successful transition found, break
+                    break
+                end
+            end
         end
     end
 
@@ -230,7 +273,7 @@ Solve MDP using basic forward search algorithm.
 """
 function mdp_solve_forward_search(opportunities::Array{Opportunity, 1}, 
     constraint_list::Array{Function, 1}, probabilities::Union{Dict{Opportunity, <:Real}, Nothing}=nothing;
-    depth::Real=3, breadth::Real=3, gamma::Real=0.7)
+    depth::Real=3, breadth::Real=3, gamma::Real=0.95)
 
     # Extract image list
     images = extract_images(opportunities)
@@ -255,6 +298,7 @@ function mdp_solve_forward_search(opportunities::Array{Opportunity, 1},
 
     # Transition state forward
     state = mdp_forward_step(state, action, position_lookup)
+    # state = mdp_forward_step(state, action, position_lookup, probabilities=probabilities)
 
     while true
         action, value = forward_search(state, depth, opportunities, 
@@ -271,6 +315,7 @@ function mdp_solve_forward_search(opportunities::Array{Opportunity, 1},
 
         # Transition state forward
         state = mdp_forward_step(state, action, position_lookup)
+        # state = mdp_forward_step(state, action, position_lookup, probabilities=probabilities)
     end
 
     # Compute plan reward
@@ -291,5 +336,219 @@ end
 ###########################
 # Monte Carlo Tree Search #
 ###########################
+
+function mcts_generate_rollout(opportunities::Array{Opportunity, 1}, constraint_list::Array{Function, 1}; breadth::Integer=10)
+
+    rollout_policy = Dict{Opportunity, Array{Tuple{Opportunity, <:Real}}}()
+
+    for start_opportunity in opportunities
+
+        # Initialize Array
+        rollout_policy[start_opportunity] = Array{Tuple{Opportunity, <:Real}, 1}[]
+
+        # Populate list of possible actions
+        actions = mdp_compute_actions(start_opportunity, opportunities, constraint_list, breadth=breadth)
+
+        num_actions = length(actions)
+        for a in actions
+            push!(rollout_policy[start_opportunity], (a, 1.0/num_actions))
+        end
+    end
+
+    return rollout_policy
+end
+
+function mcts_get_optimal_action(state, Q, N; c=1.0)
+    # Find optimal action
+    amax, vmax = nothing, 0.0
+    # println("State: $state")
+    # println("State: $(string(UInt64(pointer_from_objref(state)), base=16))")
+    # println("Q States: $([UInt64(pointer_from_objref(k)) for k in keys(Q)])")
+    for as in keys(Q[state])
+        println("Action: $as")
+    end
+    Ns = sum([N[state][as] for as in keys(Q[state])])
+    for a in keys(Q[state])
+        if Ns == 0
+            # If Ns gis zero use this otherwise log(Ns) = -Inf
+            v = Q[state][a]
+        else
+            v = Q[state][a] + c*sqrt(log(Ns)/N[state][a])
+        end
+
+        if v > vmax
+            amax, vmax = a, v
+        end
+    end
+
+    return amax
+end
+
+function mcts_tree_search(state::MDPState, d::Integer, rollout_policy::Dict{Opportunity, Array{Tuple{Opportunity, <:Real}}};
+            opportunities::Array{Opportunity, 1},
+            probabilities::Union{Dict{Opportunity, <:Real}, Nothing}=nothing,
+            constraint_list::Array{Function, 1}, 
+            position_lookup::Dict{Image, <:Integer},
+            T::Array{MDPState, 1},
+            N::Dict{MDPState, Dict{Opportunity, Int32}},
+            Q::Dict{MDPState, Dict{Opportunity, Float64}},
+            c::Real=1.0, gamma::Real=0.95, breadth::Integer=10)
+   
+    if d == 0
+        return 0.0
+    end
+
+    # If state not seen, add it and rollout policy 
+    if !(state in T)
+        println("Encounted unseen state: $state")
+
+        # Initiallies N & Q arrays
+        N[state] = Dict{Opportunity, Int32}()
+        Q[state] = Dict{Opportunity, Float64}()
+
+        for a in mdp_compute_actions(state.time, opportunities, constraint_list, breadth=breadth)
+            # Initialize state action reward value if not
+            N[state][a] = 0
+            Q[state][a] = 0
+        end
+
+        # Add state to observed states
+        push!(T, state)
+
+        # Return reward for state using rollout_policy
+        return mcts_rollout(state, d, rollout_policy, gamma=gamma, probabilities=probabilities, position_lookup=position_lookup)
+    end
+
+    if state in T
+        println("Encounted seen state: $state")
+    end
+
+    # Find optimal action
+    amax = mcts_get_optimal_action(state, Q, N, c=c)
+
+    # Simulate next state
+    next_state = mdp_forward_step(state, amax, position_lookup, probabilities=probabilities)
+    # println("Next State: $state")
+    # println("Next State: $(string(UInt64(pointer_from_objref(state)), base=16))")
+    
+    # Reward for action
+    r = amax.location.reward*next_state.locations[position_lookup[amax.location]]
+
+    q = r + gamma*mcts_tree_search(next_state, d-1, rollout_policy, 
+                    opportunities=opportunities, probabilities=probabilities,
+                    constraint_list=constraint_list,
+                    position_lookup=position_lookup,
+                    T=T, Q=Q, N=N, c=c, gamma=gamma, breadth=breadth)
+    
+    N[state][amax] = N[state][amax] + 1
+    Q[state][amax] = Q[state][amax] + (q - Q[state][amax])/N[state][amax]
+
+    return q
+end
+
+function sample_rollout(state::MDPState, rollout_policy::Dict{Opportunity, Array{Tuple{Opportunity, <:Real}}})
+    # Generate random number
+    p = rand()
+
+    # Set cumulative probability
+    cum_prob = 0.0
+
+    for ap in rollout_policy[state.time]
+        cum_prob += ap[2]
+
+        if p <= cum_prob
+            return ap[1]
+        end
+    end
+
+    return nothing
+end
+
+function mcts_rollout(state, d, rollout_policy::Dict{Opportunity, Array{Tuple{Opportunity, <:Real}}}; 
+            probabilities::Union{Dict{Opportunity, <:Real}, Nothing}=nothing,
+            position_lookup::Dict{Image, <:Integer},
+            gamma::Real=0.95)
+            
+    if d == 0
+        return 0
+    end
+
+    # Sample rollout policy
+    action = sample_rollout(state, rollout_policy)
+
+    # If no possible future states return 0
+    if action == nothing
+        return 0
+    end
+
+    # Simulate next state
+    next_state = mdp_forward_step(state, action, position_lookup, probabilities=probabilities)
+    
+    # Reward for action
+    r = action.location.reward*next_state.locations[position_lookup[action.location]]
+
+    return r + gamma*mcts_rollout(next_state, d-1, rollout_policy, gamma=gamma, probabilities=probabilities, position_lookup=position_lookup)
+end
+
+
+export mdp_solve_mcts
+"""
+Solve MDP witht Monte Carlo Tree Search
+"""
+function mdp_solve_mcts(opportunities::Array{Opportunity, 1}, 
+    constraint_list::Array{Function, 1}, probabilities::Union{Dict{Opportunity, <:Real}, Nothing}=nothing;
+    depth::Real=10, breadth::Integer=10, gamma::Real=0.95, c::Real=0.75, max_iterations::Integer=5)
+
+    # Extract image list
+    images = extract_images(opportunities)
+
+    # Compute image lookup
+    image_lookup, position_lookup = create_lookups(images)
+
+    # Initialize MCTS variables
+    plan   = Union{Opportunity, Nothing}[]
+    T = MDPState[]                                    # Visited States 
+    N = Dict{MDPState, Dict{Opportunity, Int32}}()    # State-Action Exploration Count
+    Q = Dict{MDPState, Dict{Opportunity, Float64}}()  # State-Action Reward
+
+    # Generate rollout policy
+    rollout_policy = mcts_generate_rollout(opportunities, constraint_list, breadth=breadth)
+
+    # Set Initial state
+    init_opp = opportunities[collect(keys(opportunities))[findmin(collect([o.sow for o in opportunities]))[2]]]
+    state    = MDPState(init_opp, images)
+
+    # While
+    for i in 1:max_iterations
+        println("Tree search Iteration $i")
+        q = mcts_tree_search(state, depth, rollout_policy, 
+                    opportunities=opportunities,
+                    probabilities=probabilities,
+                    constraint_list=constraint_list,
+                    position_lookup=position_lookup,
+                    T=T,
+                    Q=Q,
+                    N=N,
+                    c=c,
+                    gamma=gamma,
+                    breadth=breadth)
+        println("Q keys: $(keys(Q))")
+    end
+
+    # Get Optimal action for state
+    action = mcts_get_optimal_action(state, Q, N, c=c)
+
+    println("Optimal action: $action")
+
+    # Add action to plan
+    push!(plan, action)
+
+    # Transition state forward probabilistically
+    state = mdp_forward_step(state, action, position_lookup, probabilities=probabilities)
+
+    println("Time: $(state.time.sow)")
+
+    return 0, 0, 0
+end
 
 end # End MDP module

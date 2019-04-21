@@ -214,7 +214,7 @@ end
 
 function Base.show(io::IO, img::Image)
 
-    s = @sprintf "Image(Ptr: %d Lon: %.3f Lat: %0.3f Reward: %f)" UInt64(pointer_from_objref(img)) img.lon img.lat img.reward
+    s = @sprintf "Image(Ptr: %s Lon: %.3f Lat: %0.3f Reward: %f)" string(UInt64(pointer_from_objref(img)),base=16) img.lon img.lat img.reward
 
     print(io, s)
 end
@@ -311,7 +311,7 @@ end
 
 function Base.show(io::IO, img::GroundStation)
 
-    s = @sprintf "GroundStation(Ptr: %d Lon: %.3f Lat: %0.3f)" UInt64(pointer_from_objref(img)) img.lon img.lat 
+    s = @sprintf "GroundStation(Ptr: %s Lon: %.3f Lat: %0.3f)" string(UInt64(pointer_from_objref(img)),base=16) img.lon img.lat 
 
     print(io, s)
 end
@@ -411,10 +411,10 @@ function Base.show(io::IO, opp::Opportunity)
 
     image = "nothing"
     if opp.location != nothing 
-        image = string(UInt64(pointer_from_objref(opp.location)))
+        image = string(UInt64(pointer_from_objref(opp.location)), base=16)
     end
     
-    s = @sprintf "Opportunity(Ptr: %d, Orbit: %s, Location: %s, Start: %s, End: %s, Duration: %.2f)" UInt64(pointer_from_objref(opp)) orbit image string(opp.sow) string(opp.eow) opp.duration
+    s = @sprintf "Opportunity(Ptr: %s, Orbit: %s, Location: %s, Start: %s, End: %s, Duration: %.2f)" string(UInt64(pointer_from_objref(opp)), base=16) orbit image string(opp.sow) string(opp.eow) opp.duration
 
     print(io, s)
 end

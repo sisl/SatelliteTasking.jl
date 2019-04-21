@@ -22,14 +22,15 @@ Arguments:
 Returns:
 - `opportunity_policy::Array{Opportunity}` List of opportunities to take in the order which they should be taken
 """
-function sp_milp_policy(opportunities::Array{Opportunity, 1}, constraint_list; horizon=0::Real, allow_repeats=false::Bool)
+function sp_milp_policy(opportunities::Array{Opportunity, 1}, constraint_list; horizon::Real=0, allow_repeats::Bool=false, timeout::Real=900)
     
     # Sort Opportunitys to ensure they are in time-asecnding order
     opportunities = sort!(opportunities, by = x -> x.sow)
 
     # Initialize MILP problem
     # milp = Model(solver=GurobiSolver())
-    milp = Model(with_optimizer(Gurobi.Optimizer, Presolve=0, Heuristics=0.0, TimeLimit=900))
+    # milp = Model(with_optimizer(Gurobi.Optimizer, Presolve=0, Heuristics=0.0, TimeLimit=900))
+    milp = Model(with_optimizer(Gurobi.Optimizer, TimeLimit=900))
 
     # Initialize Variables
     @variable(milp, x[1:length(opportunities)], Bin)
