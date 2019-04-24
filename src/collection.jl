@@ -228,11 +228,21 @@ Arguments:
 Returns:
 - `opportunities::Array{Opportunity, 1}` Array of collection opportunities for all locations
 """
-function find_all_opportunities(orbit::Orbit, locations::Array{<:Location, 1}; sort=true::Bool)
+function find_all_opportunities(orbit::Orbit, locations::Array{<:Location, 1}; sort::Bool=true, zero_doppler::Bool=false)
     opportunities = Opportunity[]
     for tar in locations
         for opp in find_opportunities(orbit, tar)
             push!(opportunities, opp)
+        end
+    end
+
+    # If zero-doppler constrained edit all opportunities start and and end times
+    # to border the mid time.
+    if zero_doppler == true
+        for opp in opportunities
+            opp.sow = opp.mid - opp.location.collect_duration/2.0
+            opp.eow = opp.mid + opp.location.collect_duration/2.0
+            opp.duration = opp.eow - opp.sow
         end
     end
 

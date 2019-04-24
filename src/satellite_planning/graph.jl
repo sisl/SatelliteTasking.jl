@@ -66,6 +66,71 @@ function sp_construct_graph(opps::Array{Opportunity, 1}, constraint_list::Array{
     return graph
 end
 
+export merge_graphs
+function merge_graphs(graphs::Array{Dict{Opportunity, Array{Opportunity, 1}}, 1}; max_branch::Integer=3)
+    # Copy graphs so no conflight
+    graphs = copy(graphs)
+    
+    # Total number of graphs being merged
+    num_graphs = length(graphs)
+
+    if num_graphs < 1
+        throw(ArgumentError("There must be at least two graphs to merge"))
+    end
+
+    # Initialize merged graph
+    graph = Dict{Opportunity, Array{Opportunity, 1}}()
+
+    # Copy initial graph over merged graph 
+    for opp in keys(graphs[1])
+        graph[opp] = graphs[1][opp]
+    end
+
+    # Add graph one at a time into graph
+    for gidx in 2:num_graphs
+        current_nodes = collect(keys(graph))
+        pending_nodes = collect(keys(graphs[gidx]))
+
+        # Point each node in current graph to next node in new satellite's graph
+        for node in current_nodes
+            # Find next node in pending nodes
+            future_nodes = sort(filter(o -> o.sow > node.sow, pending_nodes), by = o -> o.sow)
+
+            # If at least one future node has been found add it
+            if length(future_nodes) >= 1
+                if max_branch == 0
+                    push!(graph[node], future_nodes...)
+                else
+                    push!(graph[node], future_nodes[1:min(max_branch, length(future_nodes))]...)
+                end
+            end
+        end
+
+        # Point new satellite's grpah to next node in current all-constellation graph
+        for node in pending_nodes
+            # Find next node in current constellation 
+            future_nodes = sort(filter(o -> o.sow > node.sow, current_nodes), by = o -> o.sow)
+
+            # If at least one future node has been found add it
+            if length(future_nodes) >= 1
+                if max_branch == 0
+                    push!(graphs[gidx][node], future_nodes...)
+                else
+                    push!(graphs[gidx][node], future_nodes[1:min(max_branch, length(future_nodes))]...)
+                end
+            end
+        end
+
+        # Merge new satellite graph into main graph
+        for node in pending_nodes
+            graph[node] = graphs[gidx][node]
+        end
+    end
+
+    # Return merged graph
+    return graph 
+end
+
 # Solve graph 
 export sp_solve_graph
 """
@@ -83,7 +148,7 @@ function sp_solve_graph(graph::Dict{Opportunity, Array{Opportunity, 1}}; allow_r
 
     # Initialize nodes in optimal path
     for node in keys(graph)
-        optimal_path[node] = (nothing, node.location.reward, [node.location])
+        optimal_path[node] = (nothing, 0.0, [])
     end
 
     # Iterate over nodes updating optimal weights

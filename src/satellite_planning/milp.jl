@@ -58,6 +58,11 @@ function sp_milp_policy(opportunities::Array{Opportunity, 1}, constraint_list; h
             # Since all constraints are reciprocal they only need to be checked in one direction
             opp_start = opportunities[i]
             opp_end   = opportunities[j]
+
+            # Skipp adding constraint if different satellites
+            if opp_start.orbit.id != opp_end.orbit.id
+                continue
+            end
             
             # Skip adding constraints if a planning horizon is being used
             if horizon > 0 && opp_end.sow > (opp_start.eow + horizon)
@@ -110,7 +115,7 @@ function sp_milp_policy(opportunities::Array{Opportunity, 1}, constraint_list; h
     image_list = [opportunities[opp_idx].location for opp_idx in opportunity_idx]
 
     # Get Path
-    path = sort!(opportunities_taken, by = x -> x.sow)
+    path = sort!(opportunities_taken, by = o -> o.sow)
 
     # Get reward
     reward = objective_value(milp)

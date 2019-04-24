@@ -358,22 +358,18 @@ function mcts_generate_rollout(opportunities::Array{Opportunity, 1}, constraint_
     return rollout_policy
 end
 
-function mcts_get_optimal_action(state, Q, N; c=1.0)
+function mcts_get_optimal_action(state::MDPState, N::Dict{Opportunity, Dict{Opportunity, Int32}}, Q::Dict{Opportunity, Dict{Opportunity, Float64}}; c=1.0)
     # Find optimal action
-    amax, vmax = nothing, 0.0
-    # println("State: $state")
-    # println("State: $(string(UInt64(pointer_from_objref(state)), base=16))")
-    # println("Q States: $([UInt64(pointer_from_objref(k)) for k in keys(Q)])")
-    for as in keys(Q[state])
-        println("Action: $as")
-    end
-    Ns = sum([N[state][as] for as in keys(Q[state])])
-    for a in keys(Q[state])
+    amax, vmax = nothing, -Inf
+
+    Ns = sum([N[state.time][as] for as in keys(Q[state.time])])
+    for a in keys(Q[state.time])
+
         if Ns == 0
             # If Ns gis zero use this otherwise log(Ns) = -Inf
-            v = Q[state][a]
+            v = Q[state.time][a]
         else
-            v = Q[state][a] + c*sqrt(log(Ns)/N[state][a])
+            v = Q[state.time][a] + c*sqrt(log(Ns)/N[state.time][a])
         end
 
         if v > vmax
@@ -389,9 +385,10 @@ function mcts_tree_search(state::MDPState, d::Integer, rollout_policy::Dict{Oppo
             probabilities::Union{Dict{Opportunity, <:Real}, Nothing}=nothing,
             constraint_list::Array{Function, 1}, 
             position_lookup::Dict{Image, <:Integer},
-            T::Array{MDPState, 1},
-            N::Dict{MDPState, Dict{Opportunity, Int32}},
-            Q::Dict{MDPState, Dict{Opportunity, Float64}},
+            image_lookup::Dict{<:Integer, Image}, 
+            T::Array{Opportunity, 1},
+            N::Dict{Opportunity, Dict{Opportunity, Int32}},
+            Q::Dict{Opportunity, Dict{Opportunity, Float64}},
             c::Real=1.0, gamma::Real=0.95, breadth::Integer=10)
    
     if d == 0
@@ -399,49 +396,56 @@ function mcts_tree_search(state::MDPState, d::Integer, rollout_policy::Dict{Oppo
     end
 
     # If state not seen, add it and rollout policy 
-    if !(state in T)
-        println("Encounted unseen state: $state")
+    if !(state.time in T)
+        # println("Encountered new state $(string(UInt64(pointer_from_objref(state.time)), base=16)).")
 
         # Initiallies N & Q arrays
-        N[state] = Dict{Opportunity, Int32}()
-        Q[state] = Dict{Opportunity, Float64}()
+        N[state.time] = Dict{Opportunity, Int32}()
+        Q[state.time] = Dict{Opportunity, Float64}()
 
         for a in mdp_compute_actions(state.time, opportunities, constraint_list, breadth=breadth)
             # Initialize state action reward value if not
-            N[state][a] = 0
-            Q[state][a] = 0
+            N[state.time][a] = 0
+            Q[state.time][a] = 0
         end
 
         # Add state to observed states
-        push!(T, state)
+        push!(T, state.time)
 
         # Return reward for state using rollout_policy
-        return mcts_rollout(state, d, rollout_policy, gamma=gamma, probabilities=probabilities, position_lookup=position_lookup)
-    end
-
-    if state in T
-        println("Encounted seen state: $state")
+        return mcts_rollout(state, d, rollout_policy, 
+                gamma=gamma, 
+                probabilities=probabilities, 
+                position_lookup=position_lookup, 
+                image_lookup=image_lookup)
+    else    
+        # println("Encountered state $(string(UInt64(pointer_from_objref(state.time)), base=16)) - $(sum([N[state.time][as] for as in keys(Q[state.time])])) times previously.")
     end
 
     # Find optimal action
-    amax = mcts_get_optimal_action(state, Q, N, c=c)
+    amax = mcts_get_optimal_action(state, N, Q, c=c)    
+
+    # No future actions return nothing
+    if amax == nothing
+        return 0.0
+    end
 
     # Simulate next state
     next_state = mdp_forward_step(state, amax, position_lookup, probabilities=probabilities)
-    # println("Next State: $state")
-    # println("Next State: $(string(UInt64(pointer_from_objref(state)), base=16))")
-    
+       
     # Reward for action
-    r = amax.location.reward*next_state.locations[position_lookup[amax.location]]
+    # r = amax.location.reward*next_state.locations[position_lookup[amax.location]]
+    r = mdp_reward(next_state, image_lookup, position_lookup)
 
     q = r + gamma*mcts_tree_search(next_state, d-1, rollout_policy, 
                     opportunities=opportunities, probabilities=probabilities,
                     constraint_list=constraint_list,
                     position_lookup=position_lookup,
+                    image_lookup=image_lookup, 
                     T=T, Q=Q, N=N, c=c, gamma=gamma, breadth=breadth)
     
-    N[state][amax] = N[state][amax] + 1
-    Q[state][amax] = Q[state][amax] + (q - Q[state][amax])/N[state][amax]
+    N[state.time][amax] = N[state.time][amax] + 1
+    Q[state.time][amax] = Q[state.time][amax] + (q - Q[state.time][amax])/N[state.time][amax]
 
     return q
 end
@@ -467,6 +471,7 @@ end
 function mcts_rollout(state, d, rollout_policy::Dict{Opportunity, Array{Tuple{Opportunity, <:Real}}}; 
             probabilities::Union{Dict{Opportunity, <:Real}, Nothing}=nothing,
             position_lookup::Dict{Image, <:Integer},
+            image_lookup::Dict{<:Integer, Image}, 
             gamma::Real=0.95)
             
     if d == 0
@@ -485,9 +490,14 @@ function mcts_rollout(state, d, rollout_policy::Dict{Opportunity, Array{Tuple{Op
     next_state = mdp_forward_step(state, action, position_lookup, probabilities=probabilities)
     
     # Reward for action
-    r = action.location.reward*next_state.locations[position_lookup[action.location]]
+    # r = action.location.reward*next_state.locations[position_lookup[action.location]]
+    r = mdp_reward(next_state, image_lookup, position_lookup)
 
-    return r + gamma*mcts_rollout(next_state, d-1, rollout_policy, gamma=gamma, probabilities=probabilities, position_lookup=position_lookup)
+    return r + gamma*mcts_rollout(next_state, d-1, rollout_policy, 
+                        gamma=gamma,
+                        probabilities=probabilities, 
+                        position_lookup=position_lookup,
+                        image_lookup=image_lookup)
 end
 
 
@@ -497,7 +507,7 @@ Solve MDP witht Monte Carlo Tree Search
 """
 function mdp_solve_mcts(opportunities::Array{Opportunity, 1}, 
     constraint_list::Array{Function, 1}, probabilities::Union{Dict{Opportunity, <:Real}, Nothing}=nothing;
-    depth::Real=10, breadth::Integer=10, gamma::Real=0.95, c::Real=0.75, max_iterations::Integer=5)
+    depth::Real=10, breadth::Integer=10, gamma::Real=0.95, c::Real=0.75, max_iterations::Integer=10)
 
     # Extract image list
     images = extract_images(opportunities)
@@ -506,10 +516,10 @@ function mdp_solve_mcts(opportunities::Array{Opportunity, 1},
     image_lookup, position_lookup = create_lookups(images)
 
     # Initialize MCTS variables
-    plan   = Union{Opportunity, Nothing}[]
-    T = MDPState[]                                    # Visited States 
-    N = Dict{MDPState, Dict{Opportunity, Int32}}()    # State-Action Exploration Count
-    Q = Dict{MDPState, Dict{Opportunity, Float64}}()  # State-Action Reward
+    plan = Union{Opportunity, Nothing}[]
+    T = Opportunity[]                                    # Visited States 
+    N = Dict{Opportunity, Dict{Opportunity, Int32}}()    # State-Action Exploration Count
+    Q = Dict{Opportunity, Dict{Opportunity, Float64}}()  # State-Action Reward
 
     # Generate rollout policy
     rollout_policy = mcts_generate_rollout(opportunities, constraint_list, breadth=breadth)
@@ -518,37 +528,83 @@ function mdp_solve_mcts(opportunities::Array{Opportunity, 1},
     init_opp = opportunities[collect(keys(opportunities))[findmin(collect([o.sow for o in opportunities]))[2]]]
     state    = MDPState(init_opp, images)
 
-    # While
+    # println("Current state: $(state.time.sow)")
+
+    # Run MCTS for fix number of iterations
     for i in 1:max_iterations
-        println("Tree search Iteration $i")
+        # println("Tree search Iteration $i")
         q = mcts_tree_search(state, depth, rollout_policy, 
                     opportunities=opportunities,
                     probabilities=probabilities,
                     constraint_list=constraint_list,
                     position_lookup=position_lookup,
+                    image_lookup=image_lookup,
                     T=T,
                     Q=Q,
                     N=N,
                     c=c,
                     gamma=gamma,
                     breadth=breadth)
-        println("Q keys: $(keys(Q))")
     end
 
     # Get Optimal action for state
-    action = mcts_get_optimal_action(state, Q, N, c=c)
-
-    println("Optimal action: $action")
+    action = mcts_get_optimal_action(state, N, Q, c=0)
 
     # Add action to plan
     push!(plan, action)
 
     # Transition state forward probabilistically
     state = mdp_forward_step(state, action, position_lookup, probabilities=probabilities)
+    # println("Current state: $(state.time.sow)")
 
-    println("Time: $(state.time.sow)")
+    while true
+        # Run MCTS for fix number of iterations
+        for i in 1:max_iterations
+            # println("Tree search Iteration $i")
+            q = mcts_tree_search(state, depth, rollout_policy, 
+                        opportunities=opportunities,
+                        probabilities=probabilities,
+                        constraint_list=constraint_list,
+                        position_lookup=position_lookup,
+                        image_lookup=image_lookup,
+                        T=T,
+                        Q=Q,
+                        N=N,
+                        c=c,
+                        gamma=gamma,
+                        breadth=breadth)
+        end
 
-    return 0, 0, 0
+        # Get Optimal action for state
+        action = mcts_get_optimal_action(state, N, Q, c=0)
+
+        if action == nothing
+            # Exit early
+            break
+        end
+
+        # Add action to plan
+        push!(plan, action)
+
+        # Transition state forward probabilistically
+        state = mdp_forward_step(state, action, position_lookup, probabilities=probabilities)
+        # println("Current state: $(state.time.sow)")
+    end
+
+
+    # Compute plan reward
+    reward = 0
+    image_list = Image[]
+    
+    for (i, image_collected) in enumerate(state.locations)
+        if image_collected
+            image   = image_lookup[i]
+            reward += image.reward
+            push!(image_list, image)
+        end
+    end
+        
+    return plan, reward, image_list
 end
 
 end # End MDP module
