@@ -9,7 +9,7 @@ let
     orb = Orbit(epc0, epcf, eci0, dtmax=30)
 
     # Load test images
-    images = collect(load_images("../data/landsat_test.json")[[3, 5]])
+    images = collect(load_images("./data/landsat_test.json")[[3, 5]])
 
     # Compute collect opportunities
     opportunities = find_all_opportunities(orb, images, sort=true)

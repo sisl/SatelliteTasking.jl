@@ -6,6 +6,7 @@ using Random
 using Printf
 
 using SatelliteDynamics.Time: Epoch
+using SatelliteDynamics.OrbitDynamics: eclipse_conical
 using SatelliteTasking.DataStructures: Image, Opportunity
 
 
@@ -148,8 +149,6 @@ end
 Enumerate possible states reachable 
 """
 function reachable_states(state::MDPResourceState, action::Opportunity, position_lookup::Dict{Image, <:Integer})
-    
-    
     # Failure to take collect would be same response at an updated time
     failure      = MDPResourceState(action, state.power, state.data, deepcopy(state.locations))
     
@@ -273,7 +272,17 @@ function mdp_forward_step(state::MDPResourceState, action::Opportunity,
     ts = state.time.eow
     te = state_next.time.sow
 
-    # orb = state.orbit.
+    # Get index of first and last time
+    is = findfirst(x -> x == ts, action.orbit.epc)
+    ie = findfirst(x -> x == te, action.orbit.epc)
+
+    # Power generated
+    pg = 0.0
+
+    for i in is:ie
+        nu = eclipse_conical(action.orbit.epc[i], action.orbit.eci[:, i])
+        pg += nu*state.pane
+    end
     
     if probabilities != nothing
         # Tranition state probabilistically if probabilities are available

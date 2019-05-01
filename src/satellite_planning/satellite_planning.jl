@@ -7,7 +7,6 @@ using Reexport
 include("graph.jl")
 include("milp.jl")
 include("mdp.jl")
-include("mdp_resources.jl")
 
 @reexport using SatelliteTasking.SatellitePlanning.Graph
 @reexport using SatelliteTasking.SatellitePlanning.MILP

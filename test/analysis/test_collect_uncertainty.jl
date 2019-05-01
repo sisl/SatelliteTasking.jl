@@ -16,7 +16,7 @@ let
     true_orbit, perturbed_orbits, eci_errors = simulate_orbits(num_orbits, epc0, epcf, eci0, pmean, pstd, timestep=1)
 
     # Load test images
-    images = load_images("../data/landsat_test.json");
+    images = load_images("./data/landsat_test.json");
 
     true_opportunities, perturbed_opportunities, mean_diff, sdev_diff, miss_opp = compute_perturbed_opportunities(true_orbit, perturbed_orbits, images)
 

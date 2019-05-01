@@ -21,7 +21,7 @@ let
     orb = Orbit(epc0, epcf, eci0, dtmax=30)
 
     # Load test images
-    images = load_images("../data/landsat_test.json");
+    images = load_images("./data/landsat_test.json");
 
     # Compute collect opportunities
     opportunities = find_all_opportunities(orb, images, sort=true)
@@ -48,7 +48,7 @@ let
     orb = Orbit(epc0, epcf, eci0, dtmax=30)
 
     # Load test images
-    images = load_images("../data/landsat_test.json");
+    images = load_images("./data/landsat_test.json");
 
     # Compute collect opportunities
     opportunities = find_all_opportunities(orb, images, sort=true)

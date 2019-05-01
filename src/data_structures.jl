@@ -212,6 +212,16 @@ mutable struct Image <: Location
     end
 end
 
+function Base.isequal(ll::Image, rl::Image)
+    return (
+        (ll.id == rl.id) &&
+        (ll.lat == rl.lat) &&
+        (ll.lon == rl.lon) &&
+        (ll.ecef == rl.ecef) && true
+    )
+end
+Base.:(==)(ll::Image, rl::Image) = Base.isequal(ll, rl)
+
 function Base.show(io::IO, img::Image)
 
     s = @sprintf "Image(Ptr: %s Lon: %.3f Lat: %0.3f Reward: %f)" string(UInt64(pointer_from_objref(img)),base=16) img.lon img.lat img.reward
@@ -309,6 +319,16 @@ mutable struct GroundStation <: Location
     end
 end
 
+function Base.isequal(ll::GroundStation, rl::GroundStation)
+    return (
+        (ll.id == rl.id) &&
+        (ll.lat == rl.lat) &&
+        (ll.lon == rl.lon) &&
+        (ll.ecef == rl.ecef) && true
+    )
+end
+Base.:(==)(ll::GroundStation, rl::GroundStation) = Base.isequal(ll, rl)
+
 function Base.show(io::IO, img::GroundStation)
 
     s = @sprintf "GroundStation(Ptr: %s Lon: %.3f Lat: %0.3f)" string(UInt64(pointer_from_objref(img)),base=16) img.lon img.lat 
@@ -402,6 +422,19 @@ mutable struct Opportunity
     end
 end
 
+function Base.isequal(ol::Opportunity, or::Opportunity)
+    return (
+        (ol.id == or.id) &&
+        (ol.location == or.location) &&
+        (ol.sow == or.sow) &&
+        (ol.mid == or.mid) &&
+        (ol.eow == or.eow) &&
+        (ol.duration == or.duration) &&
+        (ol.collect_duration == or.collect_duration) && true
+    )
+end
+Base.:(==)(ol::Opportunity, or::Opportunity) = Base.isequal(ol, or)
+
 function Base.show(io::IO, opp::Opportunity)
 
     orbit = "nothing"
@@ -414,7 +447,7 @@ function Base.show(io::IO, opp::Opportunity)
         image = string(UInt64(pointer_from_objref(opp.location)), base=16)
     end
     
-    s = @sprintf "Opportunity(Ptr: %s, Orbit: %s, Location: %s, Start: %s, End: %s, Duration: %.2f)" string(UInt64(pointer_from_objref(opp)), base=16) orbit image string(opp.sow) string(opp.eow) opp.duration
+    s = @sprintf "Opportunity(Ptr: %s, a Orbit: %s, Location: %s, Start: %s, End: %s, Duration: %.2f)" string(UInt64(pointer_from_objref(opp)), base=16) orbit image string(opp.sow) string(opp.eow) opp.duration
 
     print(io, s)
 end

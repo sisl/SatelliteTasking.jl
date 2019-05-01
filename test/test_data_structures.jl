@@ -47,7 +47,7 @@ end
 
 let
     # Test Image loading
-    img_data = abspath(string(@__DIR__), "../data/landsat_test_150.json")
+    img_data = abspath(string(@__DIR__), "./data/landsat_test.json")
     images = load_images(img_data)
 
     @test length(images) == 150
@@ -62,4 +62,15 @@ let
 
     @test opp1.id != opp2.id
     @test opp1.orbit == opp2.orbit
+end
+
+let
+    # Test Opportunity Equality
+    sow  = Epoch(2018, 1, 1, 12, 1, 0, 0)
+    eow  = Epoch(2018, 1, 1, 12, 1, 1, 0)
+    oppl = Opportunity(sow, eow)
+    oppr = deepcopy(oppl)
+
+    @test isequal(oppl, oppr) == true
+    @test oppl == oppr
 end
