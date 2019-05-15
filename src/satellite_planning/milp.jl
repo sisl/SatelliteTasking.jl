@@ -30,7 +30,7 @@ function sp_milp_policy(opportunities::Array{Opportunity, 1}, constraint_list; h
     # Initialize MILP problem
     # milp = Model(solver=GurobiSolver())
     # milp = Model(with_optimizer(Gurobi.Optimizer, Presolve=0, Heuristics=0.0, TimeLimit=900))
-    milp = Model(with_optimizer(Gurobi.Optimizer, TimeLimit=600))
+    milp = Model(with_optimizer(Gurobi.Optimizer, TimeLimit=timeout))
 
     # Initialize Variables
     @variable(milp, x[1:length(opportunities)], Bin)
