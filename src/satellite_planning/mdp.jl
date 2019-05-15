@@ -510,6 +510,7 @@ function mdp_solve_mcts(opportunities::Array{Opportunity, 1},
     depth::Real=10, breadth::Integer=10, gamma::Real=0.95, c::Real=0.75, max_iterations::Integer=10)
 
     println("Called!")
+    println("Updated call")
     return 0, 0, 0
 
     # Extract image list
