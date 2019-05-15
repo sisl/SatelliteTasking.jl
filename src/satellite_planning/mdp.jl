@@ -366,7 +366,7 @@ function mcts_get_optimal_action(state::MDPState, N::Dict{Opportunity, Dict{Oppo
     for a in keys(Q[state.time])
 
         if Ns == 0
-            # If Ns gis zero use this otherwise log(Ns) = -Inf
+            # If Ns is zero use this otherwise log(Ns) = -Inf
             v = Q[state.time][a]
         else
             v = Q[state.time][a] + c*sqrt(log(Ns)/N[state.time][a])
@@ -509,6 +509,9 @@ function mdp_solve_mcts(opportunities::Array{Opportunity, 1},
     constraint_list::Array{Function, 1}, probabilities::Union{Dict{Opportunity, <:Real}, Nothing}=nothing;
     depth::Real=10, breadth::Integer=10, gamma::Real=0.95, c::Real=0.75, max_iterations::Integer=10)
 
+    println("Called!")
+    return 0, 0, 0
+
     # Extract image list
     images = extract_images(opportunities)
 
@@ -579,6 +582,7 @@ function mdp_solve_mcts(opportunities::Array{Opportunity, 1},
         action = mcts_get_optimal_action(state, N, Q, c=0)
 
         if action == nothing
+            @debug "No next action at time: $(state.time) Stopping search. $(mdp_compute_actions(state.time, opportunities, constraint_list, breadth=breadth))"
             # Exit early
             break
         end
@@ -588,7 +592,7 @@ function mdp_solve_mcts(opportunities::Array{Opportunity, 1},
 
         # Transition state forward probabilistically
         state = mdp_forward_step(state, action, position_lookup, probabilities=probabilities)
-        # println("Current state: $(state.time.sow)")
+        @debug "Current state: $(state.time.sow)"
     end
 
 
