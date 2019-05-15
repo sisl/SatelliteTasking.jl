@@ -509,10 +509,6 @@ function mdp_solve_mcts(opportunities::Array{Opportunity, 1},
     constraint_list::Array{Function, 1}, probabilities::Union{Dict{Opportunity, <:Real}, Nothing}=nothing;
     depth::Real=10, breadth::Integer=10, gamma::Real=0.95, c::Real=0.75, max_iterations::Integer=10)
 
-    println("Called!")
-    println("Updated call")
-    return 0, 0, 0
-
     # Extract image list
     images = extract_images(opportunities)
 
