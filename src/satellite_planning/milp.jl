@@ -36,7 +36,7 @@ function sp_milp_policy(opportunities::Array{Opportunity, 1}, constraint_list; h
     @variable(milp, x[1:length(opportunities)], Bin)
 
     # Add Objective
-    @objective(milp, Max, sum(opp.location.reward*x[i] for (i,opp) in enumerate(opportunities)))
+    @objective(milp, Max, sum(opp.location.reward*x[i] for (i, opp) in enumerate(opportunities)))
 
     # Define non-repetition constraints if necessary
     if allow_repeats == false

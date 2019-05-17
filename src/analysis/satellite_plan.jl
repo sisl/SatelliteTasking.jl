@@ -22,23 +22,26 @@ Arguments:
 Returns:
 - `valid::Bool` Returns `true` if collect plan is valid, returns `false` otherwise.
 """
-function sp_check_feasibility(collects::Array{<:Any,1}, constraint_list::Array{Function,1})
+function sp_check_feasibility(actions::Array{<:Any,1}, constraint_list::Array{Function,1})
     # Independently check that all constraints are still met
-    for i in 1:length(collects)-1
-        col_start = collects[i]
-        col_end   = collects[i+1]
+    for i in 1:length(actions)-1
+        col_start = actions[i]
+        col_end   = actions[i+1]
 
-        # Set transition valid by default
-        valid_transition = true
+        # Only check validity of opportunity transitions
+        if typeof(col_start) == Opportunity && typeof(col_end) == Opportunity
+            # Set transition valid by default
+            valid_transition = true
 
-        for constraint in constraint_list
-            # Use logical and to evaulate path feasibility on graph
-            valid_transition = valid_transition && constraint(col_start, col_end)
-        end
+            for constraint in constraint_list
+                # Use logical and to evaulate path feasibility on graph
+                valid_transition = valid_transition && constraint(col_start, col_end)
+            end
 
-        if !valid_transition
-            println("Collect Failed:\n Start: $col_start\n End: $col_end\n")
-            return false
+            if !valid_transition
+                println("Collect Failed:\n Start: $col_start\n End: $col_end\n")
+                return false
+            end
         end
     end
     
