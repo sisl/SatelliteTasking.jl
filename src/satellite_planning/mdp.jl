@@ -6,12 +6,23 @@ using Random
 using Printf
 
 using SatelliteDynamics.Time: Epoch
-using SatelliteTasking.DataStructures: Image, Opportunity
+using SatelliteDynamics.OrbitDynamics: eclipse_conical
+using SatelliteTasking.DataStructures: Image, Opportunity, Orbit
 
 
 ########################
 # General MDP Planning #
 ########################
+
+# Default spacecraft model
+sc_model_default = Dict{String,Float64}(
+    "power_generation" => 0.0,
+    "power_draw_downlink" => 0.0,
+    "power_draw_imaging"  => 0.0,
+    "data_generation_backorbit" => 0.0,
+    "data_generation_imaging" => 0.0,
+    "data_downlink" => 0.0
+)
 
 export MDPState
 """
@@ -116,7 +127,8 @@ function mdp_reward(state::MDPState, action::Union{Symbol, Opportunity}; alpha::
 
     # Check power state
     if state.power <= 0.0
-        r = -1000000
+        # println("I'm dead-jim")
+        r += -1000000
     end
 
     return r
@@ -138,27 +150,48 @@ end
 # Deterministic Forward Search #
 ################################
 
-function reachable_states(state::MDPState, action::Union{Symbol, Opportunity}, collect_opportunities::Array{Opportunity, 1})
+function reachable_states(state::MDPState, action::Union{Symbol, Opportunity}, 
+            collect_opportunities::Array{Opportunity, 1}, orbit::Orbit,
+            sc_model::Dict{String, Float64}=sc_model_default)
     # Compute all possible reachable states given acition
-    # (In this case it's deterministic)
+    # (In this case it's deterministic) 
 
     time = state.time
+
+    # Spacecraft resources
+    power = state.power
+    data  = state.data
 
     images = copy(state.images)
     if action == :SUNPOINT
         idx  = findfirst(o -> o.sow > time, collect_opportunities)
         time = collect_opportunities[idx].sow
+
+        # Recharge
+        # println("Investigating sunpoint state.")
+        # println("Power before: $power")
+        power += sc_model["power_generation"]*(collect_opportunities[idx].sow-state.time)
+        # println("Power after: $power")
     else
         # Advance time
         time = action.sow
+
+        # Decrement power
+        power += action.location.collect_duration*sc_model["power_draw_imaging"]
+
+        # Increment data 
+        data += action.location.collect_duration*sc_model["data_generation_imaging"]
+
         push!(images, action.location)
     end
-    sp = MDPState(time, action, images, state.power, state.data, false)
+    sp = MDPState(time, action, images, power, data, false)
 
     return MDPState[sp]
 end
 
-function forward_search(state::MDPState, d::Int, collect_opportunities::Array{Opportunity, 1}; 
+function forward_search(state::MDPState, d::Int, 
+            collect_opportunities::Array{Opportunity, 1}, orbit::Orbit,
+            sc_model::Dict{String, Float64}=sc_model_default; 
             constraint_list::Array{Function, 1}=Function[],
             depth::Real=3, breadth::Real=3, gamma::Real=1.0, alpha::Real=0.0)
 
@@ -172,9 +205,9 @@ function forward_search(state::MDPState, d::Int, collect_opportunities::Array{Op
     for a in mdp_compute_actions(state, collect_opportunities, constraint_list=constraint_list, breadth=breadth)
         v = mdp_reward(state, a, alpha=alpha)
         
-        for sp in reachable_states(state, a, collect_opportunities)
+        for sp in reachable_states(state, a, collect_opportunities, orbit, sc_model)
             # Continue forward search of space
-            ap, vp = forward_search(sp, d-1, collect_opportunities,
+            ap, vp = forward_search(sp, d-1, collect_opportunities, orbit, sc_model,
                         constraint_list=constraint_list,
                         depth=depth, breadth=breadth, gamma=gamma)
             
@@ -190,25 +223,49 @@ function forward_search(state::MDPState, d::Int, collect_opportunities::Array{Op
     return astar, vstar
 end
 
-function mdp_forward_step(state::MDPState, action::Union{Opportunity, Symbol},  collect_opportunities::Array{Opportunity, 1})
+function mdp_forward_step(state::MDPState, action::Union{Opportunity, Symbol}, 
+            collect_opportunities::Array{Opportunity, 1}, orbit::Orbit,
+            sc_model::Dict{String, Float64}=sc_model_default)
     
     # Current state time
-    time = state.time
+    time0 = state.time
+    time  = time0
+
+    # Resources
+    power = state.power
+    data  = state.data
 
     # Shallow copy observed images
     images = copy(state.images)
 
     # Transition based on action type
     if action == :SUNPOINT
-        #Sunpoint tarnsition
+        # Sunpoint transition
         idx  = findfirst(o -> o.sow > time, collect_opportunities)
         time = collect_opportunities[idx].sow
+
+        # Generate power for duration of step
+        pg = sc_model["power_generation"]*(time - time0)
+
+        # for to in 0:(time - time0)
+        #     epc_idx = findfirst(x -> x >= (to + time0), orbit.epc)
+        #     pg += sc_model["power_generation"]
+        #     # pg += eclipse_conical(orbit.epc[epc_idx], orbit.eci[:, epc_idx])*sc_model["power_generation"]
+        # end
+
+        power += pg
 
     elseif typeof(action) == Opportunity
         # Opportunity Transition
 
         # Advance time
         time = action.sow
+
+        # Decrement power
+        power += action.location.collect_duration*sc_model["power_draw_imaging"]
+
+        # Increment data 
+        data += action.location.collect_duration*sc_model["data_generation_imaging"]
 
         # Add newly observed image to list
         push!(images, action.location)
@@ -218,7 +275,7 @@ function mdp_forward_step(state::MDPState, action::Union{Opportunity, Symbol},  
     end
 
     # Initialize next state
-    state_next = MDPState(time, action, images, state.power, state.data, state.done)
+    state_next = MDPState(time, action, images, power, data, state.done)
 
     return state_next
 end
@@ -228,42 +285,65 @@ export mdp_solve_forward_search
 """
 Solve MDP using basic forward search algorithm.
 """
-function mdp_solve_forward_search(opportunities::Array{Opportunity, 1}, constraint_list::Array{Function, 1}=Function[];
-            depth::Real=3, breadth::Real=3, gamma::Real=1.0, alpha::Real=0.0)
+function mdp_solve_forward_search(opportunities::Array{Opportunity, 1}, 
+            constraint_list::Array{Function, 1}=Function[];
+            depth::Real=3, breadth::Real=3, gamma::Real=1.0, alpha::Real=0.0, 
+            sc_model::Dict{String, Float64}=sc_model_default)
 
     # Extract image list
     images = extract_images(opportunities)
+
+    # Orbit
+    orbit = opportunities[1].orbit
 
     # Set Initial state
     init_opp = opportunities[collect(keys(opportunities))[findmin(collect([o.sow for o in opportunities]))[2]]]
     state    = MDPState(init_opp.sow, init_opp, Image[init_opp.location], 1.0, 0.0, false)
 
-    # Store plan
-    plan = Union{Opportunity, Symbol, Nothing}[]
+    # Store plan (action history) and state history
+    plan   = Union{Opportunity, Symbol, Nothing}[]
+    states = Union{MDPState, Nothing}[]
+
 
     # Take initial step
-    action, value = forward_search(state, depth, opportunities, constraint_list=constraint_list, depth=depth, breadth=breadth, gamma=gamma, alpha=alpha)
+    action, value = forward_search(state, depth, opportunities, orbit, sc_model, 
+                        constraint_list=constraint_list, depth=depth, 
+                        breadth=breadth, gamma=gamma, alpha=alpha)
 
-    # Add action to plan
+    # Add initial state to search
+    push!(states, state)
     push!(plan, action)
 
     # Transition state forward
-    state = mdp_forward_step(state, action, opportunities)
+    state = mdp_forward_step(state, action, opportunities, orbit, sc_model)
+
+    # println("State: $(string(state))")
 
     while true
         # Compute next action
-        action, value = forward_search(state, depth, opportunities, constraint_list=constraint_list, depth=depth, breadth=breadth, gamma=gamma, alpha=alpha)
+        action, value = forward_search(state, depth, opportunities, orbit, sc_model, 
+                            constraint_list=constraint_list, depth=depth, 
+                            breadth=breadth, gamma=gamma, alpha=alpha)
+
+        # println("Next action: $(string(action))")
 
         if action == :DONE
             state.done = true
             break
         end
 
-        # Add action to plan
+        if action == :SUNPOINT
+            println("Next action: $(string(action))")
+        end
+
+        # Add state and action to plan 
+        push!(states, state)
         push!(plan, action)
 
         # Transition state forward
-        state = mdp_forward_step(state, action, opportunities)
+        state = mdp_forward_step(state, action, opportunities, orbit, sc_model)
+
+        # println("State: $(string(state))")
     end
 
     # Compute plan reward
@@ -273,7 +353,7 @@ function mdp_solve_forward_search(opportunities::Array{Opportunity, 1}, constrai
         reward += image.reward
     end
         
-    return plan, reward, image_list
+    return states, plan, reward, image_list
 end
 
 ###########################
