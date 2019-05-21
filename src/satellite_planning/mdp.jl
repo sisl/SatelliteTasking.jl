@@ -37,6 +37,7 @@ mutable struct MDPState
     time::Epoch
     last_action::Union{Opportunity, Symbol}
     images::Array{Image, 1}
+    downlink_queue::Vector{Image}
     power::Float64
     data::Float64
     done::Bool
@@ -166,6 +167,9 @@ function reachable_states(state::MDPState, action::Union{Symbol, Opportunity},
     # Shallow copy observed images
     images = copy(state.images)
 
+    # Shallow copy downlink Queue
+    dlqueue = copy(state.downlink_queue)
+
     if action == :SUNPOINT
         # Sunpoint transition
         # idx  = findfirst(o -> o.sow > time, collect_opportunities)
@@ -192,7 +196,7 @@ function reachable_states(state::MDPState, action::Union{Symbol, Opportunity},
 
         push!(images, action.location)
     end
-    sp = MDPState(time, action, images, power, data, false)
+    sp = MDPState(time, action, images, dlqueue, power, data, false)
 
     return MDPState[sp]
 end
@@ -249,6 +253,9 @@ function mdp_forward_step(state::MDPState, action::Union{Opportunity, Symbol},
     # Shallow copy observed images
     images = copy(state.images)
 
+    # Shallow copy downlink Queue
+    dlqueue = copy(state.downlink_queue)
+
     # Transition based on action type
     if action == :SUNPOINT
         # Sunpoint transition
@@ -279,7 +286,7 @@ function mdp_forward_step(state::MDPState, action::Union{Opportunity, Symbol},
     end
 
     # Initialize next state
-    state_next = MDPState(time, action, images, power, data, state.done)
+    state_next = MDPState(time, action, images, dlqueue, power, data, state.done)
 
     return state_next
 end
@@ -311,7 +318,7 @@ function mdp_solve_forward_search(opportunities::Array{Opportunity, 1},
 
     # Set Initial state
     init_opp = opportunities[collect(keys(opportunities))[findmin(collect([o.sow for o in opportunities]))[2]]]
-    state    = MDPState(init_opp.sow, init_opp, Image[init_opp.location], 1.0, 0.0, false)
+    state    = MDPState(init_opp.sow, init_opp, Image[init_opp.location], Vector{Image}(), 1.0, 0.0, false)
 
     # Store plan (action history) and state history
     plan   = Union{Opportunity, Symbol, Nothing}[]
