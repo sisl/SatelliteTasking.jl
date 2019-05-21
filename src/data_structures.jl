@@ -358,8 +358,6 @@ Arguments:
 function load_stations(file::String)
     data = JSON.parsefile(file)
 
-    println("data: $data")
-
     # Initialize array of Images
     n_stations = length(data)
     stations   = Array{GroundStation, 1}(undef, n_stations)
