@@ -7,7 +7,7 @@ using Printf
 
 using SatelliteDynamics.Time: Epoch, mjd
 using SatelliteDynamics.OrbitDynamics: eclipse_conical
-using SatelliteTasking.DataStructures: Image, Opportunity, Orbit
+using SatelliteTasking.DataStructures: Image, GroundStation, Opportunity, Orbit
 
 
 ########################
@@ -120,10 +120,17 @@ function mdp_reward(state::MDPState, action::Union{Symbol, Opportunity}; alpha::
 
     r = 0.0
     
-    if typeof(action) == Opportunity
+    if typeof(action) == Opportunity && typeof(action.location) == Image
+        # Only reward new images
         if !(action.location in state.images)
-            r = action.location.reward*(1.0 + alpha)^(-abs(action.sow - state.time))
+            # Only reward if we haven't over-filled data
+            if state.data < 1.0
+                r = action.location.reward*(1.0 + alpha)^(-abs(action.sow - state.time))
+            end
         end
+    elseif typeof(action) == Opportunity && typeof(action.location) == GroundStation
+        # Reward for downlinking data
+        r += 0.01*action.duration
     end
 
     # Check power state
@@ -184,18 +191,51 @@ function reachable_states(state::MDPState, action::Union{Symbol, Opportunity},
         # println("Power before: $power")
         # power += sc_model["power_generation"]*(collect_opportunities[idx].sow-state.time)
         # println("Power after: $power")
-    else
+    elseif typeof(action) == Opportunity && typeof(action.location) == Image
+        # Image Collection
+
         # Advance time
         time = action.sow
 
-        # Decrement power
-        power += action.location.collect_duration*sc_model["power_draw_imaging"]
+        # Only perform collect if we have data capacity
+        data_generated = action.location.collect_duration*sc_model["data_generation_imaging"]
 
-        # Increment data 
-        data += action.location.collect_duration*sc_model["data_generation_imaging"]
+        # Check we don't overflow data buffer
+        if (data + data_generated) < 1.0
+            # Decrement power
+            power += action.location.collect_duration*sc_model["power_draw_imaging"]
 
-        push!(images, action.location)
+            # Increment data 
+            data += data_generated
+
+            push!(images, action.location)
+        else
+            # Decrement Power
+            power += action.location.collect_duration*sc_model["power_draw_imaging"]
+
+            # Set data to max
+            data = 1.0
+        end
+
+    elseif typeof(action) == Opportunity && typeof(action.location) == GroundStation
+        # Ground Contact
+
+        # Advance time
+        time = action.sow
+
+        # Decrement downlink power rate
+        power += 0
+
+        # Decrement data        
+        data += action.location.collect_duration*sc_model["data_downlink"]
+
     end
+
+    # Ensure you can't get above 100% charge
+    if power > 1.0
+        power = 1.0
+    end
+
     sp = MDPState(time, action, images, dlqueue, power, data, false)
 
     return MDPState[sp]
@@ -266,23 +306,51 @@ function mdp_forward_step(state::MDPState, action::Union{Opportunity, Symbol},
         # Generate power for duration of step
         power += sc_model["power_generation"]*(time - time0)
 
-    elseif typeof(action) == Opportunity
+    elseif typeof(action) == Opportunity && typeof(action.location) == Image
         # Opportunity Transition
 
         # Advance time
         time = action.sow
 
-        # Decrement power
-        power += action.location.collect_duration*sc_model["power_draw_imaging"]
+        # Only perform collect if we have data capacity
+        data_generated = action.location.collect_duration*sc_model["data_generation_imaging"]
 
-        # Increment data 
-        data += action.location.collect_duration*sc_model["data_generation_imaging"]
+        # Check we don't overflow data buffer
+        if (data + data_generated) < 1.0
+            # Decrement power
+            power += action.location.collect_duration*sc_model["power_draw_imaging"]
 
-        # Add newly observed image to list
-        push!(images, action.location)
+            # Increment data 
+            data += data_generated
+
+            push!(images, action.location)
+        else
+            # Decrement Power
+            power += action.location.collect_duration*sc_model["power_draw_imaging"]
+
+            # Set data to max
+            data = 1.0
+        end
+
+    elseif typeof(action) == Opportunity && typeof(action.location) == GroundStation
+        # Ground Contact
+
+        # Advance time
+        time = action.sow
+
+        # Decrement downlink power rate
+        power += 0
+
+        # Decrement data        
+        data += action.location.collect_duration*sc_model["data_downlink"]
 
     else
         throw(ErrorException("Unknown action type $(string(action))"))
+    end
+
+    # Ensure you can't get above 100% charge
+    if power > 1.0
+        power = 1.0
     end
 
     # Initialize next state
