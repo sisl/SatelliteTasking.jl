@@ -7,6 +7,7 @@ using Printf
 
 using SatelliteDynamics.Time: Epoch, mjd
 using SatelliteDynamics.OrbitDynamics: eclipse_conical
+using SatelliteDynamics.SGPModels: TLE
 using SatelliteTasking.DataStructures: Image, GroundStation, Opportunity, Orbit
 
 
@@ -145,7 +146,7 @@ function extract_images(opportunities::Array{Opportunity, 1})
     images = Image[]
 
     for opp in opportunities
-        if !(opp.location in images)
+        if !(opp.location in images) && typeof(opp.location) == Image
             push!(images, opp.location)
         end
     end
@@ -227,13 +228,24 @@ function reachable_states(state::MDPState, action::Union{Symbol, Opportunity},
         power += 0
 
         # Decrement data        
-        data += action.location.collect_duration*sc_model["data_downlink"]
+        data += action.duration*sc_model["data_downlink"]
 
     end
 
-    # Ensure you can't get above 100% charge
+    # Ensure Power limits
     if power > 1.0
         power = 1.0
+    end
+    if power < 0.0
+        power = 0.0
+    end
+
+    # Ensure Data Limits
+    if data > 1.0
+        data = 1.0
+    end
+    if data < 0.0
+        data = 0.0
     end
 
     sp = MDPState(time, action, images, dlqueue, power, data, false)
@@ -342,15 +354,26 @@ function mdp_forward_step(state::MDPState, action::Union{Opportunity, Symbol},
         power += 0
 
         # Decrement data        
-        data += action.location.collect_duration*sc_model["data_downlink"]
+        data += action.duration*sc_model["data_downlink"]
 
     else
         throw(ErrorException("Unknown action type $(string(action))"))
     end
 
-    # Ensure you can't get above 100% charge
+    # Ensure Power limits
     if power > 1.0
         power = 1.0
+    end
+    if power < 0.0
+        power = 0.0
+    end
+
+    # Ensure Data Limits
+    if data > 1.0
+        data = 1.0
+    end
+    if data < 0.0
+        data = 0.0
     end
 
     # Initialize next state
@@ -438,6 +461,10 @@ function mdp_solve_forward_search(opportunities::Array{Opportunity, 1},
         
     return states, plan, reward, image_list
 end
+
+####################
+# Branch and Bound #
+####################
 
 ###########################
 # Monte Carlo Tree Search #

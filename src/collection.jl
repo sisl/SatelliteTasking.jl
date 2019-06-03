@@ -8,14 +8,14 @@ using Statistics
 # SatelliteDynamics imports
 using SatelliteDynamics.Constants: R_EARTH
 using SatelliteDynamics.Coordinates: sECEFtoGEOD, sGEODtoECEF, sECEFtoENZ, sENZtoAZEL
+using SatelliteDynamics.SGPModels
+using SatelliteDynamics
 
 # Package imports
 using SatelliteTasking.DataStructures: Orbit, Image, Location, GroundStation, Opportunity
 
-using SatelliteDynamics
 
-
-export image_view_geometry
+export view_geometry
 """
 Compute the view geometry from an observer to a specific image. 
 
@@ -27,7 +27,7 @@ Returns:
 - `look_angle::Float64` Look angle from the satellite to the image center. Equivalent to off-nadiar angle. [deg]
 - `range::Float64` Range from the observing satellite to the location. [m]
 """
-function image_view_geometry(sat_ecef::Array{<:Real, 1}, image::Image)
+function view_geometry(sat_ecef::Array{<:Real, 1}, image::Image)
     # Satellite state
     r_sat = sat_ecef[1:3]
     
@@ -48,7 +48,7 @@ function image_view_geometry(sat_ecef::Array{<:Real, 1}, image::Image)
 end
 
 
-export image_visible
+export visible
 """
 Computes whether an image is visible from a given state and return boolean true/false
 result.
@@ -60,10 +60,10 @@ Arguments:
 Returns:
 - `visible::Bool` Indication of whether image is visible or not
 """
-function image_visible(sat_ecef::Array{<:Real, 1}, image::Image)
-    look_angle, eow_range = image_view_geometry(sat_ecef, image)
+function visible(sat_ecef::Array{<:Real, 1}, image::Image)
+    look_angle, eow_range = view_geometry(sat_ecef, image)
 
-    r         = norm(sat_ecef[1:3])
+    r = norm(sat_ecef[1:3])
     # theta_max = image.look_angle_max*pi/180.0
     # max_range = -r*cos(theta_max) - sqrt(r^2*cos(theta_max)^2 - (r^2-R_EARTH^2)^2)
     
@@ -81,7 +81,6 @@ function image_visible(sat_ecef::Array{<:Real, 1}, image::Image)
     end
 end
 
-export station_view_geometry
 """
 Compute the view geometry from an observer to a specific station. 
 
@@ -92,7 +91,7 @@ Arguments:
 Returns:
 - `elevation::Float64` Elevation of satellite with respect to station [deg]
 """
-function station_view_geometry(sat_ecef::Array{<:Real, 1}, station::GroundStation)
+function view_geometry(sat_ecef::Array{<:Real, 1}, station::GroundStation)
     # Satellite state
     r_sat     = sat_ecef[1:3]
     r_station = station.ecef
@@ -102,7 +101,6 @@ function station_view_geometry(sat_ecef::Array{<:Real, 1}, station::GroundStatio
     return elevation, range
 end
 
-export station_visible
 """
 Computes whether an station is visible from a given state and return boolean true/false
 result.
@@ -114,14 +112,13 @@ Arguments:
 Returns:
 - `visible::Bool` Indication of whether station is visible or not
 """
-function station_visible(sat_ecef::Array{<:Real, 1}, station::GroundStation, time)
-    elevation, range = station_view_geometry(sat_ecef, station)
+function visible(sat_ecef::Array{<:Real, 1}, station::GroundStation)
+    elevation, range = view_geometry(sat_ecef, station)
 
     r = norm(sat_ecef[1:3])
 
     if station.elevation_min <= elevation
         dist = norm(sat_ecef[1:3] - station.ecef[1:3])
-        # println("$time - $elevation - $range - $(dist/1e3) - $(sECEFtoGEOD(sat_ecef, use_degrees=true))")
 
         return true
     else
@@ -203,11 +200,7 @@ function find_opportunities(orbit::Orbit, location::Location)
     visibility = Array{Bool, 1}(undef, length(orbit.t))
 
     for i in 1:length(orbit.t)
-        if typeof(location) == Image
-            visibility[i] = image_visible(orbit.ecef[:, i], location)
-        elseif typeof(location) == GroundStation
-            visibility[i] = station_visible(orbit.ecef[:, i], location, orbit.epc[i])
-        end
+        visibility[i] = visible(orbit.ecef[:, i], location)
     end
 
     visible_indices = group_indices(findall(visibility))
@@ -411,6 +404,117 @@ function group_image_opportunities(opportunities::Array{Opportunity, 1})
     end
 
     return image_opportunities
+end
+
+##########################
+# TLE Opportunity Search #
+##########################
+
+function visibility_find_boundary(tle::TLE, location::Location, epc0::Epoch, step::Real; tol::Real=1.0e-1)
+    """Compute the boundary of when the geolocation 
+    """
+
+    # println("Step size: $step")
+
+    epc = deepcopy(epc0)
+
+    if abs(step) < tol
+        return epc0
+    else
+        x_ecef  = sECItoECEF(epc, state(tle, epc))
+        ivis = visible(x_ecef, location)
+
+        # println("Initial visibility: $ivis - $epc")
+
+        while visible(x_ecef, location) == ivis
+            epc    = epc + step
+            x_ecef = sECItoECEF(epc, state(tle, epc))
+            # println("Step visibility: $(visible(x_ecef, location)) - $epc")
+        end
+
+        # println("Final visibility: $(visible(x_ecef, location)) - $epc")
+
+        next_step = -sign(step)*max(abs(step)/2, tol/2)
+
+        return visibility_find_boundary(tle, location, epc, next_step, tol=tol)
+    end
+end
+
+function find_all_opportunities(tle::TLE, location::Array{<:Location, 1}, epc_min::Union{Epoch, Nothing}, epc_max::Union{Epoch, Nothing}; macro_step::Real=60.0, tol::Real=0.01, zero_doppler::Bool=true)
+    if epc_min == nothing
+        epc_min = tle.epoch
+    end
+
+    if epc_max == nothing
+        epc_min += 86400.0
+    end
+
+    # Compute orbital period
+    T = orbit_period(sCARTtoOSC(state(tle, epc_min), use_degrees=true)[1])
+
+    opportunities = Opportunity[]
+
+    next_step = macro_step
+
+    for loc in location
+        # Perform macro adaptive stepsize search
+        epc = epc_min
+        while epc < epc_max
+
+            # println("Current step: $epc")
+
+            x_ecef = sECItoECEF(epc, state(tle, epc))
+
+            if visible(x_ecef, loc)
+                # println("Found instant of visibility - $(visible(x_ecef, loc)) - $epc")
+
+                # Search for AOS (before initial guess epoch)
+                window_open = visibility_find_boundary(tle, loc, epc, -macro_step, tol=tol)
+                # println("Found window_open boundary: $window_open")
+
+                # Search for LOS (after initial guess epoch)
+                window_close = visibility_find_boundary(tle, loc, epc, macro_step, tol=tol)
+                # println("Found window_close boundary: $window_close")
+
+                # If zero-doppler collection is required updated pass-times and geometry profile
+                collect_duration = 0
+                if typeof(loc) == Image
+                    epc_mid = window_open + (window_close - window_open)/2.0
+                    window_open  = epc_mid - loc.collect_duration/2.0
+                    window_close = epc_mid + loc.collect_duration/2.0
+                    collect_duration = loc.collect_duration
+                end
+
+                opp = Opportunity(window_open, 
+                        window_close,
+                        orbit=tle,
+                        location=loc,
+                        collect_duration=collect_duration)
+
+                if (window_close - window_open) > 0.0
+                    # if typeof(opp) == Image && ((window_close - window_open) >= loc.collect_duration)
+                    #     push!(opportunities, opp)
+                    # elseif typeof(opp) == GroundStation
+                    #     push!(opportunities, opp)
+                    # end
+                    push!(opportunities, opp)
+                end
+
+                # Step a half orbit 
+                epc += T/2.0
+
+            else
+                # Take a macro step because there's a good chance there won't be an
+                # opportunity until the next one
+                epc += macro_step
+            end
+        end
+    end
+
+    # Sort opportunities in ascending order
+    sort!(opportunities, by = x -> x.sow)
+
+    return opportunities
 end
 
 end # End module

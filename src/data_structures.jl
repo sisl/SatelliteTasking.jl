@@ -6,6 +6,7 @@ using SatelliteDynamics.Astrodynamics
 using SatelliteDynamics.ReferenceSystems
 using SatelliteDynamics.Coordinates
 using SatelliteDynamics.Simulation
+using SatelliteDynamics.SGPModels
 
 using LinearAlgebra
 using Statistics
@@ -253,8 +254,11 @@ function load_images(file::String; collect_duration::Real=1.0)
     data = JSON.parsefile(file)
 
     # Initialize array of Images
-    n_img  = length(data["images"])
-    images = Array{Image, 1}(undef, n_img)
+    # n_img  = length(data["images"])
+    # images = Array{Image, 1}(undef, n_img)
+    images = Image[]
+
+    dup_count = 0
 
     for (i, img) in enumerate(data["images"])
         lon = img["lon"]
@@ -275,12 +279,32 @@ function load_images(file::String; collect_duration::Real=1.0)
             collect_duration = img["collect_duration"]
         end
 
-        images[i] = Image(lon, lat, id=id, 
-                        look_angle_min=look_angle_min,
-                        look_angle_max=look_angle_max, 
-                        collect_duration=collect_duration,
-                        require_zero_doppler=false, reward=reward)
+        # images[i] = Image(lon, lat, id=id, 
+        #                 look_angle_min=look_angle_min,
+        #                 look_angle_max=look_angle_max, 
+        #                 collect_duration=collect_duration,
+        #                 require_zero_doppler=false, reward=reward)
+
+        duplicate = false
+        for img in images
+            if img.lat == lat && img.lon == lon
+                duplicate = true
+                break
+            end
+        end
+
+        if duplicate == false
+            push!(images, Image(lon, lat, id=id, 
+                look_angle_min=look_angle_min,
+                look_angle_max=look_angle_max, 
+                collect_duration=collect_duration,
+                require_zero_doppler=false, reward=reward))
+        else
+            dup_count += 1
+        end
     end
+
+    println("Found $dup_count duplicate images.")
 
     return images
 end
@@ -401,7 +425,7 @@ Attributes:
 """
 mutable struct Opportunity
     id::UUID
-    orbit::Union{Orbit, Nothing}
+    orbit::Union{Orbit, TLE, Nothing}
     location::Union{Location, Nothing}
     sow::Epoch
     mid::Epoch
@@ -410,7 +434,7 @@ mutable struct Opportunity
     collect_duration::Float64
 
     function Opportunity(sow::Epoch, eow::Epoch;
-                         id=uuid4()::UUID, orbit=nothing::Union{Orbit, Nothing}, 
+                         id=uuid4()::UUID, orbit=nothing::Union{Orbit, TLE, Nothing}, 
                          location=nothing::Union{Location, Nothing},
                          collect_duration=0::Real)
 
@@ -436,8 +460,10 @@ Base.:(==)(ol::Opportunity, or::Opportunity) = Base.isequal(ol, or)
 function Base.show(io::IO, opp::Opportunity)
 
     orbit = "nothing"
-    if opp.orbit != nothing 
+    if typeof(opp.orbit) == Orbit && opp.orbit != nothing 
         orbit = string(opp.orbit.id)
+    elseif typeof(opp.orbit) == TLE
+        orbit = "TLE"
     end
 
     image = "nothing"
