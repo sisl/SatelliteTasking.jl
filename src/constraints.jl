@@ -2,9 +2,9 @@ __precompile__(true)
 module Constraints
 
 using LinearAlgebra
-using SatelliteDynamics: Epoch, rECEFtoECI
+using SatelliteDynamics: Epoch, rECEFtoECI, TLE, state
 
-using SatelliteTasking.DataStructures: Opportunity, interpolate
+using SatelliteTasking.DataStructures: Orbit, Opportunity, interpolate
 
 ##########################
 # Spacecraft Slew Models #
@@ -55,7 +55,12 @@ function compute_los_vector(col::Opportunity, epc::Epoch)
     
     # Compute starting and ending attitude
     r_eci_location  = rECEFtoECI(epc) * col.location.ecef
-    r_eci_sat     = interpolate(col.orbit, epc)[1:3] # Interpolate satellite state to Epoch
+    r_eci_sat = zeros(Float64, 6)
+    if typeof(col.orbit) == Orbit
+        r_eci_sat = interpolate(col.orbit, epc)[1:3] # Interpolate satellite state to Epoch
+    elseif typeof(col.orbit) == TLE
+        r_eci_sat = state(col.orbit, epc)[1:3]
+    end
 
     # Compute initial look angle
     z_los = r_eci_location - r_eci_sat # Compute look angle 

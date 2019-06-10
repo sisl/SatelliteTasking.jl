@@ -6,7 +6,8 @@ using JuMP
 using Gurobi
 
 # SatelliteTasking imports
-using SatelliteTasking.DataStructures: Image, Opportunity
+using SatelliteDynamics.SGPModels: TLE
+using SatelliteTasking.DataStructures: Image, Opportunity, Orbit
 using SatelliteTasking.Collection: group_image_opportunities
 
 export sp_milp_policy
@@ -59,8 +60,10 @@ function sp_milp_policy(opportunities::Array{Opportunity, 1}, constraint_list; h
             opp_start = opportunities[i]
             opp_end   = opportunities[j]
 
-            # Skipp adding constraint if different satellites
-            if opp_start.orbit.id != opp_end.orbit.id
+            # Skip adding constraint if different satellites
+            if (typeof(opp_start.orbit) == Orbit && (opp_start.orbit.id != opp_end.orbit.id)) ||
+               (typeof(opp_start.orbit) == TLE && ((opp_start.orbit.line1 != opp_end.orbit.line1) ||
+                                                 (opp_start.orbit.line2 != opp_end.orbit.line2)))
                 continue
             end
             
