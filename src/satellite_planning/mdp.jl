@@ -44,6 +44,10 @@ mutable struct MDPState
     done::Bool
 end
 
+function Base.hash(state::MDPState, h::UInt)
+    return hash(state.time, hash(length(state.images), hash(state.power, hash(state.data, hash(state.done, hash(:Epoch, h))))))
+end
+
 function Base.show(io::IO, state::MDPState)
 
     s = @sprintf "MDPState(time: %s, power: %.2f, data: %.2f, image_count: %d)" state.time state.power state.data length(state.images)
@@ -132,12 +136,6 @@ function mdp_reward(state::MDPState, action::Union{Symbol, Opportunity};
 
     # Bias function
     r = 0.0
-
-    # println("R1: $r")
-    if action == :SUNPOINT
-        r += 1000
-        # println("Rewarding SUNPOINT")
-    end
     
     if typeof(action) == Opportunity && typeof(action.location) == Image
         # Only reward new images
@@ -147,11 +145,10 @@ function mdp_reward(state::MDPState, action::Union{Symbol, Opportunity};
             pg = action.location.collect_duration*sc_model["power_draw_imaging"]
 
             # Only reward if we haven't over-filled data
-            if ((state.data  + dg) < 1.0) && ((state.power + pg) > 0.0)
+            if ((state.data  + dg) < 1.0)
+            # if ((state.data  + dg) < 1.0) && ((state.power + pg) > 0.0)
                 # println("Collecting: $(state.power) + $pg")
                 r += action.location.reward*(1.0 + alpha)^(-abs(action.sow - state.time))
-            else
-                r += -10000
             end
         end
     elseif typeof(action) == Opportunity && typeof(action.location) == GroundStation
@@ -159,23 +156,11 @@ function mdp_reward(state::MDPState, action::Union{Symbol, Opportunity};
         r += 0.01*action.duration
     end
 
-    # println("R2: $r")
-
 
     # Penalize running out tof power 
     if state.power <= 0.0
         r += -1000000
     end
-
-    # println("R3: $r")
-
-    # # Penalize 
-    # if action == :SUNPOINT
-    #     r += 1000
-    #     println("Rewarding SUNPOINT")
-    # end
-
-    # println("State: $(state.time) - A: $action - Reward: $r")
 
     return r
 end
@@ -332,6 +317,11 @@ function mdp_forward_step(state::MDPState, action::Union{Opportunity, Symbol},
             opportunities::Array{Opportunity, 1},
             next_action_time::Dict{Epoch, Epoch}=Dict{Epoch, Epoch}(),
             sc_model::Dict{String, Float64}=sc_model_default)
+
+    # If done return same state
+    if action == :DONE
+        return MDPState(state.time, state.last_action, state.images, state.downlink_queue, state.power, state.data, true)
+    end
     
     # Current state time
     time0 = state.time
@@ -581,9 +571,11 @@ function mcts_simulate(state::MDPState, d::Integer,
             breadth::Integer=10,
             c::Real=1.0, gamma::Real=1.0, alpha::Real=1.0)
    
-    if d == 0
+    if (d == 0) || state.done == true
         return 0.0
     end
+
+    # println("Simulating state: $state")
 
     # If state not seen, add it and rollout policy 
     if !(state in T)
@@ -606,7 +598,7 @@ function mcts_simulate(state::MDPState, d::Integer,
             end
 
             # Initiallies N & Q arrays
-            N[(state, action)] = 0
+            N[(state, action)] = 1
             Q[(state, action)] = 0.0
         end
 
@@ -616,19 +608,27 @@ function mcts_simulate(state::MDPState, d::Integer,
                     sc_model=sc_model, breadth=breadth, gamma=gamma, alpha=alpha)
     end
 
+    if !(state in keys(L))
+        println("Encountered missing state: $state")
+        println("Current state count: $(length(keys(L)))")
+        for k in keys(L)
+            println("Key: $k - $(k == state)")
+        end
+    end
+
     # Calculate N(s) by summing over all observed states 
     Ns = 0
     for a in L[state]
         Ns = Ns + N[(state, a)]
     end
 
-    println("Ns: $Ns")
+    # println("Ns: $Ns")
 
     # Get Action
     astar, vstar = :DONE, -Inf
     for a in L[state]
-        println("S: $state - A: $a")
-        println("Q: $(Q[(state, a)]) + c*sqrt(log(Ns)/N[(state, a)]: $(c*sqrt(log(Ns)/N[(state, a)]))")
+        # println("S: $state - A: $a")
+        # println("Q: $(Q[(state, a)]) + c*sqrt(log(Ns)/N[(state, a)]: $(c*sqrt(log(Ns)/N[(state, a)]))")
         if (Q[(state, a)] + c*sqrt(log(Ns)/N[(state, a)])) > vstar
             astar, vstar = a, Q[(state, a)]
         end
@@ -640,8 +640,13 @@ function mcts_simulate(state::MDPState, d::Integer,
     next_state = mdp_forward_step(state, astar, opportunities, next_action_time, sc_model)
     r = mdp_reward(state, astar, alpha=alpha, sc_model=sc_model)
 
+    # If next sttate is done return reward
+    if astar == :DONE
+        return 0.0
+    end
+
     # Apply MCTS to get reward of next state
-    q = r + gamma*mcts_simulate(state, d-1, opportunities, T, L, N, Q,
+    q = r + gamma*mcts_simulate(next_state, d-1, opportunities, T, L, N, Q,
             constraint_list=constraint_list, sc_model=sc_model, next_action_time=next_action_time,
             breadth=breadth, c=c, gamma=gamma, alpha=alpha)
 
@@ -711,18 +716,18 @@ function mdp_solve_mcts(opportunities::Array{Opportunity, 1},
     Q = Dict{Tuple{MDPState, Union{Opportunity, Symbol}}, Float64}() # State-Action Reward
 
     # Take initial step
-    # for i in 1:iterations
-    value = mcts_simulate(state, depth, opportunities, T, L, N, Q, 
-                        constraint_list=constraint_list,
-                        sc_model=sc_model,
-                        breadth=breadth, 
-                        gamma=gamma, 
-                        next_action_time=next_action_time)
-    # end
+    for i in 1:iterations
+        value = mcts_simulate(state, depth, opportunities, T, L, N, Q, 
+                            constraint_list=constraint_list,
+                            sc_model=sc_model,
+                            breadth=breadth, 
+                            gamma=gamma, 
+                            next_action_time=next_action_time)
+    end
 
     # Add initial state to search
     action = mcts_optimal_action(state, L, Q)
-    # println("At state $(state.time) - optimal action: $(typeof(action)) - Value: $value")
+    # println("At state $(state.time) - optimal action: $(typeof(action))")
     state  = mdp_forward_step(state, action, opportunities, next_action_time, sc_model)
     push!(states, state)
     push!(plan, action)
@@ -731,14 +736,14 @@ function mdp_solve_mcts(opportunities::Array{Opportunity, 1},
 
     # Transition state forward
     while true
-        # for i in 1:iterations
-        value = mcts_simulate(state, depth, opportunities, T, L, N, Q, 
-                        constraint_list=constraint_list,
-                        sc_model=sc_model,
-                        breadth=breadth,
-                        gamma=gamma, 
-                        next_action_time=next_action_time)
-        # end
+        for i in 1:iterations
+            value = mcts_simulate(state, depth, opportunities, T, L, N, Q, 
+                            constraint_list=constraint_list,
+                            sc_model=sc_model,
+                            breadth=breadth,
+                            gamma=gamma, 
+                            next_action_time=next_action_time)
+        end
 
         # Add initial state to search
         action = mcts_optimal_action(state, L, Q)
@@ -746,7 +751,7 @@ function mdp_solve_mcts(opportunities::Array{Opportunity, 1},
             state.done = true
             break
         end
-        # println("At state $(state.time) - optimal action: $(typeof(action)) - Value: $value")
+        # println("At state $(state.time) - optimal action: $(typeof(action))")
 
         state  = mdp_forward_step(state, action, opportunities, next_action_time, sc_model)
 
