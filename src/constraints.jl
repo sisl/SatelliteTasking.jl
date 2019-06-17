@@ -1,11 +1,3 @@
-__precompile__(true)
-module Constraints
-
-using LinearAlgebra
-using SatelliteDynamics: Epoch, rECEFtoECI, TLE, state
-
-using SatelliteTasking.DataStructures: Orbit, Opportunity, interpolate
-
 ##########################
 # Spacecraft Slew Models #
 ##########################
@@ -51,16 +43,15 @@ export compute_los_vector
 """
 Compute line of sight vector 
 """
-function compute_los_vector(col::Opportunity, epc::Epoch)
+function compute_los_vector(mdp::MDPProblem, col::Opportunity, t_since::Real)
     
+    # Lookup collect location
+    location = mdp.locations[col.geolocation_id]
+    epc = get_abs_time(mdp, t_since)
+
     # Compute starting and ending attitude
-    r_eci_location  = rECEFtoECI(epc) * col.location.ecef
-    r_eci_sat = zeros(Float64, 6)
-    if typeof(col.orbit) == Orbit
-        r_eci_sat = interpolate(col.orbit, epc)[1:3] # Interpolate satellite state to Epoch
-    elseif typeof(col.orbit) == TLE
-        r_eci_sat = state(col.orbit, epc)[1:3]
-    end
+    r_eci_location  = rECEFtoECI(epc) * location.ecef
+    r_eci_sat = state(mdp.tle, epc)[1:3]
 
     # Compute initial look angle
     z_los = r_eci_location - r_eci_sat # Compute look angle 
@@ -84,31 +75,29 @@ Arguments:
 Returns:
 - `feasible::Bool` `true` if the transition from start to end is feasible. `false` otherwise
 """
-function constraint_agility_single_axis(start_collect::Opportunity, end_collect::Opportunity; max_slew_time=180.0::Float64)
+function constraint_agility_single_axis(mdp::MDPProblem, start_collect::Opportunity, end_collect::Opportunity; max_slew_time=180.0::Float64)
 
     # Can't go backwards in time
-    if end_collect.sow < start_collect.eow
+    if end_collect.window_open < start_collect.window_close
         return false
     end
 
     # Exit early if time separation is large enough to guarantee feasibility
-    if (end_collect.sow - start_collect.eow) > max_slew_time
+    if (end_collect.window_open - start_collect.window_close) > max_slew_time
         return true
     end
 
     # Compute start and end line of sight vectors
-    z_start = compute_los_vector(start_collect, start_collect.eow)
-    z_end   = compute_los_vector(end_collect, end_collect.sow)
+    z_start = compute_los_vector(mdp, start_collect, start_collect.window_close)
+    z_end   = compute_los_vector(mdp, end_collect, end_collect.window_open)
 
     # Compute slew time between orientations
     t_slew = slew_time_single_axis(z_start, z_end)
 
     # Check if slew time is less than the time available to complete the slew
-    if t_slew > (end_collect.sow - start_collect.eow)
+    if t_slew > (end_collect.window_open - start_collect.window_close)
         return false
     else
         return true
     end
 end
-
-end # Constraints module
