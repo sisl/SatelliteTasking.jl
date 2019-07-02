@@ -87,6 +87,12 @@ git-tree-sha1 = "61c5334f33d91e570e1d0c3eb5465835242582c4"
 uuid = "a2cac450-b92f-5266-8821-25eda20663c8"
 version = "0.4.0"
 
+[[ColorSchemes]]
+deps = ["Colors", "Random", "Test"]
+git-tree-sha1 = "a268082f7b23cc1a13325664a531ea583f1b1ede"
+uuid = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
+version = "3.3.0"
+
 [[ColorTypes]]
 deps = ["FixedPointNumbers", "Random"]
 git-tree-sha1 = "10050a24b09e8e41b951e9976b109871ce98d965"
@@ -94,10 +100,10 @@ uuid = "3da002f7-5984-5a60-b8a6-cbb66c0b333f"
 version = "0.8.0"
 
 [[ColorVectorSpace]]
-deps = ["ColorTypes", "Colors", "FixedPointNumbers", "LinearAlgebra", "SpecialFunctions", "Statistics", "StatsBase", "Test"]
-git-tree-sha1 = "a890f08e61b40e9843d7177206da61229a3603c8"
+deps = ["ColorTypes", "Colors", "FixedPointNumbers", "LinearAlgebra", "SpecialFunctions", "Statistics", "StatsBase"]
+git-tree-sha1 = "d626b542f9c3aa22b4f82fe3d36a0ff56fc58601"
 uuid = "c3611d14-8923-5661-9e6a-0046d554d3a4"
-version = "0.6.2"
+version = "0.7.0"
 
 [[Colors]]
 deps = ["ColorTypes", "FixedPointNumbers", "InteractiveUtils", "Printf", "Reexport", "Test"]
@@ -214,10 +220,10 @@ deps = ["Random", "Serialization", "Sockets"]
 uuid = "8ba89e20-285c-5b6f-9357-94700520ee1b"
 
 [[Distributions]]
-deps = ["Distributed", "LinearAlgebra", "PDMats", "Printf", "QuadGK", "Random", "SpecialFunctions", "Statistics", "StatsBase", "StatsFuns", "Test"]
-git-tree-sha1 = "022e6610c320b6e19b454502d759c672580abe00"
+deps = ["LinearAlgebra", "PDMats", "Printf", "QuadGK", "Random", "SpecialFunctions", "Statistics", "StatsBase", "StatsFuns"]
+git-tree-sha1 = "4ae0ff1a3a556383f7b1b004f5fb964b26ac96c9"
 uuid = "31c24e10-a181-5473-b8eb-7969acd0382f"
-version = "0.18.0"
+version = "0.20.0"
 
 [[DocStringExtensions]]
 deps = ["LibGit2", "Markdown", "Pkg", "Test"]
@@ -253,10 +259,9 @@ version = "1.0.7"
 uuid = "7b1f6079-737a-58dc-b8bc-7a2ca5c1b5ee"
 
 [[FixedPointNumbers]]
-deps = ["Test"]
-git-tree-sha1 = "b8045033701c3b10bf2324d7203404be7aef88ba"
+git-tree-sha1 = "d14a6fa5890ea3a7e5dcab6811114f132fec2b4b"
 uuid = "53c48c17-4a7d-5ca2-90c5-79b7896eea93"
-version = "0.5.3"
+version = "0.6.1"
 
 [[ForwardDiff]]
 deps = ["CommonSubexpressions", "DiffResults", "DiffRules", "InteractiveUtils", "LinearAlgebra", "NaNMath", "Random", "SparseArrays", "SpecialFunctions", "StaticArrays", "Test"]
@@ -323,16 +328,16 @@ uuid = "2803e5a7-5153-5ecf-9a86-9b4c37f5f5ac"
 version = "0.6.0"
 
 [[ImageCore]]
-deps = ["ColorTypes", "Colors", "FFTW", "FixedPointNumbers", "Graphics", "MappedArrays", "OffsetArrays", "PaddedViews", "Random", "Statistics", "Test"]
-git-tree-sha1 = "bd41f7febe7b4d7914c08c5b6d0a69dcd627e3b9"
+deps = ["ColorTypes", "Colors", "FFTW", "FixedPointNumbers", "Graphics", "MappedArrays", "OffsetArrays", "PaddedViews", "Reexport"]
+git-tree-sha1 = "2fb7a0d80ab6bf0c5a8b0a189bca60311c73a605"
 uuid = "a09fc81d-aa75-5fe9-8630-4744c3626534"
-version = "0.7.4"
+version = "0.8.4"
 
 [[ImageDistances]]
-deps = ["Colors", "Distances", "LinearAlgebra", "ProgressMeter", "Test"]
-git-tree-sha1 = "a5de7b61f6fa98fb93c39857fa43cf40ca383b28"
+deps = ["ColorVectorSpace", "Colors", "Distances", "FixedPointNumbers", "ImageCore"]
+git-tree-sha1 = "aa69ce81260bcb5e950a5e3b48ccca15447c6d8c"
 uuid = "51556ac3-7006-55f5-8cb3-34580c88182d"
-version = "0.1.1"
+version = "0.2.4"
 
 [[ImageFiltering]]
 deps = ["CatIndices", "ColorVectorSpace", "Colors", "ComputationalResources", "DataStructures", "FFTViews", "FFTW", "FixedPointNumbers", "ImageCore", "LinearAlgebra", "MappedArrays", "OffsetArrays", "Requires", "StaticArrays", "Statistics", "TiledIteration"]
@@ -353,10 +358,10 @@ uuid = "bc367c6b-8a6b-528e-b4bd-a4b897500b49"
 version = "0.7.1"
 
 [[ImageMorphology]]
-deps = ["ImageCore", "Test"]
-git-tree-sha1 = "e94f43b9ff76f3a3810bfdd9b3d2fbcacbc26fd0"
+deps = ["Colors", "FixedPointNumbers", "ImageCore"]
+git-tree-sha1 = "2ea6e55a36166321ca735b8eaf74936180e2ad5d"
 uuid = "787d08f9-d448-5407-9aad-5290dd7ab264"
-version = "0.1.1"
+version = "0.2.4"
 
 [[ImageShow]]
 deps = ["Base64", "ColorTypes", "Colors", "FileIO", "FixedPointNumbers", "ImageCore", "OffsetArrays", "Requires"]
@@ -371,10 +376,10 @@ uuid = "02fcd773-0e25-5acc-982a-7f6622650795"
 version = "0.8.0"
 
 [[Images]]
-deps = ["AxisArrays", "Base64", "ColorTypes", "ColorVectorSpace", "Colors", "FileIO", "FixedPointNumbers", "Graphics", "ImageAxes", "ImageCore", "ImageDistances", "ImageFiltering", "ImageMetadata", "ImageMorphology", "ImageShow", "ImageTransformations", "IndirectArrays", "LinearAlgebra", "MappedArrays", "OffsetArrays", "Random", "Reexport", "SparseArrays", "StaticArrays", "Statistics", "StatsBase", "Test", "TiledIteration"]
-git-tree-sha1 = "b3db301ac8d92ec3638145f05abb76bf8033d1f7"
+deps = ["AxisArrays", "Base64", "ColorTypes", "ColorVectorSpace", "Colors", "FileIO", "FixedPointNumbers", "Graphics", "ImageAxes", "ImageCore", "ImageDistances", "ImageFiltering", "ImageMetadata", "ImageMorphology", "ImageShow", "ImageTransformations", "IndirectArrays", "MappedArrays", "OffsetArrays", "Reexport", "SparseArrays", "StaticArrays", "Statistics", "StatsBase", "TiledIteration"]
+git-tree-sha1 = "1aae59fc0e34e47dfb111113bb6e9a65d7bafe81"
 uuid = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
-version = "0.17.3"
+version = "0.18.0"
 
 [[IndirectArrays]]
 deps = ["Compat", "Test"]
@@ -446,10 +451,10 @@ uuid = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 version = "0.20.0"
 
 [[JuMP]]
-deps = ["Calculus", "DataStructures", "ForwardDiff", "LinearAlgebra", "MathOptInterface", "NaNMath", "Random", "SparseArrays", "Statistics", "Test"]
-git-tree-sha1 = "db9f08540c1a23269acbae5d520c79f4722899f4"
+deps = ["Calculus", "DataStructures", "ForwardDiff", "LinearAlgebra", "MathOptInterface", "NaNMath", "Random", "SparseArrays", "Statistics"]
+git-tree-sha1 = "a37fdb14ee3a04b4df44c20a73da89c57035bdf2"
 uuid = "4076af6c-e467-56ae-b986-b466b2749572"
-version = "0.19.0"
+version = "0.19.2"
 
 [[Knockout]]
 deps = ["JSExpr", "JSON", "Observables", "Test", "WebIO"]
@@ -591,10 +596,10 @@ uuid = "90014a1f-27ba-587c-ab20-58faa44d9150"
 version = "0.9.7"
 
 [[PGFPlots]]
-deps = ["ColorBrewer", "Colors", "Contour", "DataFrames", "Discretizers", "Distributed", "ImageMagick", "Images", "IndirectArrays", "Printf", "StatsBase", "Test", "TikzPictures"]
-git-tree-sha1 = "8c62a411e1570b403b0ba61dc37b5b821254cac8"
+deps = ["ColorBrewer", "ColorSchemes", "Colors", "Contour", "DataFrames", "Discretizers", "Distributed", "ImageMagick", "Images", "IndirectArrays", "Printf", "StatsBase", "TikzPictures"]
+git-tree-sha1 = "43a8674042c2335a0c933e74b6aff284baf9e820"
 uuid = "3b7a836e-365b-5785-a47d-02c71176b4aa"
-version = "3.0.3"
+version = "3.1.2"
 
 [[PaddedViews]]
 deps = ["OffsetArrays", "Test"]
@@ -626,12 +631,6 @@ version = "0.5.2"
 [[Printf]]
 deps = ["Unicode"]
 uuid = "de0858da-6303-5e67-8744-51eddeeeb8d7"
-
-[[ProgressMeter]]
-deps = ["Distributed", "Printf", "Random", "Test"]
-git-tree-sha1 = "48058bc11607676e5bbc0b974af79106c6200787"
-uuid = "92933f4c-e287-5a05-a399-4b506db050ca"
-version = "0.9.0"
 
 [[QuadGK]]
 deps = ["DataStructures", "LinearAlgebra"]
