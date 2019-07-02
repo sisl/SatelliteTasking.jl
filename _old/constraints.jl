@@ -4,13 +4,15 @@ module Constraints
 using LinearAlgebra
 using SatelliteDynamics: Epoch, rECEFtoECI, TLE, state
 
-using SatelliteTasking.DataStructures: Orbit, Opportunity, interpolate
+using SatelliteTasking.DataStructures
+
+# Exports
+export slew_time_single_axis, compute_los_vector, constraint_agility_single_axis
 
 ##########################
 # Spacecraft Slew Models #
 ##########################
 
-export slew_time_single_axis
 """
 Compute the required slew time to maneuver from pointing aligned with the start
 vector to the end vector.
@@ -47,7 +49,6 @@ end
 #####################
 
 
-export compute_los_vector
 """
 Compute line of sight vector 
 """
@@ -71,7 +72,6 @@ function compute_los_vector(col::Opportunity, epc::Epoch)
     return z_los
 end
 
-export constraint_agility_single_axis
 """
 Computes whether it is feasible for a spacecraft to slew from the start collect
 to the end collect. The transition is based on the spacecraft ability to satisfy

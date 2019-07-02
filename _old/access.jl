@@ -1,5 +1,5 @@
 __precompile__(true)
-module Collection
+module Access
 
 # Julia imports
 using LinearAlgebra

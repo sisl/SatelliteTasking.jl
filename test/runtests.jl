@@ -64,33 +64,5 @@ end
 
 @time @testset "SatelliteTasking Package Tests" begin
     testdir = joinpath(dirname(@__DIR__), "test")
-    # Main Package Test Set
-    @time @testset "SatelliteTasking.DataStructures" begin
-        include(joinpath(testdir, "test_data_structures.jl"))
-    end
-    @time @testset "SatelliteTasking.Collection" begin
-        include(joinpath(testdir, "test_collection.jl"))
-    end
-    @time @testset "SatelliteTasking.Constraints" begin
-        include(joinpath(testdir, "test_constraints.jl"))
-    end
-    @time @testset "SatelliteTasking.Simulation" begin
-        include(joinpath(testdir, "test_simulation.jl"))
-    end
 
-    # Satellite Planning Test Set
-    @time @testset "SatelliteTasking.SatellitePlanning.Graph" begin
-        include(joinpath(testdir, "satellite_planning", "test_graph.jl"))
-    end
-    @time @testset "SatelliteTasking.SatellitePlanning.MILP" begin
-        include(joinpath(testdir, "satellite_planning", "test_milp.jl"))
-    end
-    @time @testset "SatelliteTasking.SatellitePlanning.MDP" begin
-        include(joinpath(testdir, "satellite_planning", "test_mdp.jl"))
-    end
-
-    # Analysis Test Set
-    @time @testset "SatelliteTasking.Analysis.CollectUncertainty" begin
-        include(joinpath(testdir, "analysis", "test_collect_uncertainty.jl"))
-    end
 end

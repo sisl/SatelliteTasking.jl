@@ -14,11 +14,23 @@ using JSON
 using UUIDs
 using Printf
 
+# Exports
+export Orbit
+export interpolate
+export Location
+export Request
+export load_requests
+export set_collect_duration
+export GroundStation
+export load_stations
+export Opportunity
+export Collect
+export Contact
+
 #########
 # Orbit #
 #########
 
-export Orbit
 """
 Orbit provides a data structure which wraps SatelliteDynamics propagators
 
@@ -112,7 +124,6 @@ function searchsortednearest(a,x)
     end
  end
 
-export interpolate
 """
 Interpolate orbit information to a given `Epoch`.
 
@@ -162,33 +173,50 @@ function interpolate(orbit::Orbit, epc::Epoch)
     return eci
 end
 
-##########
+############
 # Location #
-##########
+############
 
 abstract type Location end
 
-#########
-# Image #
-#########
 
-export Image
+function Base.isequal(ll::Location, rl::Location)
+    return (
+        (ll.id == rl.id) &&
+        (ll.lat == rl.lat) &&
+        (ll.lon == rl.lon) &&
+        (ll.ecef == rl.ecef) && true
+    )
+end
+Base.:(==)(ll::Location, rl::Location) = Base.isequal(ll, rl)
+
+function Base.show(io::IO, loc::Location)
+
+    s = @sprintf "%s(ID: %s, Lon: %.3f, Lat: %0.3f)" typeof(loc) string(loc.id) loc.lon loc.lat
+
+    print(io, s)
+end
+
+###########
+# Request #
+###########
+
 """
-Image represents a single area/point on Earth to be observed. It represents a location
+Request represents a single area/point on Earth to be observed. It represents a location
 for which it is possible to collect the entire area in a singel collect
 
 Attributes:
-- `lon::Float64` Longitude of image center [deg]
+- `lon::Float64` Longitude of request center [deg]
 - `lat::Float64` Lattitude of iamge center [deg]
-- `ecef::Array{Float64, 1}` Earth-Centered-Earth-Fixed Coordinates of image center [m]
+- `ecef::Array{Float64, 1}` Earth-Centered-Earth-Fixed Coordinates of request center [m]
 - `look_angle_min::Float64` Minimum look angle of valid collect
 - `look_angle_max::Float64` Maximum look angle of valid collect
-- `collect_duration` Required time to well of image for a feasible collection
+- `collect_duration` Required time to well of request for a feasible collection
 - `require_zero_doppler::Bool` Require that the collect occurs centered at zero Doppler offset
-- `reward::Float64` Reward for for image collection
-- `id::UUID` Unique image identifier
+- `reward::Float64` Reward for for request collection
+- `id::Union{UUID, Integer}` Unique request identifier
 """
-mutable struct Image <: Location
+mutable struct Request <: Location
     lon::Float64
     lat::Float64
     ecef::Array{Float64, 1}
@@ -197,42 +225,31 @@ mutable struct Image <: Location
     require_zero_doppler::Bool
     collect_duration::Float64
     reward::Float64
-    id::UUID
+    id::Union{UUID, Integer}
 
-    function Image(lon::Real, lat::Real ; id::UUID=uuid4(),
+    function Request(lon::Real, lat::Real ; id::Union{UUID, Integer}=uuid4(),
                     look_angle_min::Real=5.0, look_angle_max::Real=55.0, 
-                    require_zero_doppler::Bool=false, collect_duration::Real=1.0,
+                    require_zero_doppler::Bool=true, collect_duration::Real=1.0,
                     reward::Real=1.0, use_degrees::Bool=true)
 
         # Compute ECEF coordinates of scene center
         ecef = sGEODtoECEF([lon, lat], use_degrees=use_degrees::Real)
 
-        # Generate new image object
+        # Generate new request object
         new(lon, lat, ecef, look_angle_min, look_angle_max,
             require_zero_doppler, collect_duration, reward, id)
     end
 end
 
-function Base.isequal(ll::Image, rl::Image)
-    return (
-        (ll.id == rl.id) &&
-        (ll.lat == rl.lat) &&
-        (ll.lon == rl.lon) &&
-        (ll.ecef == rl.ecef) && true
-    )
-end
-Base.:(==)(ll::Image, rl::Image) = Base.isequal(ll, rl)
+function Base.show(io::IO, req::Request)
 
-function Base.show(io::IO, img::Image)
-
-    s = @sprintf "Image(Ptr: %s Lon: %.3f Lat: %0.3f Reward: %f)" string(UInt64(pointer_from_objref(img)),base=16) img.lon img.lat img.reward
+    s = @sprintf "Request(ID: %s, Lon: %.3f, Lat: %0.3f, Reward: %.2f, Duration: %.2f)" string(req.id) req.lon req.lat req.reward req.collect_duration
 
     print(io, s)
 end
 
-export load_images
 """
-Loads image data from a JSON file.
+Loads request data from a JSON file.
 
 THe JSON file is expected to contain an array of JSON objects where each object 
 has the following format:
@@ -248,122 +265,100 @@ has the following format:
 ```
 
 Arguments:
-- `file::String` Filepath to JSON file encoding image 
+- `file::String` Filepath to JSON file encoding request 
 """
-function load_images(file::String; collect_duration::Real=1.0)
+function load_requests(file::String; require_zero_doppler::Bool=true)
+    # Parse data file
     data = JSON.parsefile(file)
 
-    # Initialize array of Images
-    # n_img  = length(data["images"])
-    # images = Array{Image, 1}(undef, n_img)
-    images = Image[]
+    requests = Array{Request, 1}(undef, length(data))
 
-    dup_count = 0
+    for (i, req) in enumerate(data)
+        lon = req["lon"]
+        lat = req["lat"]
+        look_angle_min = req["look_angle_min"]
+        look_angle_max = req["look_angle_max"]
+        id  = i
 
-    for (i, img) in enumerate(data["images"])
-        lon = img["lon"]
-        lat = img["lat"]
-        look_angle_min = img["look_angle_min"]
-        look_angle_max = img["look_angle_max"]
-        reward = img["reward"]
-        id  = uuid4()
-
-        # Read from file if present
-        img_keys = keys(data)
-
-        if "id" in img_keys
-            id = UUID(img["id"])
-        end
-
-        if "collect_duration" in img_keys
-            collect_duration = img["collect_duration"]
-        end
-
-        # images[i] = Image(lon, lat, id=id, 
-        #                 look_angle_min=look_angle_min,
-        #                 look_angle_max=look_angle_max, 
-        #                 collect_duration=collect_duration,
-        #                 require_zero_doppler=false, reward=reward)
-
-        duplicate = false
-        for img in images
-            if img.lat == lat && img.lon == lon
-                duplicate = true
-                break
-            end
-        end
-
-        if duplicate == false
-            push!(images, Image(lon, lat, id=id, 
-                look_angle_min=look_angle_min,
-                look_angle_max=look_angle_max, 
-                collect_duration=collect_duration,
-                require_zero_doppler=false, reward=reward))
-        else
-            dup_count += 1
-        end
+        requests[i] = Request(lon, lat, id=id,
+            look_angle_min=look_angle_min,
+            look_angle_max=look_angle_max
+        )
     end
 
-    println("Found $dup_count duplicate images.")
+    println("Loaded $(length(requests)) requests.")
 
-    return images
+    return requests
+end
+
+"""
+Set the request collection duration for satellites in the constellation.
+"""
+function set_collect_duration(requests::Array{<:Request, 1}, collect_duration::Real)
+    if collect_duration <= 0.0
+        throw(ArgumentError("Invalid collection duration."))
+    end
+
+    for request in requests
+        request.collect_duration = collect_duration
+    end
 end
 
 #################
 # GroundStation #
 #################
 
-export GroundStation
 """
 GroundStation represents a location which the satellite can use to communicate
 with the ground.
 
 Attributes:
-- `lon::Float64` Longitude of image center [deg]
+- `lon::Float64` Longitude of request center [deg]
 - `lat::Float64` Lattitude of iamge center [deg]
-- `ecef::Array{Float64, 1}` Earth-Centered-Earth-Fixed Coordinates of image center [m]
+- `ecef::Array{Float64, 1}` Earth-Centered-Earth-Fixed Coordinates of request center [m]
 - `elevation_min::Float64` Minimum look angle of valid collect
-- `id::UUID` Unique station identifier
+- `id::Union{UUID, Integer}` Unique station identifier
 """
 mutable struct GroundStation <: Location
     lon::Float64
     lat::Float64
     ecef::Array{Float64, 1}
     elevation_min::Float64
-    id::UUID
+    duration_min::Float64
+    id::Union{UUID, Integer}
 
-    function GroundStation(lon::Real, lat::Real ; id::UUID=uuid4(),
-                    elevation_min::Real=5.0, use_degrees::Bool=true)
+    function GroundStation(lon::Real, lat::Real ; id::Union{UUID, Integer}=uuid4(),
+                    elevation_min::Real=5.0, duration_min::Real=0.0,
+                    use_degrees::Bool=true)
 
         # Compute ECEF coordinates of scene center
         ecef = sGEODtoECEF([lon, lat], use_degrees=use_degrees)
 
-        # Generate new image object
-        new(lon, lat, ecef, elevation_min, id)
+        # Generate new request object
+        new(lon, lat, ecef, elevation_min, duration_min, id)
     end
 end
 
-function Base.isequal(ll::GroundStation, rl::GroundStation)
-    return (
-        (ll.id == rl.id) &&
-        (ll.lat == rl.lat) &&
-        (ll.lon == rl.lon) &&
-        (ll.ecef == rl.ecef) && true
-    )
-end
-Base.:(==)(ll::GroundStation, rl::GroundStation) = Base.isequal(ll, rl)
+# function Base.isequal(ll::GroundStation, rl::GroundStation)
+#     return (
+#         (ll.id == rl.id) &&
+#         (ll.lat == rl.lat) &&
+#         (ll.lon == rl.lon) &&
+#         (ll.ecef == rl.ecef) && true
+#     )
+# end
+# Base.:(==)(ll::GroundStation, rl::GroundStation) = Base.isequal(ll, rl)
 
-function Base.show(io::IO, img::GroundStation)
+function Base.show(io::IO, sta::GroundStation)
 
-    s = @sprintf "GroundStation(Ptr: %s Lon: %.3f Lat: %0.3f)" string(UInt64(pointer_from_objref(img)),base=16) img.lon img.lat 
+    s = @sprintf "GroundStation(ID: %s, Lon: %.3f, Lat: %0.3f)" string(sta.id) sta.lon sta.lat
 
     print(io, s)
 end
 
 
-export load_stations
 """
-Loads image data from a JSON file.
+Loads request data from a JSON file.
 
 THe JSON file is expected to contain an array of JSON objects where each object 
 has the following format:
@@ -377,101 +372,119 @@ has the following format:
 ```
 
 Arguments:
-- `file::String` Filepath to JSON file encoding image 
+- `file::String` Filepath to JSON file encoding request 
 """
 function load_stations(file::String)
     data = JSON.parsefile(file)
 
-    # Initialize array of Images
-    n_stations = length(data)
-    stations   = Array{GroundStation, 1}(undef, n_stations)
+    # Initialize array of Requests
+    stations = Array{GroundStation, 1}(undef, length(data))
 
     for (i, sta) in enumerate(data)
         lon = sta["lon"]
         lat = sta["lat"]
         elevation_min = sta["elevation_min"]
-        id  = uuid4()
+        id  = i
 
-        # Read from file if present
-        sta_keys = keys(data)
-
-        if "id" in sta_keys
-            id = UUID(sta["id"])
-        end
 
         stations[i] = GroundStation(lon, lat, id=id, elevation_min=elevation_min)
     end
 
+    println("Loaded $(length(stations)) stations.")
+
     return stations
+end
+
+"""
+Set minimum access duration for all stations
+"""
+function set_station_duration_min(stations::Array{<:GroundStation, 1}, duration_min::Real)
+    if duration_min <= 0.0
+        throw(ArgumentError("Invalid minimum contact duration duration."))
+    end
+
+    for station in stations
+        station.duration_min = duration_min
+    end
 end
 
 ###############
 # Opportunity #
 ###############
 
-export Opportunity
 """
-Opportunity represents a single 
+Opportunity represents an "opportunity" for action for a spacecraft
 
-Attributes:
-- `id::UUID` Unique collect identifier
-- `orbit::Orbit` Orbit object associated with this collect
+Common Attributes:
+- `id::Integer` Unique Identifier for action
+- `orbit::TLE` Orbit object associated with this collect
 - `location::Location` Location object on the ground for interaction
-- `collect_duration` Required dewell time to make collection
-- `sow::Epoch` Start of acquisition window 
-- `mid::Epoch` Mid-time of acquisition window
-- `eow::Epoch` End of possible acquisition window
-- `duration::` Length of acquisition window
+- `t_start::Epoch` Start of acquisition window 
+- `t_mid::Epoch` Mid-time of acquisition window
+- `t_end::Epoch` End of possible acquisition window
+- `duration::Real` Length of action
 """
-mutable struct Opportunity
-    id::UUID
-    orbit::Union{Orbit, TLE, Nothing}
-    location::Union{Location, Nothing}
-    sow::Epoch
-    mid::Epoch
-    eow::Epoch
+abstract type Opportunity end
+"""
+Opportunity type for a Request collection.
+"""
+mutable struct Collect <: Opportunity
+    id::Integer
+    orbit::Union{TLE, Nothing}
+    location::Union{Request, Nothing}
+    t_start::Epoch
+    t_mid::Epoch
+    t_end::Epoch
     duration::Float64
-    collect_duration::Float64
+    reward::Float64
 
-    function Opportunity(sow::Epoch, eow::Epoch;
-                         id=uuid4()::UUID, orbit=nothing::Union{Orbit, TLE, Nothing}, 
-                         location=nothing::Union{Location, Nothing},
-                         collect_duration=0::Real)
+    function Collect(t_start::Epoch, t_end::Epoch;
+        id::Integer=0, orbit=nothing::Union{Orbit, TLE, Nothing}, 
+        location=nothing::Union{Location, Nothing})
 
-        duration = eow - sow
-        mid      = sow + duration/2.0
-        new(id, orbit, location, sow, mid, eow, duration, collect_duration)
+        duration = t_end - t_start
+        t_mid    = t_start + duration/2.0
+        new(id, orbit, location, t_start, t_mid, t_end, duration, location.reward)
     end
 end
 
-function Base.isequal(ol::Opportunity, or::Opportunity)
-    return (
-        (ol.id == or.id) &&
-        (ol.location == or.location) &&
-        (ol.sow == or.sow) &&
-        (ol.mid == or.mid) &&
-        (ol.eow == or.eow) &&
-        (ol.duration == or.duration) &&
-        (ol.collect_duration == or.collect_duration) && true
-    )
+Base.:(==)(ol::Collect, or::Collect) = Base.isequal(ol, or)
+
+function Base.show(io::IO, col::Collect)
+
+    s = @sprintf "Collect(ID: %s, Request: %s, t_start: %s, t_end: %s, Reward: %.2f)" string(col.id) string(col.location.id) col.t_start col.t_end col.reward
+
+    print(io, s)
 end
-Base.:(==)(ol::Opportunity, or::Opportunity) = Base.isequal(ol, or)
 
-function Base.show(io::IO, opp::Opportunity)
+"""
+Opportunity type for a ground contact.
+"""
+mutable struct Contact <: Opportunity
+    id::Integer
+    orbit::Union{TLE, Nothing}
+    location::Union{GroundStation, Nothing}
+    t_start::Epoch
+    t_mid::Epoch
+    t_end::Epoch
+    duration::Float64
 
-    orbit = "nothing"
-    if typeof(opp.orbit) == Orbit && opp.orbit != nothing 
-        orbit = string(opp.orbit.id)
-    elseif typeof(opp.orbit) == TLE
-        orbit = "TLE"
+    function Contact(t_start::Epoch, t_end::Epoch;
+        id::Integer=0, orbit=nothing::Union{Orbit, TLE, Nothing}, 
+        location=nothing::Union{Location, Nothing})
+
+        duration = t_end - t_start
+        t_mid    = t_start + duration/2.0
+        new(id, orbit, location, t_start, t_mid, t_end, duration)
     end
+end
 
-    image = "nothing"
-    if opp.location != nothing 
-        image = string(UInt64(pointer_from_objref(opp.location)), base=16)
-    end
-    
-    s = @sprintf "Opportunity(Ptr: %s, a Orbit: %s, Location: %s, Start: %s, End: %s, Duration: %.2f)" string(UInt64(pointer_from_objref(opp)), base=16) orbit image string(opp.sow) string(opp.eow) opp.duration
+function Base.show(io::IO, con::Contact)
+
+    minutes = floor(con.duration/60)
+    seconds = con.duration - 60*minutes
+
+    s = @sprintf "Contact(ID: %s, Station: %s, t_start: %s, t_end: %s, Duration: %02dm %02ds)" string(con.id) string(con.location.id) con.t_start con.t_end minutes seconds
 
     print(io, s)
 end

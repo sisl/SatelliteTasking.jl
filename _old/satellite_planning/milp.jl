@@ -8,7 +8,7 @@ using Gurobi
 # SatelliteTasking imports
 using SatelliteDynamics.SGPModels: TLE
 using SatelliteTasking.DataStructures: Image, Opportunity, Orbit
-using SatelliteTasking.Collection: group_image_opportunities
+using SatelliteTasking.Access: group_image_opportunities
 
 export sp_milp_policy
 """

@@ -7,7 +7,7 @@ Modules = [SatelliteTasking.DataStructures]
 
 ## Collection
 ```@index
-Modules = [SatelliteTasking.Collection]
+Modules = [SatelliteTasking.Access]
 ```
 
 ## Simulation

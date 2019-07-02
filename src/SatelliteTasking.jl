@@ -3,23 +3,27 @@ module SatelliteTasking
 
 using Reexport
 
+
 # Base Module Includes
 include("data_structures.jl")
-include("collection.jl")
-include("constraints.jl")
-include("simulation.jl")
+include("access.jl")
+include("models.jl")
 
 # Export Values
 @reexport using SatelliteTasking.DataStructures
-@reexport using SatelliteTasking.Collection
-@reexport using SatelliteTasking.Constraints
-@reexport using SatelliteTasking.Simulation
+@reexport using SatelliteTasking.Access
+@reexport using SatelliteTasking.Models
+# @reexport using SatelliteTasking.Simulation
+
+# Direct includes
+include("visualization.jl")
+
 
 # Export satellite planning submodule
-include(joinpath(".", "satellite_planning", "satellite_planning.jl"))
+# include(joinpath(".", "satellite_planning", "satellite_planning.jl"))
 
 # Export analysis submodule
-# println(joinpath("analysis", "analysis.jl"))
-include(joinpath(".", "analysis", "analysis.jl"))
+# include(joinpath(".", "analysis", "analysis.jl"))
+# @reexport using SatelliteTasking.Analysis
 
 end # module
