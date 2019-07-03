@@ -448,7 +448,7 @@ Opportunity type for a Request collection.
 """
 mutable struct Collect <: Opportunity
     id::Integer
-    orbit::Union{TLE, Nothing}
+    spacecraft::Spacecraft
     location::Union{Request, Nothing}
     t_start::Union{Epoch, Real}
     t_mid::Union{Epoch, Real}
@@ -457,12 +457,12 @@ mutable struct Collect <: Opportunity
     reward::Float64
 
     function Collect(t_start::Union{Epoch, Real}, t_end::Union{Epoch, Real};
-        id::Integer=0, orbit=nothing::Union{Orbit, TLE, Nothing}, 
+        id::Integer=0, spacecraft=nothing::Union{Spacecraft, Nothing}, 
         location=nothing::Union{Location, Nothing})
 
         duration = t_end - t_start
         t_mid    = t_start + duration/2.0
-        new(id, orbit, location, t_start, t_mid, t_end, duration, location.reward)
+        new(id, spacecraft, location, t_start, t_mid, t_end, duration, location.reward)
     end
 end
 
@@ -482,7 +482,11 @@ Base.:(==)(ol::Collect, or::Collect) = Base.isequal(ol, or)
 
 function Base.show(io::IO, col::Collect)
 
-    s = @sprintf "Collect(ID: %s, Request: %s, t_start: %s, t_end: %s, Reward: %.2f)" string(col.id) string(col.location.id) col.t_start col.t_end col.reward
+    if typeof(col.t_start) == Epoch
+        s = @sprintf "Collect(ID: %s, Spacecraft %s, Request: %s, t_start: %s, t_end: %s, Reward: %.2f)" string(col.id) string(col.spacecraft.id) string(col.location.id) col.t_start col.t_end col.reward
+    else
+        s = @sprintf "Collect(ID: %s, Spacecraft %s, Request: %s, t_start: %.3f, t_end: %.3f, Reward: %.2f)" string(col.id) string(col.spacecraft.id) string(col.location.id) col.t_start col.t_end col.reward
+    end
 
     print(io, s)
 end
@@ -492,7 +496,7 @@ Opportunity type for a ground contact.
 """
 mutable struct Contact <: Opportunity
     id::Integer
-    orbit::Union{TLE, Nothing}
+    spacecraft::Spacecraft
     location::Union{GroundStation, Nothing}
     t_start::Union{Epoch, Real}
     t_mid::Union{Epoch, Real}
@@ -500,12 +504,12 @@ mutable struct Contact <: Opportunity
     duration::Float64
 
     function Contact(t_start::Union{Epoch, Real}, t_end::Union{Epoch, Real};
-        id::Integer=0, orbit=nothing::Union{Orbit, TLE, Nothing}, 
+        id::Integer=0, spacecraft=nothing::Union{Spacecraft, Nothing}, 
         location=nothing::Union{Location, Nothing})
 
         duration = t_end - t_start
         t_mid    = t_start + duration/2.0
-        new(id, orbit, location, t_start, t_mid, t_end, duration)
+        new(id, spacecraft, location, t_start, t_mid, t_end, duration)
     end
 end
 
@@ -526,7 +530,11 @@ function Base.show(io::IO, con::Contact)
     minutes = floor(con.duration/60)
     seconds = con.duration - 60*minutes
 
-    s = @sprintf "Contact(ID: %s, Station: %s, t_start: %s, t_end: %s, Duration: %02dm %02ds)" string(con.id) string(con.location.id) con.t_start con.t_end minutes seconds
+    if typeof(con.t_start) == Epoch
+        s = @sprintf "Contact(ID: %s,  Spacecraft %s, Station: %s, t_start: %s, t_end: %s, Duration: %02dm %02ds)" string(con.id) string(con.spacecraft.id) string(con.location.id) con.t_start con.t_end minutes seconds
+    else
+        s = @sprintf "Contact(ID: %s,  Spacecraft %s, Station: %s, t_start: %.3f, t_end: %.3f, Duration: %02dm %02ds)" string(con.id) string(con.spacecraft.id) string(con.location.id) con.t_start con.t_end minutes seconds
+    end
 
     print(io, s)
 end
@@ -557,6 +565,7 @@ end
     # Lookup Tables
     lt_locations     = Dict{Union{Integer, UUID}, Location}()
     lt_opportunities = Dict{Union{Integer, UUID}, Opportunity}()
+    lt_loc_opps = Dict{Union{Integer, UUID}, Array{Union{Integer, UUID}, 1}}()
 
     # Solver Parameters - General 
     solve_gamma::Real   = 0.0

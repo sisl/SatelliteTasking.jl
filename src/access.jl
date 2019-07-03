@@ -1,10 +1,9 @@
 # Exports
 export access_geometry, visible
+export spacecraft_compute_access
 export compute_access
 export parallel_compute_access
 export create_lookup_location_opportunity
-export create_lookup_location
-export create_lookup_opportunity
 
 ###################
 # Access Geometry #
@@ -155,19 +154,17 @@ function find_access_boundary(tle::TLE, location::Location, epc0::Epoch, step::R
     end
 end
 
-function compute_access(tle::TLE, locations::Array{<:Location, 1}, 
-            epc_min::Union{Epoch, Nothing}, epc_max::Union{Epoch, Nothing}; 
-            macro_step::Real=60.0, tol::Real=0.01, id_offset::Integer=0)
-    if epc_min == nothing
-        epc_min = tle.epoch
-    end
+function spacecraft_compute_access(problem::PlanningProblem, spacecraft::Spacecraft,
+            locations::Array{<:Location, 1}; 
+            macro_step::Real=60.0,
+            tol::Real=0.01, 
+            orbit_fraction::Real=0.5,
+            id_offset::Integer=0)
 
-    if epc_max == nothing
-        epc_min += 86400.0
-    end
-
+    # Access is computed over planning horizon of problem (t_start -> t_end)
+    
     # Compute orbital period
-    T = orbit_period(sCARTtoOSC(state(tle, epc_min), use_degrees=true)[1])
+    T = orbit_period(sCARTtoOSC(state(spacecraft.tle, problem.t_start), use_degrees=true)[1])
 
     opportunities = Array{Opportunity, 1}(undef, 0)
 
@@ -175,25 +172,27 @@ function compute_access(tle::TLE, locations::Array{<:Location, 1},
 
     for loc in locations
         # Perform macro adaptive stepsize search
-        epc = epc_min
-        while epc < epc_max
+        epc = problem.t_start
+        while epc < problem.t_end
 
             # println("Current step: $epc")
 
-            x_ecef = sECItoECEF(epc, state(tle, epc))
+            x_ecef = sECItoECEF(epc, state(spacecraft.tle, epc))
 
             if visible(x_ecef, loc)
                 # println("Found instant of visibility - $(visible(x_ecef, loc)) - $epc")
 
                 # Search for AOS (before initial guess epoch)
-                window_open = find_access_boundary(tle, loc, epc, -macro_step, tol=tol)
+                window_open = find_access_boundary(spacecraft.tle, loc, epc, -macro_step, tol=tol)
                 # println("Found window_open boundary: $window_open")
 
                 # Search for LOS (after initial guess epoch)
-                window_close = find_access_boundary(tle, loc, epc, macro_step, tol=tol)
+                window_close = find_access_boundary(spacecraft.tle, loc, epc, macro_step, tol=tol)
                 # println("Found window_close boundary: $window_close")
 
-                teststep = (window_close - window_open)*1.1
+                # Convert window_open/window_close to elapsed time values
+                # window_open = get_rel_time(problem, window_open)
+                # window_close = get_rel_time(problem, window_close)
 
                 # If zero-doppler collection is required updated pass-times and geometry profile
                 collect_duration = 0
@@ -208,14 +207,14 @@ function compute_access(tle::TLE, locations::Array{<:Location, 1},
                     if typeof(loc) == Request
                         collect = Collect(window_open, 
                             window_close,
-                            orbit=tle,
+                            spacecraft=spacecraft,
                             location=loc)
 
                         push!(opportunities, collect)
                     elseif typeof(loc) == GroundStation
                         contact = Contact(window_open, 
                             window_close,
-                            orbit=tle,
+                            spacecraft=spacecraft,
                             location=loc)
 
                         push!(opportunities, contact)
@@ -226,10 +225,7 @@ function compute_access(tle::TLE, locations::Array{<:Location, 1},
 
                 # Step a most of an orbit because there (likely) won't be another
                 # Acces until at least 1 orbit later
-                # epc += T*(13/16)
-                epc += T*(1/2)
-                # epc += T/10
-                # epc += teststep
+                epc += T*orbit_fraction
 
             else
                 # Take a macro step because there's a good chance there won't be an
@@ -251,91 +247,112 @@ function compute_access(tle::TLE, locations::Array{<:Location, 1},
     return opportunities
 end
 
-function parallel_compute_access(tle::TLE, locations::Array{<:Location, 1},
-            epc_min::Union{Epoch, Nothing}, epc_max::Union{Epoch, Nothing}; 
-            macro_step::Real=60.0, tol::Real=0.01, id_offset::Integer=0)
+function compute_access(problem::PlanningProblem;
+            macro_step::Real=60.0, tol::Real=0.01, 
+            orbit_fraction::Real=0.5)
+
+    # All Opportunities
+    all_opportunities = Array{Opportunity, 1}(undef, 0)
+
+    # Compute all opportunities for each spacecraft
+    for spacecraft in problem.spacecraft
+        println("Computing access for spacecraft: $(spacecraft.id)")
+        opportunities = spacecraft_compute_access(problem, 
+                            spacecraft,
+                            problem.locations,
+                            macro_step=macro_step, tol=tol,
+                            orbit_fraction=orbit_fraction)
+
+        # Add opportunities to list of all opportunities
+        push!(all_opportunities, opportunities...)
+    end
+
+    # Sort opportunities in ascending order
+    sort!(all_opportunities, by = x -> x.t_start)
+
+    # Apply IDs for collects in ascending time order
+    id_offset = length(problem.opportunities)
+    for (idx, opp) in enumerate(all_opportunities)
+        # Override computed opportunity id
+        opp.id = idx
+    end
+
+    # Add opportunities to problem
+    problem.opportunities = all_opportunities
+
+    # Create separate arrays of contacts and requests
+    problem.contacts = filter(x -> typeof(x) == Contact, problem.opportunities)
+    problem.collects = filter(x -> typeof(x) == Collect, problem.opportunities)
+
+    # Zero Location Opportunity Counts
+    for loc in problem.locations
+        problem.lt_loc_opps[loc.id] = Union{Integer, UUID}[]
+    end
+
+    # Update opportunity lookup table
+    for opp in problem.opportunities
+        problem.lt_opportunities[opp.id] = opp
+        push!(problem.lt_loc_opps[opp.location.id], opp.id)
+    end
+
+    return
+end
+
+function parallel_compute_access(problem::PlanningProblem;
+            macro_step::Real=60.0, tol::Real=0.01, 
+            orbit_fraction::Real=0.5)
 
     # Create anonymous function to map array inputs to 
-    fn(a, b, c, d, e) = x -> compute_access(a, x, b, c, macro_step=d, tol=e)
+    # Must be declared at start of function for julia reasons...
+    # x is a tuple (spacecraft, locations)
+    fn(p, a, b, c) = x -> spacecraft_compute_access(p, x[1], x[2], macro_step=a, tol=b, orbit_fraction=c)
 
     # Create work assignments
     nw = nworkers()        # Number of workers
-    lw = length(locations) # Length of work
+    lw = length(problem.locations) # Length of work
 
     # @debug "Have $lw items of work and $nw workers")
 
     wa = floor(Int, lw/nw) # Average work per worker
     wr = lw - nw*wa        # Remaining worker
 
-    # Work Array
-    assignments = Array{<:Location, 1}[]
+    # Construct assignments (function inputs) for Workers
+    assignments = Tuple{Spacecraft, Array{<:Location, 1}}[]
 
-    # @debug "Worker 1 convering $(1):$(wa+wr)")
-    push!(assignments, locations[1:(wa+wr)])
-    for i in 2:nw
-        # @debug "Worker $i convering $(1+wr+(i-1)*wa):$(i*wa+wr)")
-        push!(assignments, locations[(1+wr+(i-1)*wa):(i*wa+wr)])
+    for sc in problem.spacecraft
+         # @debug "Worker 1 convering $(1):$(wa+wr)")
+        push!(assignments, (sc, problem.locations[1:(wa+wr)]))
+        for i in 2:nw
+            # @debug "Worker $i convering $(1+wr+(i-1)*wa):$(i*wa+wr)")
+            push!(assignments, (sc, problem.locations[(1+wr+(i-1)*wa):(i*wa+wr)]))
+        end
     end
 
-    results = pmap(fn(tle, epc_min, epc_max, macro_step, tol), assignments)
+    # Execute Work in paralle
+    results = pmap(fn(problem, macro_step, tol, orbit_fraction), assignments)
     
-    # Aggregate all results
-    opportunities = vcat(results...)
+    # Aggregate and process results
+
+    # Add opportunities to problem
+    problem.opportunities = vcat(results...)
 
     # Sort opportunities in ascending order
-    sort!(opportunities, by = x -> x.t_start)
+    sort!(problem.opportunities, by = x -> x.t_start)
 
-    # Aggregate results and resolve id numbering
-    for (idx, opp) in enumerate(opportunities)
-        # Override computed opportunity id
-        opp.id = idx + id_offset
+    # Create separate arrays of contacts and requests
+    problem.contacts = filter(x -> typeof(x) == Contact, problem.opportunities)
+    problem.collects = filter(x -> typeof(x) == Collect, problem.opportunities)
+
+    # Zero Location Opportunity Counts
+    for loc in problem.locations
+        problem.lt_loc_opps[loc.id] = Union{Integer, UUID}[]
     end
 
-    return opportunities
-end
-
-"""
-Create dictionary lookup of the possible opportunities that exist for each request.
-
-Arguments:
-- `opportunities::Array{<:Opportunity, 1}` Array of opportunities for all requests
-
-Returns:
-- `location_access::Dict{<:Location, Array{<:Opportunity, 1}}` Lookup table which returns the array of opportunities for each request
-"""
-function create_lookup_location_opportunity(locations::Array{<:Location, 1}, opportunities::Array{<:Opportunity, 1})
-    # Get ID Types
-    loc_id_type = typeof(locations[1].id)
-    opp_id_type = typeof(opportunities[1].id)
-
-    # Initialize dictionary storing collects for each request
-    location_oppoturnities = Dict{loc_id_type, Array{opp_id_type, 1}}()
-
-
-    # Create collect array for each unique request
-    for loc in locations
-        location_oppoturnities[loc.id] = Integer[]
+    # Update opportunity lookup table
+    for opp in problem.opportunities
+        problem.lt_opportunities[opp.id] = opp
+        push!(problem.lt_loc_opps[opp.location.id], opp.id)
     end
 
-    # Populate lookup with opportunities
-    for opp in opportunities
-        push!(location_oppoturnities[opp.location.id], opp.id)
-    end
-
-    return location_oppoturnities
-end
-
-"""
-Create Lookup to get opportunity based on opportunity ID
-"""
-function create_lookup_opportunity(opportunities::Array{<:Opportunity})
-    loc_id_type = typeof(opportunities[1].id)
-
-    lookup = Dict{loc_id_type, Opportunity}()
-
-    for opportunity in opportunities
-        lookup[opportunity.id] = opportunity
-    end
-
-    return lookup
+    return
 end
