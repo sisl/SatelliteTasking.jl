@@ -4,6 +4,7 @@ authors = ["Duncan Eddy <duncan.eddy@gmail.com>"]
 version = "0.1.0"
 
 [deps]
+Discretizers = "6e83dbb3-75ca-525b-8ae2-3751f0dd50b4"
 Distributed = "8ba89e20-285c-5b6f-9357-94700520ee1b"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 Gurobi = "2e9cd046-0924-5485-92f1-d5272153d98b"
@@ -14,6 +15,7 @@ JuMP = "4076af6c-e467-56ae-b986-b466b2749572"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"
 PGFPlots = "3b7a836e-365b-5785-a47d-02c71176b4aa"
+Parameters = "d96e819e-fc66-5662-9728-84c9c7592b0a"
 Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 Reexport = "189a3867-3050-52da-a836-e630ba90ab69"

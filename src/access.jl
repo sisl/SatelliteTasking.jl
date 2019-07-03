@@ -1,24 +1,10 @@
-__precompile__(true)
-module Access
-
-# Julia imports
-using LinearAlgebra
-using Statistics
-using Distributed
-
-# SatelliteDynamics imports
-using SatelliteDynamics
-
-# Package imports
-using SatelliteTasking.DataStructures
-
 # Exports
 export access_geometry, visible
 export compute_access
-export group_location_access
-export create_location_lookup
-export create_opportunity_lookup
 export parallel_compute_access
+export create_lookup_location_opportunity
+export create_lookup_location
+export create_lookup_opportunity
 
 ###################
 # Access Geometry #
@@ -169,7 +155,9 @@ function find_access_boundary(tle::TLE, location::Location, epc0::Epoch, step::R
     end
 end
 
-function compute_access(tle::TLE, locations::Array{<:Location, 1}, epc_min::Union{Epoch, Nothing}, epc_max::Union{Epoch, Nothing}; macro_step::Real=60.0, tol::Real=0.01, id_offset::Integer=1)
+function compute_access(tle::TLE, locations::Array{<:Location, 1}, 
+            epc_min::Union{Epoch, Nothing}, epc_max::Union{Epoch, Nothing}; 
+            macro_step::Real=60.0, tol::Real=0.01, id_offset::Integer=0)
     if epc_min == nothing
         epc_min = tle.epoch
     end
@@ -177,9 +165,6 @@ function compute_access(tle::TLE, locations::Array{<:Location, 1}, epc_min::Unio
     if epc_max == nothing
         epc_min += 86400.0
     end
-
-    # Current Integer Offset
-    id = id_offset
 
     # Compute orbital period
     T = orbit_period(sCARTtoOSC(state(tle, epc_min), use_degrees=true)[1])
@@ -208,6 +193,8 @@ function compute_access(tle::TLE, locations::Array{<:Location, 1}, epc_min::Unio
                 window_close = find_access_boundary(tle, loc, epc, macro_step, tol=tol)
                 # println("Found window_close boundary: $window_close")
 
+                teststep = (window_close - window_open)*1.1
+
                 # If zero-doppler collection is required updated pass-times and geometry profile
                 collect_duration = 0
                 if typeof(loc) == Request && loc.require_zero_doppler == true
@@ -222,20 +209,16 @@ function compute_access(tle::TLE, locations::Array{<:Location, 1}, epc_min::Unio
                         collect = Collect(window_open, 
                             window_close,
                             orbit=tle,
-                            location=loc,
-                            id=id)
+                            location=loc)
 
                         push!(opportunities, collect)
-                        id += 1
                     elseif typeof(loc) == GroundStation
                         contact = Contact(window_open, 
                             window_close,
                             orbit=tle,
-                            location=loc,
-                            id=id)
+                            location=loc)
 
                         push!(opportunities, contact)
-                        id += 1
                     else
                         throw(ErrorException("Unknown type of location: $loc"))
                     end
@@ -243,7 +226,10 @@ function compute_access(tle::TLE, locations::Array{<:Location, 1}, epc_min::Unio
 
                 # Step a most of an orbit because there (likely) won't be another
                 # Acces until at least 1 orbit later
-                epc += T*(13/16)
+                # epc += T*(13/16)
+                epc += T*(1/2)
+                # epc += T/10
+                # epc += teststep
 
             else
                 # Take a macro step because there's a good chance there won't be an
@@ -256,10 +242,18 @@ function compute_access(tle::TLE, locations::Array{<:Location, 1}, epc_min::Unio
     # Sort opportunities in ascending order
     sort!(opportunities, by = x -> x.t_start)
 
+    # Apply IDs for collects in ascending time order
+    for (idx, opp) in enumerate(opportunities)
+        # Override computed opportunity id
+        opp.id = idx + id_offset
+    end
+
     return opportunities
 end
 
-function parallel_compute_access(tle::TLE, locations::Array{<:Location, 1}, epc_min::Union{Epoch, Nothing}, epc_max::Union{Epoch, Nothing}; macro_step::Real=60.0, tol::Real=0.01, id_offset::Integer=1)
+function parallel_compute_access(tle::TLE, locations::Array{<:Location, 1},
+            epc_min::Union{Epoch, Nothing}, epc_max::Union{Epoch, Nothing}; 
+            macro_step::Real=60.0, tol::Real=0.01, id_offset::Integer=0)
 
     # Create anonymous function to map array inputs to 
     fn(a, b, c, d, e) = x -> compute_access(a, x, b, c, macro_step=d, tol=e)
@@ -268,7 +262,7 @@ function parallel_compute_access(tle::TLE, locations::Array{<:Location, 1}, epc_
     nw = nworkers()        # Number of workers
     lw = length(locations) # Length of work
 
-    println("Have $lw units of work and $nw workers")
+    # @debug "Have $lw items of work and $nw workers")
 
     wa = floor(Int, lw/nw) # Average work per worker
     wr = lw - nw*wa        # Remaining worker
@@ -276,23 +270,28 @@ function parallel_compute_access(tle::TLE, locations::Array{<:Location, 1}, epc_
     # Work Array
     assignments = Array{<:Location, 1}[]
 
-    println("Worker 1 convering $(1):$(wa+wr)")
+    # @debug "Worker 1 convering $(1):$(wa+wr)")
     push!(assignments, locations[1:(wa+wr)])
     for i in 2:nw
-        println("Worker $i convering $(1+wr+(i-1)*wa):$(i*wa+wr)")
+        # @debug "Worker $i convering $(1+wr+(i-1)*wa):$(i*wa+wr)")
         push!(assignments, locations[(1+wr+(i-1)*wa):(i*wa+wr)])
     end
 
     results = pmap(fn(tle, epc_min, epc_max, macro_step, tol), assignments)
     
-    for r in results
-        println("Found $(length(r)) opportunities")
-    end
-    println("Found $(length(vcat(results))) total opportunities")
+    # Aggregate all results
+    opportunities = vcat(results...)
+
+    # Sort opportunities in ascending order
+    sort!(opportunities, by = x -> x.t_start)
 
     # Aggregate results and resolve id numbering
+    for (idx, opp) in enumerate(opportunities)
+        # Override computed opportunity id
+        opp.id = idx + id_offset
+    end
 
-    return nothing
+    return opportunities
 end
 
 """
@@ -304,19 +303,23 @@ Arguments:
 Returns:
 - `location_access::Dict{<:Location, Array{<:Opportunity, 1}}` Lookup table which returns the array of opportunities for each request
 """
-function group_location_access(opportunities::Array{<:Opportunity, 1})
+function create_lookup_location_opportunity(locations::Array{<:Location, 1}, opportunities::Array{<:Opportunity, 1})
+    # Get ID Types
+    loc_id_type = typeof(locations[1].id)
+    opp_id_type = typeof(opportunities[1].id)
+
     # Initialize dictionary storing collects for each request
-    # location_oppoturnities = Dict{<:Location, Array{<:Opportunity, 1}}()
-    location_oppoturnities = Dict{Location, Array{<:Opportunity, 1}}()
+    location_oppoturnities = Dict{loc_id_type, Array{opp_id_type, 1}}()
+
 
     # Create collect array for each unique request
-    for opp in opportunities
-        location_oppoturnities[opp.location] = typeof(opp)[]
+    for loc in locations
+        location_oppoturnities[loc.id] = Integer[]
     end
 
     # Populate lookup with opportunities
-    for (i, opp) in enumerate(opportunities)
-        push!(location_oppoturnities[opp.location], opp)
+    for opp in opportunities
+        push!(location_oppoturnities[opp.location.id], opp.id)
     end
 
     return location_oppoturnities
@@ -325,10 +328,10 @@ end
 """
 Create Lookup to get location based on location ID
 """
-function create_location_lookup(locations::Array{<:Location})
+function create_lookup_location(locations::Array{<:Location})
     loc_id_type = typeof(locations[1].id)
 
-    lookup = Dict{loc_id_type, <:Location}()
+    lookup = Dict{loc_id_type, Location}()
 
     for location in locations
         lookup[location.id] = location
@@ -340,10 +343,10 @@ end
 """
 Create Lookup to get opportunity based on opportunity ID
 """
-function create_opportunity_lookup(opportunities::Array{<:Opportunity})
+function create_lookup_opportunity(opportunities::Array{<:Opportunity})
     loc_id_type = typeof(opportunities[1].id)
 
-    lookup = Dict{loc_id_type, <:Opportunity}()
+    lookup = Dict{loc_id_type, Opportunity}()
 
     for opportunity in opportunities
         lookup[opportunity.id] = opportunity
@@ -352,4 +355,3 @@ function create_opportunity_lookup(opportunities::Array{<:Opportunity})
     return lookup
 end
 
-end # End module

@@ -1,22 +1,7 @@
-__precompile__(true)
-module DataStructures # Satellite Tasking Data Structures
-
-using SatelliteDynamics.Time
-using SatelliteDynamics.Astrodynamics
-using SatelliteDynamics.ReferenceSystems
-using SatelliteDynamics.Coordinates
-using SatelliteDynamics.Simulation
-using SatelliteDynamics.SGPModels
-
-using LinearAlgebra
-using Statistics
-using JSON
-using UUIDs
-using Printf
-
 # Exports
 export Orbit
 export interpolate
+export Spacecraft
 export Location
 export Request
 export load_requests
@@ -26,6 +11,7 @@ export load_stations
 export Opportunity
 export Collect
 export Contact
+export PlanningProblem
 
 #########
 # Orbit #
@@ -35,8 +21,8 @@ export Contact
 Orbit provides a data structure which wraps SatelliteDynamics propagators
 
 Arguments:
-- `epc0::Epoch` Initial Epoch of propagation
-- `epcf::Epoch` Final Epoch of propagation
+- `epc0::Union{Epoch, Real}` Initial Epoch of propagation
+- `epcf::Union{Epoch, Real}` Final Epoch of propagation
 - `eci0::Array{<:Real, 1}` Initial inertial state at initial Epoch [m; m/s]
 - `id::Integer` Identification number for this orbit
 - `timestep::Real` Timestep used for propgation output
@@ -70,7 +56,7 @@ mutable struct Orbit
     ecef::Array{Float64, 2}
     oe::Array{Float64, 2}
 
-    function Orbit(epc0::Epoch,  epcf::Epoch, eci0::Array{<:Real, 1}; 
+    function Orbit(epc0::Union{Epoch, Real},  epcf::Union{Epoch, Real}, eci0::Array{<:Real, 1}; 
                 id=0::Integer, timestep=1.0::Real, dtmax=30.0::Real,
                 mass=100.0::Real, area_drag=1.0::Real, coef_drag=2.3::Real, 
                 area_srp=1.0::Real, coef_srp=1.8::Real, 
@@ -132,12 +118,12 @@ that the use-case can handle the interprolation errors introduced.
 
 Arguments:
 - `orbit::Orbit` Orbit data to interpolate
-- `epc::Epoch` Epoch to interpolate state output to.
+- `epc::Union{Epoch, Real}` Epoch to interpolate state output to.
 
 Returns:
 - `eci::Arrray{Float64, 1}` Earth intertial state information interpolated to time of Epoch
 """
-function interpolate(orbit::Orbit, epc::Epoch)
+function interpolate(orbit::Orbit, epc::Union{Epoch, Real})
     # Check validity of input
     if epc < orbit.epc[1]
         throw(ArgumentError("Invaid interpolation time. Cannot interpolate before start of Orbit."))
@@ -173,12 +159,42 @@ function interpolate(orbit::Orbit, epc::Epoch)
     return eci
 end
 
+##############
+# Spacecraft #
+##############
+
+"""
+Object to store spacecraft information
+
+Model Parameters:
+- `powergen_sunpoint::Float64` Power generated when sunpointed
+- `powergen_image::Float64` Power generated when imaging (should be negative)
+- `powergen_downlink::Float64` Power generated when downlinking (should be negative)
+- `datagen_backorbit::Float64` Data generated in backorbit
+- `datagen_image::Float64` Data generated when imaging
+- `datagen_downlink::Float64` Data generated when downlinking (should be negative)
+- `slew_rage::Float64` Spacecraft slew rate (degrees per second)
+"""
+@with_kw mutable struct Spacecraft
+    # Core Parameters
+    id::Integer
+    tle::TLE
+
+    # Resource Model
+    powergen_sunpoint::Float64 = 0.0
+    powergen_image::Float64 = 0.0
+    powergen_downlink::Float64 = 0.0
+    datagen_backorbit::Float64 = 0.0
+    datagen_image::Float64 = 0.0
+    datagen_downlink::Float64 = 0.0
+    slew_rage::Float64 = 1.0
+end
+
 ############
 # Location #
 ############
 
 abstract type Location end
-
 
 function Base.isequal(ll::Location, rl::Location)
     return (
@@ -267,7 +283,7 @@ has the following format:
 Arguments:
 - `file::String` Filepath to JSON file encoding request 
 """
-function load_requests(file::String; require_zero_doppler::Bool=true)
+function load_requests(file::String; id_offset::Integer=0, require_zero_doppler::Bool=true)
     # Parse data file
     data = JSON.parsefile(file)
 
@@ -278,7 +294,7 @@ function load_requests(file::String; require_zero_doppler::Bool=true)
         lat = req["lat"]
         look_angle_min = req["look_angle_min"]
         look_angle_max = req["look_angle_max"]
-        id  = i
+        id  = i + id_offset
 
         requests[i] = Request(lon, lat, id=id,
             look_angle_min=look_angle_min,
@@ -374,7 +390,7 @@ has the following format:
 Arguments:
 - `file::String` Filepath to JSON file encoding request 
 """
-function load_stations(file::String)
+function load_stations(file::String, id_offset::Integer=0)
     data = JSON.parsefile(file)
 
     # Initialize array of Requests
@@ -384,7 +400,7 @@ function load_stations(file::String)
         lon = sta["lon"]
         lat = sta["lat"]
         elevation_min = sta["elevation_min"]
-        id  = i
+        id  = i + id_offset
 
 
         stations[i] = GroundStation(lon, lat, id=id, elevation_min=elevation_min)
@@ -419,12 +435,13 @@ Common Attributes:
 - `id::Integer` Unique Identifier for action
 - `orbit::TLE` Orbit object associated with this collect
 - `location::Location` Location object on the ground for interaction
-- `t_start::Epoch` Start of acquisition window 
-- `t_mid::Epoch` Mid-time of acquisition window
-- `t_end::Epoch` End of possible acquisition window
+- `t_start::Union{Epoch, Real}` Start of acquisition window 
+- `t_mid::Union{Epoch, Real}` Mid-time of acquisition window
+- `t_end::Union{Epoch, Real}` End of possible acquisition window
 - `duration::Real` Length of action
 """
 abstract type Opportunity end
+
 """
 Opportunity type for a Request collection.
 """
@@ -432,13 +449,13 @@ mutable struct Collect <: Opportunity
     id::Integer
     orbit::Union{TLE, Nothing}
     location::Union{Request, Nothing}
-    t_start::Epoch
-    t_mid::Epoch
-    t_end::Epoch
+    t_start::Union{Epoch, Real}
+    t_mid::Union{Epoch, Real}
+    t_end::Union{Epoch, Real}
     duration::Float64
     reward::Float64
 
-    function Collect(t_start::Epoch, t_end::Epoch;
+    function Collect(t_start::Union{Epoch, Real}, t_end::Union{Epoch, Real};
         id::Integer=0, orbit=nothing::Union{Orbit, TLE, Nothing}, 
         location=nothing::Union{Location, Nothing})
 
@@ -446,6 +463,18 @@ mutable struct Collect <: Opportunity
         t_mid    = t_start + duration/2.0
         new(id, orbit, location, t_start, t_mid, t_end, duration, location.reward)
     end
+end
+
+function JSON.lower(col::Collect)
+    return Dict(
+        "id" => col.id,
+        "location" => col.location.id,
+        "lon" => col.location.lon,
+        "lat" => col.location.lat,
+        "t_start" => string(col.t_start),
+        "t_end"  => string(col.t_end),
+        "duration" => col.duration
+    )    
 end
 
 Base.:(==)(ol::Collect, or::Collect) = Base.isequal(ol, or)
@@ -464,12 +493,12 @@ mutable struct Contact <: Opportunity
     id::Integer
     orbit::Union{TLE, Nothing}
     location::Union{GroundStation, Nothing}
-    t_start::Epoch
-    t_mid::Epoch
-    t_end::Epoch
+    t_start::Union{Epoch, Real}
+    t_mid::Union{Epoch, Real}
+    t_end::Union{Epoch, Real}
     duration::Float64
 
-    function Contact(t_start::Epoch, t_end::Epoch;
+    function Contact(t_start::Union{Epoch, Real}, t_end::Union{Epoch, Real};
         id::Integer=0, orbit=nothing::Union{Orbit, TLE, Nothing}, 
         location=nothing::Union{Location, Nothing})
 
@@ -477,6 +506,18 @@ mutable struct Contact <: Opportunity
         t_mid    = t_start + duration/2.0
         new(id, orbit, location, t_start, t_mid, t_end, duration)
     end
+end
+
+function JSON.lower(con::Contact)
+    return Dict(
+        "id" => con.id,
+        "location" => con.location.id,
+        "lon" => con.location.lon,
+        "lat" => con.location.lat,
+        "t_start" => string(con.t_start),
+        "t_end"  => string(con.t_end),
+        "duration" => con.duration
+    )    
 end
 
 function Base.show(io::IO, con::Contact)
@@ -489,4 +530,30 @@ function Base.show(io::IO, con::Contact)
     print(io, s)
 end
 
-end # Close DataStructures
+####################
+# Planning Problem #
+####################
+
+mutable struct PlanningProblem
+    # Problem Parameters
+    t_start::Epoch
+    t_end::Epoch
+
+    # Constraint List
+    constraint_list::Array{Function,1} = Function[]
+
+    # Spacecraft Parameters
+    spacecraft::Array{Spacecraft, 1} = Spacecraft[]
+    locations::Array{<:Location, 1} = Location[]
+    opportunities::Array{<:Opportunity, 1} = Opportunity[]
+
+    # Solver Parameters - General 
+    solve_gamma::Real   = 0.0
+    solve_depth::Int    = 10
+    action_breadth::Int = 0
+
+    # Solver Parameters - MCTS
+    mcts_alpha::Real = 1.0
+    mcts_rollout_iterations::Int = 10
+    mcts_c::Real = 1.0
+end

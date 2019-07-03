@@ -1,21 +1,25 @@
 __precompile__(true)
 module SatelliteTasking
 
-using Reexport
+# Julia Packages
+using Printf
+using JSON
+using UUIDs
+using Distributed
+using LinearAlgebra
+using Statistics
+using Distributions
+using Discretizers
+using Parameters
 
+# Other dependencies
+using SatelliteDynamics
 
-# Base Module Includes
+# Includes
 include("data_structures.jl")
-include("access.jl")
 include("models.jl")
-
-# Export Values
-@reexport using SatelliteTasking.DataStructures
-@reexport using SatelliteTasking.Access
-@reexport using SatelliteTasking.Models
-# @reexport using SatelliteTasking.Simulation
-
-# Direct includes
+include("utils.jl")
+include("access.jl")
 include("visualization.jl")
 
 
@@ -26,4 +30,4 @@ include("visualization.jl")
 # include(joinpath(".", "analysis", "analysis.jl"))
 # @reexport using SatelliteTasking.Analysis
 
-end # module
+end # End module

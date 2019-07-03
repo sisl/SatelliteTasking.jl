@@ -1,15 +1,3 @@
-__precompile__(true)
-module Simulation
-
-# Julia Packages
-using Distributions
-using Statistics
-using LinearAlgebra
-using SatelliteDynamics
-
-# SatelliteTasking Imports
-using SatelliteTasking.DataStructures: Orbit
-
 # Exports
 # export simulate_orbits
 
@@ -94,5 +82,3 @@ using SatelliteTasking.DataStructures: Orbit
 
 #     return true_orbit, perturbed_orbits, eci_errors
 # end
-
-end # End Simulation Module

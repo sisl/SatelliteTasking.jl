@@ -1,6 +1,3 @@
-__precompile__(true)
-module Models
-
 ##########################
 # Spacecraft Slew Models #
 ##########################
@@ -97,5 +94,3 @@ module Models
 #         return true
 #     end
 # end
-
-end
