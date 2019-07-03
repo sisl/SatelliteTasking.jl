@@ -4,13 +4,13 @@ export get_abs_time, get_rel_time
 """
 Computes the absolute time
 """
-function get_abs_time(mdp::MDPProblem, t_since::Real)
-    return mdp.t_start + t_since
+function get_abs_time(problem::PlanningProblem, t_since::Real)
+    return problem.t_start + t_since
 end
 
 """
 Computes the relative time
 """
-function get_rel_time(mdp::MDPProblem, epc::Epoch)
-    return epc - mdp.t_start
+function get_rel_time(problem::PlanningProblem, epc::Epoch)
+    return epc - problem.t_start
 end

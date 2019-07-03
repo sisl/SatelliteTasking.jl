@@ -12,6 +12,7 @@ export Opportunity
 export Collect
 export Contact
 export PlanningProblem
+export add_locations
 
 #########
 # Orbit #
@@ -534,18 +535,28 @@ end
 # Planning Problem #
 ####################
 
-mutable struct PlanningProblem
-    # Problem Parameters
+@with_kw mutable struct PlanningProblem
+    # General Planning Settings
     t_start::Epoch
     t_end::Epoch
 
-    # Constraint List
+    # Spacecraft Settings
+    spacecraft::Array{Spacecraft, 1} = Spacecraft[]
     constraint_list::Array{Function,1} = Function[]
 
-    # Spacecraft Parameters
-    spacecraft::Array{Spacecraft, 1} = Spacecraft[]
+    # Planning Locations
     locations::Array{<:Location, 1} = Location[]
+    stations::Array{GroundStation, 1} = GroundStation[]
+    requests::Array{Request, 1} = Request[]
+
+    # Planning Opportunities
     opportunities::Array{<:Opportunity, 1} = Opportunity[]
+    contacts::Array{Contact, 1} = Contact[]
+    collects::Array{Collect, 1} = Collect[]
+
+    # Lookup Tables
+    lt_locations     = Dict{Union{Integer, UUID}, Location}()
+    lt_opportunities = Dict{Union{Integer, UUID}, Opportunity}()
 
     # Solver Parameters - General 
     solve_gamma::Real   = 0.0
@@ -556,4 +567,30 @@ mutable struct PlanningProblem
     mcts_alpha::Real = 1.0
     mcts_rollout_iterations::Int = 10
     mcts_c::Real = 1.0
+end
+
+"""
+Add locations to planning problem.
+"""
+function add_locations(problem::PlanningProblem, locations::Array{<:Location})
+    if length(locations) == 0
+        @warn "No locations in array. Nothing to add..."
+        return
+    end
+
+    # TODO: Check for duplicate IDs in requests (assumes already unique)
+
+    # Add location to problem
+    push!(problem.locations, locations...)
+
+    # Create separate arrays of contacts and requests
+    push!(problem.stations, filter(x -> typeof(x) == GroundStation, locations)...)
+    push!(problem.requests, filter(x -> typeof(x) == Request, locations)...)
+
+    # Update location lookup table
+    for loc in problem.locations
+        problem.lt_locations[loc.id] = loc
+    end
+
+    return
 end

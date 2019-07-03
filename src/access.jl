@@ -326,21 +326,6 @@ function create_lookup_location_opportunity(locations::Array{<:Location, 1}, opp
 end
 
 """
-Create Lookup to get location based on location ID
-"""
-function create_lookup_location(locations::Array{<:Location})
-    loc_id_type = typeof(locations[1].id)
-
-    lookup = Dict{loc_id_type, Location}()
-
-    for location in locations
-        lookup[location.id] = location
-    end
-
-    return lookup
-end
-
-"""
 Create Lookup to get opportunity based on opportunity ID
 """
 function create_lookup_opportunity(opportunities::Array{<:Opportunity})
@@ -354,4 +339,3 @@ function create_lookup_opportunity(opportunities::Array{<:Opportunity})
 
     return lookup
 end
-
