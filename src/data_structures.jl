@@ -13,6 +13,9 @@ export Collect
 export Contact
 export PlanningProblem
 export add_locations
+export clear_locations
+export clear_opportunities
+export clear_all
 
 #########
 # Orbit #
@@ -174,7 +177,7 @@ Model Parameters:
 - `datagen_backorbit::Float64` Data generated in backorbit
 - `datagen_image::Float64` Data generated when imaging
 - `datagen_downlink::Float64` Data generated when downlinking (should be negative)
-- `slew_rage::Float64` Spacecraft slew rate (degrees per second)
+- `slew_rate::Float64` Spacecraft slew rate (degrees per second)
 """
 @with_kw mutable struct Spacecraft
     # Core Parameters
@@ -188,7 +191,7 @@ Model Parameters:
     datagen_backorbit::Float64 = 0.0
     datagen_image::Float64 = 0.0
     datagen_downlink::Float64 = 0.0
-    slew_rage::Float64 = 1.0
+    slew_rate::Float64 = 1.0
 end
 
 ############
@@ -478,7 +481,20 @@ function JSON.lower(col::Collect)
     )    
 end
 
-Base.:(==)(ol::Collect, or::Collect) = Base.isequal(ol, or)
+function Base.isequal(cl::Collect, cr::Collect)
+    return (
+        (cl.id == cr.id) &&
+        ((cl.spacecraft == nothing && cr.spacecraft == nothing) ||
+         ((cl.spacecraft != nothing && cr.spacecraft != nothing &&
+          (cl.spacecraft.id == cr.spacecraft.id)))) &&
+        ((cl.location == nothing && cr.location == nothing) ||
+         ((cl.location != nothing && cr.location != nothing &&
+          (cl.location.id == cr.location.id)))) &&
+        (cl.t_start == cr.t_start) &&
+        (cl.t_end == cr.t_end) && true
+    )
+end
+Base.:(==)(cl::Collect, cr::Collect) = Base.isequal(cl, cr)
 
 function Base.show(io::IO, col::Collect)
 
@@ -525,6 +541,21 @@ function JSON.lower(con::Contact)
     )    
 end
 
+function Base.isequal(cl::Contact, cr::Contact)
+    return (
+        (cl.id == cr.id) &&
+        ((cl.spacecraft == nothing && cr.spacecraft == nothing) ||
+         ((cl.spacecraft != nothing && cr.spacecraft != nothing &&
+          (cl.spacecraft.id == cr.spacecraft.id)))) &&
+        ((cl.location == nothing && cr.location == nothing) ||
+         ((cl.location != nothing && cr.location != nothing &&
+          (cl.location.id == cr.location.id)))) &&
+        (cl.t_start == cr.t_start) &&
+        (cl.t_end == cr.t_end) && true
+    )
+end
+Base.:(==)(cl::Contact, cr::Contact) = Base.isequal(cl, cr)
+
 function Base.show(io::IO, con::Contact)
 
     minutes = floor(con.duration/60)
@@ -550,7 +581,7 @@ end
 
     # Spacecraft Settings
     spacecraft::Array{Spacecraft, 1} = Spacecraft[]
-    constraint_list::Array{Function,1} = Function[]
+    constraints::Array{Function,1} = Function[]
 
     # Planning Locations
     locations::Array{<:Location, 1} = Location[]
@@ -576,6 +607,34 @@ end
     mcts_alpha::Real = 1.0
     mcts_rollout_iterations::Int = 10
     mcts_c::Real = 1.0
+end
+
+"""
+Clear problem locations.
+"""
+function clear_locations(problem::PlanningProblem)
+    # Reset Locations
+    problem.locations = Location[]
+    problem.stations = GroundStation[]
+    problem.requests = Request[]
+end
+
+"""
+Clear problem opportunities.
+"""
+function clear_opportunities(problem::PlanningProblem)
+    # Reset Opportunities
+    problem.opportunities = Opportunity[]
+    problem.contacts = Contact[]
+    problem.collects = Collect[]
+end
+
+"""
+Clear all problem opportunities
+"""
+function clear_all(problem::PlanningProblem)
+    clear_locations(problem)
+    clear_opportunities(problem)
 end
 
 """

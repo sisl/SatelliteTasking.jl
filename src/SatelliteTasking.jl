@@ -20,6 +20,8 @@ include("data_structures.jl")
 include("models.jl")
 include("utils.jl")
 include("access.jl")
+include("graph.jl")
+include("analysis.jl")
 include("visualization.jl")
 
 
