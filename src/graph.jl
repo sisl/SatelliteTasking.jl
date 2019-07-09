@@ -74,7 +74,15 @@ function solve_graph(problem::PlanningProblem, graph::Dict{Opportunity, Array{<:
 
     for opp in problem.opportunities
         # Initialize node weight
-        optimal_path[opp] = (nothing, 0.0, Request[])
+        if typeof(opp) == Collect
+            if allow_repeats == false
+                optimal_path[opp] = (nothing, opp.reward, Request[opp.location])
+            else
+                optimal_path[opp] = (nothing, opp.reward, Request[])
+            end
+        else
+            optimal_path[opp] = (nothing, 0.0, Request[])
+        end
     end
 
     # For each node iterate over all incoming nodes
@@ -84,7 +92,10 @@ function solve_graph(problem::PlanningProblem, graph::Dict{Opportunity, Array{<:
             # Compute reward for current action
             rij = optimal_path[nodei][2]
             if typeof(nodej) == Collect
-                rij += nodej.reward
+                # Calculate reward for taking j after the node i path
+                if allow_repeats == true || !(nodej.location in optimal_path[nodei][3])
+                    rij += nodej.reward
+                end
             elseif typeof(nodej) == Contact
                 rij += contact_reward
             end
@@ -92,7 +103,11 @@ function solve_graph(problem::PlanningProblem, graph::Dict{Opportunity, Array{<:
             # If incoming node i is higher than anything seen previously set it
             # as new predecessory
             if rij > optimal_path[nodej][2]
-                optimal_path[nodej] = (nodei, rij, Request[])
+                request_history = copy(optimal_path[nodei][3])
+                if allow_repeats == false && typeof(nodej.location) == Request
+                    push!(request_history, nodej.location)
+                end
+                optimal_path[nodej] = (nodei, rij, request_history)
             end
         end
     end
@@ -143,7 +158,7 @@ function satellite_plan_graph(problem::PlanningProblem; sat_id::Integer=1,
     end
 
     # Reverse path so it's in chronological order
-    # path = reverse!(path)
+    path = reverse!(path)
 
     return path, reward
 end

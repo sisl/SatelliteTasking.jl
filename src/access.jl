@@ -292,6 +292,14 @@ function compute_access(problem::PlanningProblem;
     # Update opportunity lookup table
     for opp in problem.opportunities
         problem.lt_opportunities[opp.id] = opp
+
+        if typeof(opp) == Contact
+            problem.lt_contacts[opp.id] = opp
+        elseif typeof(opp) == Collect
+            problem.lt_collects[opp.id] = opp
+        end
+
+        # Location -> Opportunity Lookup
         push!(problem.lt_loc_opps[opp.location.id], opp.id)
     end
 
@@ -351,6 +359,14 @@ function parallel_compute_access(problem::PlanningProblem;
     # Update opportunity lookup table
     for opp in problem.opportunities
         problem.lt_opportunities[opp.id] = opp
+
+        if typeof(opp) == Contact
+            problem.lt_contacts[opp.id] = opp
+        elseif typeof(opp) == Collect
+            problem.lt_collects[opp.id] = opp
+        end
+
+        # Location -> Opportunity Lookup
         push!(problem.lt_loc_opps[opp.location.id], opp.id)
     end
 

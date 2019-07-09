@@ -9,6 +9,9 @@ export set_collect_duration
 export GroundStation
 export load_stations
 export Opportunity
+export Done
+export Noop
+export Sunpoint
 export Collect
 export Contact
 export PlanningProblem
@@ -447,6 +450,22 @@ Common Attributes:
 abstract type Opportunity end
 
 """
+"""
+mutable struct Done <: Opportunity
+end
+
+"""
+No-operation action. Advances state without changing other values
+"""
+@with_kw mutable struct Noop <: Opportunity
+    t_start::Union{Epoch, Real} = 0.0
+end
+
+@with_kw mutable struct Sunpoint <: Opportunity
+    t_start::Union{Epoch, Real} = 0.0
+end
+
+"""
 Opportunity type for a Request collection.
 """
 mutable struct Collect <: Opportunity
@@ -596,6 +615,8 @@ end
     # Lookup Tables
     lt_locations     = Dict{Union{Integer, UUID}, Location}()
     lt_opportunities = Dict{Union{Integer, UUID}, Opportunity}()
+    lt_contacts      = Dict{Union{Integer, UUID}, Contact}()
+    lt_collects      = Dict{Union{Integer, UUID}, Collect}()
     lt_loc_opps = Dict{Union{Integer, UUID}, Array{Union{Integer, UUID}, 1}}()
 
     # Solver Parameters - General 
@@ -604,7 +625,7 @@ end
     action_breadth::Int = 0
 
     # Solver Parameters - MCTS
-    mcts_alpha::Real = 1.0
+    reward_alpha::Real = 1.0
     mcts_rollout_iterations::Int = 10
     mcts_c::Real = 1.0
 end
@@ -627,6 +648,11 @@ function clear_opportunities(problem::PlanningProblem)
     problem.opportunities = Opportunity[]
     problem.contacts = Contact[]
     problem.collects = Collect[]
+
+    problem.lt_opportunities = Dict{Union{Integer, UUID}, Opportunity}()
+    problem.lt_contacts      = Dict{Union{Integer, UUID}, Contact}()
+    problem.lt_collects      = Dict{Union{Integer, UUID}, Collect}()
+    problem.lt_loc_opps      = Dict{Union{Integer, UUID}, Array{Union{Integer, UUID}, 1}}()
 end
 
 """

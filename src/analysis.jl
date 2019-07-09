@@ -27,6 +27,7 @@ function analyze_plan(problem::PlanningProblem, plan::Array{<:Opportunity, 1})
     end
 
     unique_requests = Request[]
+    duplicate_requests = Request[]
 
     n_contacts = 0
     n_requests = 0
@@ -37,10 +38,11 @@ function analyze_plan(problem::PlanningProblem, plan::Array{<:Opportunity, 1})
     for opp in plan
         if typeof(opp) == Collect
             n_requests += 1
-            reward += opp.reward
             if !(opp.location in unique_requests)
+                reward += opp.reward
                 push!(unique_requests, opp.location)
             else
+                push!(duplicate_requests, opp.location)
                 n_dup_requests += 1
             end
         elseif typeof(opp) == Contact

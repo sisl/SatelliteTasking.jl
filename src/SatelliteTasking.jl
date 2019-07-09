@@ -12,6 +12,10 @@ using Distributions
 using Discretizers
 using Parameters
 
+# Package imports
+using JuMP
+using Gurobi
+
 # Other dependencies
 using SatelliteDynamics
 
@@ -21,6 +25,10 @@ include("models.jl")
 include("utils.jl")
 include("access.jl")
 include("graph.jl")
+include("milp.jl")
+include("mdpcore.jl")
+include("mdpfs.jl")
+include("mdpmcts.jl")
 include("analysis.jl")
 include("visualization.jl")
 
