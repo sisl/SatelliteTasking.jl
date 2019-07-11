@@ -10,9 +10,12 @@ function analyze_plan(problem::PlanningProblem, plan::Array{<:Opportunity, 1})
         col_end   = plan[i+1]
 
         # Only check validity of opportunity transitions
-        if typeof(col_start) == Opportunity && typeof(col_end) == Opportunity
+        if (typeof(col_start) == Collect ||
+            typeof(col_start) == Contact) &&
+            (typeof(col_end) == Collect ||
+            typeof(col_end) == Contact)
             # Set transition valid by default
-            fe = true
+            valid = true
 
             for constraint in problem.constraints
                 # Use logical and to evaulate path feasibility on graph

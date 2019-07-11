@@ -55,6 +55,9 @@ function satellite_plan_milp(problem::PlanningProblem; sat_id::Integer=1,
         end
     end
 
+    # Sort plan in ascending order to be viable
+    sort!(plan, by = x -> x.t_start)
+
     reward = objective_value(milp)
 
     return plan, reward

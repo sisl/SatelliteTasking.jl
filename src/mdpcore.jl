@@ -1,8 +1,8 @@
 # Exports
 export MDPState
-export mdp_fs
 export mdp_reward
-export satellite_plan_mdp_fs
+export mdp_step
+export mdp_state_actions
 
 @with_kw struct MDPState
     time::Union{Epoch, Float64}
@@ -17,10 +17,19 @@ function Base.hash(state::MDPState, h::UInt)
     return hash(state.time, hash(length(state.images), hash(state.power, hash(state.data, hash(state.done, hash(:Epoch, h))))))
 end
 
+function Base.show(io::IO, mdp::MDPState)
+
+    s = @sprintf "MDPState(Time: %s, requests: %d, power: %.2f, data: %.2f, done: %s)" string(mdp.time) length(mdp.requests) mdp.power mdp.data string(mdp.done)
+
+    print(io, s)
+end
+
+
 function mdp_reward(problem::PlanningProblem, state::MDPState, action::Opportunity)
     reward = 0.0
 
     if typeof(action) == Collect && !(action.location in state.requests)
+
         # Resources consumed by action
         data_generated  = action.duration*problem.spacecraft[1].datagen_image
         power_generated = action.duration*problem.spacecraft[1].powergen_image
@@ -31,6 +40,8 @@ function mdp_reward(problem::PlanningProblem, state::MDPState, action::Opportuni
         end
     elseif typeof(action) == Contact
         reward += 0.01*action.duration
+    elseif typeof(action) == Noop
+        reward += 0.0
     end
 
     if state.power <= 0
@@ -42,9 +53,9 @@ end
 
 function mdp_step(problem::PlanningProblem, state::MDPState, action::Opportunity)
     # If done return same state, just done
-    if action == Done
+    if typeof(action) == Done
         return MDPState(time=state.time,
-                last_action=state.last_action,
+                last_action=Done(),
                 requests=copy(state.requests),
                 power=state.power,
                 data=state.data,
@@ -54,6 +65,9 @@ function mdp_step(problem::PlanningProblem, state::MDPState, action::Opportunity
     # Current state time
     time0 = state.time
     time  = state.time
+
+    # Store last viable action
+    last_action = state.last_action
 
     # Resource
     power = state.power
@@ -65,13 +79,16 @@ function mdp_step(problem::PlanningProblem, state::MDPState, action::Opportunity
     # Finish state
     done = false
 
+    # Advance time to next action
+    time = action.t_start
+
     if typeof(action) == Noop
-        # Advance time to next action without changing resources
-        time = action.t_start
+        # Do nothing if Noop
     elseif typeof(action) == Sunpoint
-        time = action.t_start
+        # Charge
     elseif typeof(action) == Collect
-        time = action.t_start
+        # Update last action
+        last_action = action
 
         # Only perform collect if we have capacilty
         data_generated  = action.duration*problem.spacecraft[1].datagen_image
@@ -85,6 +102,9 @@ function mdp_step(problem::PlanningProblem, state::MDPState, action::Opportunity
         end
 
     elseif typeof(action) == Contact
+        # Update last action
+        last_action = action
+
         data_generated  = action.duration*problem.spacecraft[1].datagen_downlink
         power_generated = action.duration*problem.spacecraft[1].powergen_downlink
     else
@@ -104,10 +124,10 @@ function mdp_step(problem::PlanningProblem, state::MDPState, action::Opportunity
     end
 
     return MDPState(time=time,
-            last_action=state.last_action,
+            last_action=last_action,
             requests=requests,
-            power=state.power,
-            data=state.data,
+            power=power,
+            data=data,
             done=done)
     
 end
@@ -117,7 +137,7 @@ function mdp_state_actions(problem::PlanningProblem, state::MDPState)
     fopps = filter(x -> x.t_start > state.time, problem.opportunities)
 
     if length(fopps) == 0
-        return Opportunity[Done]
+        return Opportunity[Done()]
     end
 
     # List of all possible actions
@@ -125,11 +145,11 @@ function mdp_state_actions(problem::PlanningProblem, state::MDPState)
 
     # Populate list of possible actions
     for opp in fopps
-        if problem.action_breadth > 0 && length(actions) == problem.action_breadth
+        if problem.solve_breadth > 0 && length(actions) == problem.solve_breadth
             break
         end
 
-        if typeof(state.last_action) == Collect
+        if typeof(state.last_action) == Collect || typeof(state.last_action) == Contact
             # Valuate transition to see if valid
             valid = true
 
@@ -139,7 +159,7 @@ function mdp_state_actions(problem::PlanningProblem, state::MDPState)
                     break
                 end
 
-                valid = valid && constraint(start_opp, end_opp)
+                valid = valid && constraint(state.last_action, opp)
             end
 
             # If valid transition add to edges
@@ -161,70 +181,4 @@ end
 
 function mdp_reachable_states(problem::PlanningProblem, state::MDPState, action::Opportunity)
     return MDPState[mdp_step(problem, state, action)]
-end
-
-function mdp_depth_first_search(problem::PlanningProblem, state::MDPState, depth::Integer)
-    
-    # Early exit 
-    if depth == 0
-        return Noop, 0.0
-    end
-
-    astar, vstar = Noop, -Inf
-
-    for a in mdp_state_actions(problem, state)
-        v = mdp_reward(problem, state, a)
-
-        for sp in mdp_reachable_states(problem, state, a)
-            ap, vp = mdp_depth_first_search(problem, state, depth-1)
-
-            v = v + problem.solve_gamma*vp
-        end
-
-        if v > vstar
-            astar, vstar = a, v
-        end
-    end
-
-    return astar, vstar
-end
-
-function mdp_fs(problem::PlanningProblem, state; sat_id::Integer=1)
-
-    action, value = mdp_depth_first_search(problem, state, problem.solve_depth)
-
-    # Step to next state with selected action
-    state = mdp_step(problem, state, action)
-end
-
-function satellite_plan_mdp_fs(problem::PlanningProblem; sat_id::Integer=1)
-
-    # Sort opportunities
-    sort!(problem.opportunities, by = x -> x.t_start)
-    
-    # Set initial state
-    init_opp = problem.opportunities[1]
-    state = MDPState(time=init_opp.t_start, last_action=init_opp)
-
-    plan = Opportunity[state.last_action]
-    reward = 0.0
-
-    while true
-        state, action, value = mdp_fs(problem, state)
-
-        println("State: $state")
-        println("Action: $action")
-        println("Value: $value")
-
-        # Add state and action to plan
-        push!(plan, state.last_action)
-        reward += value
-
-        # Break from search if terminal state
-        if state.done == true
-            break
-        end
-    end    
-
-    return plan, reward
 end

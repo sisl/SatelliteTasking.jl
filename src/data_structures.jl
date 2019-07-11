@@ -461,8 +461,22 @@ No-operation action. Advances state without changing other values
     t_start::Union{Epoch, Real} = 0.0
 end
 
+function Base.show(io::IO, noop::Noop)
+
+    s = @sprintf "Noop(time: %s)" noop.t_start
+
+    print(io, s)
+end
+
 @with_kw mutable struct Sunpoint <: Opportunity
     t_start::Union{Epoch, Real} = 0.0
+end
+
+function Base.show(io::IO, sp::Sunpoint)
+
+    s = @sprintf "Sunpoint(time: %s)" sp.t_start
+
+    print(io, s)
 end
 
 """
@@ -620,9 +634,9 @@ end
     lt_loc_opps = Dict{Union{Integer, UUID}, Array{Union{Integer, UUID}, 1}}()
 
     # Solver Parameters - General 
-    solve_gamma::Real   = 0.0
-    solve_depth::Int    = 10
-    action_breadth::Int = 0
+    solve_gamma::Real  = 0.95
+    solve_depth::Int   = 3
+    solve_breadth::Int = 3
 
     # Solver Parameters - MCTS
     reward_alpha::Real = 1.0
