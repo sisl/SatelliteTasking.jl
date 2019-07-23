@@ -3,7 +3,7 @@ import Pkg
 # Julia Packages
 using PGFPlots
 using Profile
-using ProfileView
+using StatProfilerHTML
 
 # Allow for easy updating
 using Revise
@@ -139,7 +139,8 @@ println("Ground Contacts Taken: $mdp_fs_nc")
 
 # Profile MDP Planning code
 Profile.clear()
-@profile satellite_plan_mdp_fs(problem, sat_id=1);
+# @profile satellite_plan_mdp_fs(problem, sat_id=1);
+@profilehtml satellite_plan_mdp_fs(problem, sat_id=1);
 
 # Profile Execution
-ProfileView.view()
+# ProfileView.view()

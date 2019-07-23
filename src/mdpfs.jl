@@ -15,7 +15,7 @@ function mdp_depth_first_search(problem::PlanningProblem, state::MDPState, depth
         v = mdp_reward(problem, state, a)
 
         for sp in mdp_reachable_states(problem, state, a)
-            ap, vp = mdp_depth_first_search(problem, sp, depth-1)
+            ap, vp =  mdp_depth_first_search(problem, sp, depth-1)
 
             v = v + problem.solve_gamma*vp
         end

@@ -24,6 +24,29 @@ function Base.show(io::IO, mdp::MDPState)
     print(io, s)
 end
 
+"""
+Find actions for planning problem given state and time horizon.
+
+Uses binary search of sorted opportunity list to find element.
+"""
+function mdp_find_actions(problem::PlanningProblem, state::MDPState, horizon::Real)
+    # Get Index of Current time from State
+    t_start = state.last_action.t_start
+
+    l = 1
+    r = length(problem.opportunities)
+    m = floor((l + r) / 2)
+    while l <= r
+        if problem.opportunities[m].t_start < horizon
+            l = m + 1
+        elseif problem.opportunities[m].t_start > horizon
+            r = m - 1
+        else
+            return m
+        end
+    end
+    return nothing
+end
 
 function mdp_reward(problem::PlanningProblem, state::MDPState, action::Opportunity)
     reward = 0.0

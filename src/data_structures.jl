@@ -637,9 +637,9 @@ end
     solve_gamma::Real  = 0.95
     solve_depth::Int   = 3
     solve_breadth::Int = 3
+    solve_horizon::float = 90.0
 
     # Solver Parameters - MCTS
-    reward_alpha::Real = 1.0
     mcts_rollout_iterations::Int = 10
     mcts_c::Real = 1.0
 end
