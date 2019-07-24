@@ -1,7 +1,8 @@
 export satellite_plan_milp
 
 function satellite_plan_milp(problem::PlanningProblem; sat_id::Integer=1,
-    allow_repeats::Bool=false, contact_reward::Real=0, timeout::Real=900)
+    allow_repeats::Bool=false, contact_reward::Real=0, timeout::Real=900,
+    enforce_first::Bool=false)
 
     # Initialize MILP problem
     milp = Model(with_optimizer(Gurobi.Optimizer, Presolve=0, TimeLimit=timeout, OutputFlag=0))
@@ -11,6 +12,12 @@ function satellite_plan_milp(problem::PlanningProblem; sat_id::Integer=1,
 
     # Add Objective
     @objective(milp, Max, sum(opp.reward*x[id] for (id, opp) in problem.lt_collects))
+
+    # Enforce constraint that first opportunity in time must be taken to
+    # ensure consistency with other planning methods
+    if enforce_first == true
+        @constraint(milp, x[1] == 1)
+    end
 
     # Define non-repeat constraints if allowed
     if allow_repeats == false

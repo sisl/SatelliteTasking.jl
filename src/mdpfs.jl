@@ -6,10 +6,10 @@ function mdp_depth_first_search(problem::PlanningProblem, state::MDPState, depth
     
     # Early exit 
     if depth == 0
-        return Noop, 0.0
+        return Noop(t_start=state.time), 0.0
     end
 
-    astar, vstar = Noop, -Inf
+    astar, vstar = Noop(t_start=state.time), -Inf
 
     for a in mdp_state_actions(problem, state)
         v = mdp_reward(problem, state, a)
@@ -17,7 +17,14 @@ function mdp_depth_first_search(problem::PlanningProblem, state::MDPState, depth
         for sp in mdp_reachable_states(problem, state, a)
             ap, vp =  mdp_depth_first_search(problem, sp, depth-1)
 
-            v = v + problem.solve_gamma*vp
+            # Strict Markov Update
+            # v = v + problem.solve_gamma*vp
+
+            # Get distance action is in the future
+            t_diff = abs(ap.t_start - state.time)
+
+            # Semi-markov update
+            v = v + problem.solve_gamma^(t_diff)
         end
 
         if v > vstar
@@ -32,6 +39,12 @@ function mdp_fs(problem::PlanningProblem, state; sat_id::Integer=1)
 
     # println("Foward Search Step")
     action, value = mdp_depth_first_search(problem, state, problem.solve_depth)
+
+    if typeof(action) == Collect
+        if action.location in state.requests
+            println("Planned duplicate collect: $(action) - $(action.location)")
+        end
+    end
 
     # Step to next state with selected action
     state = mdp_step(problem, state, action)
@@ -56,6 +69,7 @@ function satellite_plan_mdp_fs(problem::PlanningProblem; sat_id::Integer=1)
 
         # println("State: $state")
         # println("Action: $action")
+        # println("Actions in horizon: $(length(find_actions(problem, state, problem.solve_horizon)))")
         # println("Value: $value")
 
         # Add state and action to plan

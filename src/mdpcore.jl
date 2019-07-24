@@ -1,5 +1,7 @@
 # Exports
 export MDPState
+export bs_find_firstgte
+export find_actions
 export mdp_reward
 export mdp_step
 export mdp_state_actions
@@ -25,27 +27,46 @@ function Base.show(io::IO, mdp::MDPState)
 end
 
 """
-Find actions for planning problem given state and time horizon.
-
-Uses binary search of sorted opportunity list to find element.
+Binary search method to find the first opportunity with an index greater than
+the target simulation time (Epoch or elapsed time)
 """
-function mdp_find_actions(problem::PlanningProblem, state::MDPState, horizon::Real)
-    # Get Index of Current time from State
-    t_start = state.last_action.t_start
-
+function bs_find_firstgte(problem::PlanningProblem, target::Union{Epoch, Real})
+    # Set search indices
     l = 1
     r = length(problem.opportunities)
-    m = floor((l + r) / 2)
-    while l <= r
-        if problem.opportunities[m].t_start < horizon
+    m = 0
+    
+    # Perform binary search to get first opportunity with start time
+    # greater or equal to the target value
+    while l < r
+        m = floor(Int, (l+r)/2)
+        
+        if problem.opportunities[m].t_start < target
             l = m + 1
-        elseif problem.opportunities[m].t_start > horizon
-            r = m - 1
         else
-            return m
+            r = m
         end
     end
-    return nothing
+    
+    return m
+end
+
+"""
+Find all possible (not necessarily feasible) actions given a state and a
+planning horizon.
+"""
+function find_actions(problem::PlanningProblem, state::MDPState, horizon::Real)
+    # Find index of next possible action
+    idx_start = bs_find_firstgte(problem::PlanningProblem, state.time)
+    
+    # Find index of first action outside of horizon
+    idx_end = bs_find_firstgte(problem::PlanningProblem, state.time+horizon)
+    
+    # Get index of last action inside horizon
+    idx_end = idx_end - 1
+    
+    # Return all opportunities inside planning horizon
+    return problem.opportunities[idx_start:idx_end]
 end
 
 function mdp_reward(problem::PlanningProblem, state::MDPState, action::Opportunity)
@@ -59,7 +80,8 @@ function mdp_reward(problem::PlanningProblem, state::MDPState, action::Opportuni
 
         # Only reward if we haven't overfilled
         if (state.data + data_generated < 1.0)
-            reward += action.reward*(1.0 + problem.reward_alpha)^(-abs(action.t_start - state.time))
+            reward += action.reward
+            # reward += action.reward*(1.0/(1+action.nr))
         end
     elseif typeof(action) == Contact
         reward += 0.01*action.duration
@@ -78,7 +100,7 @@ function mdp_step(problem::PlanningProblem, state::MDPState, action::Opportunity
     # If done return same state, just done
     if typeof(action) == Done
         return MDPState(time=state.time,
-                last_action=Done(),
+                last_action=Done(t_start=state.time),
                 requests=copy(state.requests),
                 power=state.power,
                 data=state.data,
@@ -142,7 +164,7 @@ function mdp_step(problem::PlanningProblem, state::MDPState, action::Opportunity
     if data < 0.0 data = 0.0 end
 
     # If no other possible future actions problem state is done 
-    if length(filter(x -> x.t_start > state.time, problem.opportunities)) == 0
+    if length(find_actions(problem, state, problem.solve_horizon)) == 0
         done = true
     end
 
@@ -157,11 +179,7 @@ end
 
 function mdp_state_actions(problem::PlanningProblem, state::MDPState)
     # Limit search to future opportunities
-    fopps = filter(x -> x.t_start > state.time, problem.opportunities)
-
-    if length(fopps) == 0
-        return Opportunity[Done()]
-    end
+    fopps = find_actions(problem, state, problem.solve_horizon)
 
     # List of all possible actions
     actions = Opportunity[]
@@ -193,6 +211,12 @@ function mdp_state_actions(problem::PlanningProblem, state::MDPState)
             push!(actions, opp)
         end
     end
+
+    # If no actions left to transition to we're done
+    if length(actions) == 0
+        return Opportunity[Done(t_start=state.time)]
+    end
+
 
     # Add default actions at the end not to mess width action breadth-limit
     push!(actions, Noop(t_start=fopps[1].t_start))

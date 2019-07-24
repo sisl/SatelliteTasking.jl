@@ -303,6 +303,14 @@ function compute_access(problem::PlanningProblem;
         push!(problem.lt_loc_opps[opp.location.id], opp.id)
     end
 
+    # Update opportunities with number of collects remaining
+    for (img_id, opp_ids) in problem.lt_loc_opps
+        # Update opportunities with number of remaining collect opps
+        for (i, opp_id) in enumerate(reverse(opp_ids))
+            problem.lt_opportunities[opp_id].nr = i-1
+        end
+    end
+
     return
 end
 

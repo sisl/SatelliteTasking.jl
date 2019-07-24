@@ -36,7 +36,11 @@ line1 = "1     1U          19  1.00000000  .00000000  00000-0  00000-0 0    05"
 line2 = "2     1  90.0000   0.0000 0010000   0.0000   0.0000 15.24162312    00"
 sc1 = Spacecraft(id=1, tle=TLE(line1, line2), slew_rate=1.0);
 push!(problem.spacecraft, sc1);
-println(problem.spacecraft)
+
+# Compute Orital Period
+T = orbit_period(state(problem.spacecraft[1].tle, problem.spacecraft[1].tle.epoch)[1]);
+
+println("Loadded $(length(problem.spacecraft)) spacecraft")
 
 ##
 # Load Groundstation Data
@@ -122,10 +126,10 @@ println("Ground Contacts Taken: $milp_nc")
 ##
 
 # Adjust solve parameters
-problem.solve_gamma = 0.0
-problem.solve_depth = 3
+problem.solve_gamma = 1.0 # Typical values 0.999 - 0.9999
+problem.solve_depth = 5
 problem.solve_breadth = 3
-problem.reward_alpha = 0.8
+problem.solve_horizon = T
 
 @time mdp_fs_plan, mdp_fs_reward = satellite_plan_mdp_fs(problem, sat_id=1)
 

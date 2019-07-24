@@ -451,7 +451,8 @@ abstract type Opportunity end
 
 """
 """
-mutable struct Done <: Opportunity
+@with_kw mutable struct Done <: Opportunity
+    t_start::Union{Epoch, Real} = Inf
 end
 
 """
@@ -482,7 +483,7 @@ end
 """
 Opportunity type for a Request collection.
 """
-mutable struct Collect <: Opportunity
+@with_kw mutable struct Collect <: Opportunity
     id::Integer
     spacecraft::Spacecraft
     location::Union{Request, Nothing}
@@ -491,14 +492,16 @@ mutable struct Collect <: Opportunity
     t_end::Union{Epoch, Real}
     duration::Float64
     reward::Float64
+    nr::Int
 
     function Collect(t_start::Union{Epoch, Real}, t_end::Union{Epoch, Real};
         id::Integer=0, spacecraft=nothing::Union{Spacecraft, Nothing}, 
-        location=nothing::Union{Location, Nothing})
+        location=nothing::Union{Location, Nothing},
+        nr::Int=0)
 
         duration = t_end - t_start
         t_mid    = t_start + duration/2.0
-        new(id, spacecraft, location, t_start, t_mid, t_end, duration, location.reward)
+        new(id, spacecraft, location, t_start, t_mid, t_end, duration, location.reward, nr)
     end
 end
 
@@ -532,9 +535,9 @@ Base.:(==)(cl::Collect, cr::Collect) = Base.isequal(cl, cr)
 function Base.show(io::IO, col::Collect)
 
     if typeof(col.t_start) == Epoch
-        s = @sprintf "Collect(ID: %s, Spacecraft %s, Request: %s, t_start: %s, t_end: %s, Reward: %.2f)" string(col.id) string(col.spacecraft.id) string(col.location.id) col.t_start col.t_end col.reward
+        s = @sprintf "Collect(ID: %s, Spacecraft %s, Request: %s, t_start: %s, t_end: %s, Reward: %.2f, Remaining: %d)" string(col.id) string(col.spacecraft.id) string(col.location.id) col.t_start col.t_end col.reward col.nr
     else
-        s = @sprintf "Collect(ID: %s, Spacecraft %s, Request: %s, t_start: %.3f, t_end: %.3f, Reward: %.2f)" string(col.id) string(col.spacecraft.id) string(col.location.id) col.t_start col.t_end col.reward
+        s = @sprintf "Collect(ID: %s, Spacecraft %s, Request: %s, t_start: %.3f, t_end: %.3f, Reward: %.2f, Remaining: %d)" string(col.id) string(col.spacecraft.id) string(col.location.id) col.t_start col.t_end col.reward col.nr
     end
 
     print(io, s)
@@ -551,14 +554,15 @@ mutable struct Contact <: Opportunity
     t_mid::Union{Epoch, Real}
     t_end::Union{Epoch, Real}
     duration::Float64
+    nr::Int
 
     function Contact(t_start::Union{Epoch, Real}, t_end::Union{Epoch, Real};
         id::Integer=0, spacecraft=nothing::Union{Spacecraft, Nothing}, 
-        location=nothing::Union{Location, Nothing})
+        location=nothing::Union{Location, Nothing}, nr::Int=0)
 
         duration = t_end - t_start
         t_mid    = t_start + duration/2.0
-        new(id, spacecraft, location, t_start, t_mid, t_end, duration)
+        new(id, spacecraft, location, t_start, t_mid, t_end, duration, nr)
     end
 end
 
@@ -595,9 +599,9 @@ function Base.show(io::IO, con::Contact)
     seconds = con.duration - 60*minutes
 
     if typeof(con.t_start) == Epoch
-        s = @sprintf "Contact(ID: %s,  Spacecraft %s, Station: %s, t_start: %s, t_end: %s, Duration: %02dm %02ds)" string(con.id) string(con.spacecraft.id) string(con.location.id) con.t_start con.t_end minutes seconds
+        s = @sprintf "Contact(ID: %s,  Spacecraft %s, Station: %s, t_start: %s, t_end: %s, Duration: %02dm %02ds, Remaining: %d)" string(con.id) string(con.spacecraft.id) string(con.location.id) con.t_start con.t_end minutes seconds con.nr
     else
-        s = @sprintf "Contact(ID: %s,  Spacecraft %s, Station: %s, t_start: %.3f, t_end: %.3f, Duration: %02dm %02ds)" string(con.id) string(con.spacecraft.id) string(con.location.id) con.t_start con.t_end minutes seconds
+        s = @sprintf "Contact(ID: %s,  Spacecraft %s, Station: %s, t_start: %.3f, t_end: %.3f, Duration: %02dm %02ds, Remaining: %d)" string(con.id) string(con.spacecraft.id) string(con.location.id) con.t_start con.t_end minutes seconds con.nr
     end
 
     print(io, s)
@@ -634,10 +638,10 @@ end
     lt_loc_opps = Dict{Union{Integer, UUID}, Array{Union{Integer, UUID}, 1}}()
 
     # Solver Parameters - General 
-    solve_gamma::Real  = 0.95
-    solve_depth::Int   = 3
-    solve_breadth::Int = 3
-    solve_horizon::float = 90.0
+    solve_gamma::Real   = 1.0
+    solve_depth::Int    = 3
+    solve_breadth::Int  = 3
+    solve_horizon::Real = 90.0
 
     # Solver Parameters - MCTS
     mcts_rollout_iterations::Int = 10
