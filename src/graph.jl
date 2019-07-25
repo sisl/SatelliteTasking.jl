@@ -52,7 +52,7 @@ end
 Solve a graph to find optimal transition path
 """
 function solve_graph(problem::PlanningProblem, graph::Dict{Opportunity, Array{<:Opportunity, 1}};
-            allow_repeats::Bool=false, contact_reward::Real=0.0)
+            contact_reward::Real=0.0)
    
     # Create graph based on incoming edges for each node
     igraph = Dict{Opportunity, Array{<:Opportunity, 1}}()
@@ -75,7 +75,7 @@ function solve_graph(problem::PlanningProblem, graph::Dict{Opportunity, Array{<:
     for opp in problem.opportunities
         # Initialize node weight
         if typeof(opp) == Collect
-            if allow_repeats == false
+            if problem.solve_allow_repeats == false
                 optimal_path[opp] = (nothing, opp.reward, Request[opp.location])
             else
                 optimal_path[opp] = (nothing, opp.reward, Request[])
@@ -93,7 +93,7 @@ function solve_graph(problem::PlanningProblem, graph::Dict{Opportunity, Array{<:
             rij = optimal_path[nodei][2]
             if typeof(nodej) == Collect
                 # Calculate reward for taking j after the node i path
-                if allow_repeats == true || !(nodej.location in optimal_path[nodei][3])
+                if problem.solve_allow_repeats == true || !(nodej.location in optimal_path[nodei][3])
                     rij += nodej.reward
                 end
             elseif typeof(nodej) == Contact
@@ -104,7 +104,7 @@ function solve_graph(problem::PlanningProblem, graph::Dict{Opportunity, Array{<:
             # as new predecessory
             if rij > optimal_path[nodej][2]
                 request_history = copy(optimal_path[nodei][3])
-                if allow_repeats == false && typeof(nodej.location) == Request
+                if problem.solve_allow_repeats == false && typeof(nodej.location) == Request
                     push!(request_history, nodej.location)
                 end
                 optimal_path[nodej] = (nodei, rij, request_history)
@@ -124,13 +124,12 @@ Returns:
 - `requests::{<:Request, 1}`
 """
 function satellite_plan_graph(problem::PlanningProblem; sat_id::Integer=1,
-            allow_repeats::Bool=false, contact_reward::Real=0)
+            contact_reward::Real=0)
     # Construct graph to solve 
     graph = construct_graph(problem, sat_id=sat_id)
 
     # Solve graph 
     optimal_path = solve_graph(problem, graph, 
-                        allow_repeats=allow_repeats,
                         contact_reward=contact_reward)
 
     # Extract prameters of optimal path

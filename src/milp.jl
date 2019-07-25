@@ -1,7 +1,7 @@
 export satellite_plan_milp
 
 function satellite_plan_milp(problem::PlanningProblem; sat_id::Integer=1,
-    allow_repeats::Bool=false, contact_reward::Real=0, timeout::Real=900,
+    contact_reward::Real=0, timeout::Real=900,
     enforce_first::Bool=false)
 
     # Initialize MILP problem
@@ -20,7 +20,7 @@ function satellite_plan_milp(problem::PlanningProblem; sat_id::Integer=1,
     end
 
     # Define non-repeat constraints if allowed
-    if allow_repeats == false
+    if problem.solve_allow_repeats == false
         # Group opportunities by image
         for req in problem.requests
             # Get all collects for that request

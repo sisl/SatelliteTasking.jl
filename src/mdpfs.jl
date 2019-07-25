@@ -24,7 +24,7 @@ function mdp_depth_first_search(problem::PlanningProblem, state::MDPState, depth
             t_diff = abs(ap.t_start - state.time)
 
             # Semi-markov update
-            v = v + problem.solve_gamma^(t_diff)
+            v = v + vp*problem.solve_gamma^(t_diff)
         end
 
         if v > vstar
@@ -44,6 +44,10 @@ function mdp_fs(problem::PlanningProblem, state; sat_id::Integer=1)
         if action.location in state.requests
             println("Planned duplicate collect: $(action) - $(action.location)")
         end
+    end
+
+    if typeof(action) != Done && action.t_start == state.last_action.t_start
+        throw(ErrorException("Took action that isn't advancing time...\n $state - $action"))
     end
 
     # Step to next state with selected action

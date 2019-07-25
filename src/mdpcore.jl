@@ -72,16 +72,20 @@ end
 function mdp_reward(problem::PlanningProblem, state::MDPState, action::Opportunity)
     reward = 0.0
 
-    if typeof(action) == Collect && !(action.location in state.requests)
-
+    if typeof(action) == Collect
         # Resources consumed by action
         data_generated  = action.duration*problem.spacecraft[1].datagen_image
         power_generated = action.duration*problem.spacecraft[1].powergen_image
 
-        # Only reward if we haven't overfilled
+        # Only reward if we have enough spare data space
         if (state.data + data_generated < 1.0)
-            reward += action.reward
-            # reward += action.reward*(1.0/(1+action.nr))
+            if !(action.location in state.requests)
+                # reward += action.reward
+
+                reward += action.reward*(1+1.0/(action.nr+1.0))
+            elseif problem.solve_allow_repeats == true
+                reward += action.reward*0.25
+            end
         end
     elseif typeof(action) == Contact
         reward += 0.01*action.duration

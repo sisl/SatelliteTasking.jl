@@ -638,10 +638,14 @@ end
     lt_loc_opps = Dict{Union{Integer, UUID}, Array{Union{Integer, UUID}, 1}}()
 
     # Solver Parameters - General 
+    solve_allow_repeats::Bool = false
     solve_gamma::Real   = 1.0
     solve_depth::Int    = 3
     solve_breadth::Int  = 3
     solve_horizon::Real = 90.0
+
+    # Solver Parameters - MDP 
+    mdp_reward_scarcity::False = false
 
     # Solver Parameters - MCTS
     mcts_rollout_iterations::Int = 10
