@@ -1,5 +1,6 @@
 # Exports
 export analyze_plan
+export plot_resources
 
 function analyze_plan(problem::PlanningProblem, plan::Array{<:Opportunity, 1})
     
@@ -55,4 +56,50 @@ function analyze_plan(problem::PlanningProblem, plan::Array{<:Opportunity, 1})
     n_unique_reqests = length(unique_requests)
     
     return feasible, reward, n_unique_reqests, n_dup_requests, n_requests, n_contacts
+end
+
+function plot_resources(states::Array{MDPState, 1}; width::Real=25, height::Real=12.5, hsep::Real=2.0, vsep::Real=2.0, xmax::Real=24)
+    # Plot history of power
+
+    # Initialize array
+    epochs = Epoch[]
+    times  = Float64[]
+    power  = Float64[]
+    data   = Float64[]
+
+    # Aggregate data
+    for state in states
+        push!(epochs, state.time)
+        push!(times, (state.time - epochs[1])/3600.0)
+        push!(power, state.power)
+        push!(data, state.data)
+    end
+
+    hsepstr = @sprintf "%.2f" hsep
+    vsepstr = @sprintf "%.2f" vsep
+    wsepstr = @sprintf "%.2f" width
+    hsepstr = @sprintf "%.2f" height
+
+    g = GroupPlot(1, 2, groupStyle = "horizontal sep = $(hsepstr)cm, vertical sep = $(vsepstr)cm")
+    push!(g, Axis(Plots.Linear(times, power), 
+        xlabel="Elapsed Time [Hrs]", 
+        ylabel="Power Fraction", 
+        title="Satellite Power History",
+        xmin=0.0,
+        xmax=xmax,
+        ymin=0.0,
+        ymax=1.0,
+        style = "width=$(wsepstr)cm,height=$(hsepstr)cm"
+    ))
+
+    push!(g, Axis(Plots.Linear(times, data), 
+        xlabel="Elapsed Time [Hrs]", 
+        ylabel="Data Storage", 
+        title="Satellite Data History",
+        xmin=0.0,
+        xmax=xmax,
+        ymin=0.0,
+        ymax=1.0,
+        style = "width=$(wsepstr)cm,height=$(hsepstr)cm"
+    ))
 end

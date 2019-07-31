@@ -9,13 +9,13 @@ function mdp_depth_first_search(problem::PlanningProblem, state::MDPState, depth
         return Noop(t_start=state.time), 0.0
     end
 
-    astar, vstar = Noop(t_start=state.time), -Inf
+    astar, vstar = Done(t_start=state.time), -Inf
 
     for a in mdp_state_actions(problem, state)
         v = mdp_reward(problem, state, a)
 
         for sp in mdp_reachable_states(problem, state, a)
-            ap, vp =  mdp_depth_first_search(problem, sp, depth-1)
+            ap, vp = mdp_depth_first_search(problem, sp, depth-1)
 
             # Strict Markov Update
             # v = v + problem.solve_gamma*vp
@@ -35,7 +35,7 @@ function mdp_depth_first_search(problem::PlanningProblem, state::MDPState, depth
     return astar, vstar
 end
 
-function mdp_fs(problem::PlanningProblem, state; sat_id::Integer=1)
+function mdp_fs(problem::PlanningProblem, state::MDPState)
 
     # println("Foward Search Step")
     action, value = mdp_depth_first_search(problem, state, problem.solve_depth)
@@ -46,7 +46,11 @@ function mdp_fs(problem::PlanningProblem, state; sat_id::Integer=1)
         end
     end
 
-    if typeof(action) != Done && action.t_start == state.last_action.t_start
+    # if typeof(action) == Contact
+    #     println("Taking Contact: $action")
+    # end
+
+    if typeof(action) != Done && action.t_start == state.time
         throw(ErrorException("Took action that isn't advancing time...\n $state - $action"))
     end
 
@@ -56,7 +60,7 @@ function mdp_fs(problem::PlanningProblem, state; sat_id::Integer=1)
     return state, action, value
 end
 
-function satellite_plan_mdp_fs(problem::PlanningProblem; sat_id::Integer=1)
+function satellite_plan_mdp_fs(problem::PlanningProblem)
 
     # Sort opportunities
     sort!(problem.opportunities, by = x -> x.t_start)
@@ -65,26 +69,28 @@ function satellite_plan_mdp_fs(problem::PlanningProblem; sat_id::Integer=1)
     init_opp = problem.opportunities[1]
     state = MDPState(time=init_opp.t_start, last_action=init_opp)
 
+    states = MDPState[state]
     plan = Opportunity[state.last_action]
-    reward = 0.0
+    total_reward = 0.0
 
     while true
-        state, action, value = mdp_fs(problem, state)
+        state, action, reward = mdp_fs(problem, state)
 
         # println("State: $state")
         # println("Action: $action")
         # println("Actions in horizon: $(length(find_actions(problem, state, problem.solve_horizon)))")
-        # println("Value: $value")
-
-        # Add state and action to plan
-        push!(plan, action)
-        reward += value
+        # println("Value: $reward")
 
         # Break from search if terminal state
         if typeof(action) == Done
             break
         end
+
+        # Add state and action to plan
+        push!(states, state)
+        push!(plan, action)
+        total_reward += reward
     end    
 
-    return plan, reward
+    return states, plan, total_reward
 end

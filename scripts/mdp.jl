@@ -82,69 +82,91 @@ println("Found $num_accessible_requests out of $(length(problem.requests)) reque
 # Baseline Solve (Single-Threaded)
 ##
 
-@time baseline_plan, baseline_reward = satellite_plan_baseline(problem, allow_repeats=false)
+# @time baseline_plan, baseline_reward = satellite_plan_baseline(problem, allow_repeats=false)
 
-# Check feasibility, and compute actual reward
-baseline_feasible, baseline_realized_reward, baseline_nur, baseline_ndr, baseline_nr, baseline_nc = analyze_plan(problem, baseline_plan);
+# # Check feasibility, and compute actual reward
+# baseline_feasible, baseline_realized_reward, baseline_nur, baseline_ndr, baseline_nr, baseline_nc = analyze_plan(problem, baseline_plan);
 
-println("Computed plan is feasible: $(uppercase(string(baseline_feasible)))")
-println("Computed optimal schedule. Computed reward: $baseline_reward - Realized reward: $baseline_realized_reward.")
-println("Requests Satisfied: $baseline_nur/$(length(problem.requests)), Duplicate Collects: $baseline_ndr")
-println("Ground Contacts Taken: $baseline_nc")
+# println("Computed plan is feasible: $(uppercase(string(baseline_feasible)))")
+# println("Computed optimal schedule. Computed reward: $baseline_reward - Realized reward: $baseline_realized_reward.")
+# println("Requests Satisfied: $baseline_nur/$(length(problem.requests)), Duplicate Collects: $baseline_ndr")
+# println("Ground Contacts Taken: $baseline_nc")
 
 ##
 # Graph Solve (Single-Threaded)
 ##
 
-@time graph_plan, graph_reward = satellite_plan_graph(problem, sat_id=1, allow_repeats=false)
+# @time graph_plan, graph_reward = satellite_plan_graph(problem, allow_repeats=false)
 
-# Check feasibility, and compute actual reward
-graph_feasible, graph_realized_reward, graph_nur, graph_ndr, graph_nr, graph_nc = analyze_plan(problem, graph_plan);
+# # Check feasibility, and compute actual reward
+# graph_feasible, graph_realized_reward, graph_nur, graph_ndr, graph_nr, graph_nc = analyze_plan(problem, graph_plan);
 
-println("Computed plan is feasible: $(uppercase(string(graph_feasible)))")
-println("Computed optimal schedule. Computed reward: $graph_reward - Realized reward: $graph_realized_reward.")
-println("Requests Satisfied: $graph_nur/$(length(problem.requests)), Duplicate Collects: $graph_ndr")
-println("Ground Contacts Taken: $graph_nc")
+# println("Computed plan is feasible: $(uppercase(string(graph_feasible)))")
+# println("Computed optimal schedule. Computed reward: $graph_reward - Realized reward: $graph_realized_reward.")
+# println("Requests Satisfied: $graph_nur/$(length(problem.requests)), Duplicate Collects: $graph_ndr")
+# println("Ground Contacts Taken: $graph_nc")
 
 ##
 # Mixed-Integer Linear Programing Solve (Single-Threaded)
 ##
 
-@time milp_plan, milp_reward = satellite_plan_milp(problem, sat_id=1, allow_repeats=false)
+# @time milp_plan, milp_reward = satellite_plan_milp(problem, allow_repeats=false)
 
-# Check feasibility, and compute actual reward
-milp_feasible, milp_realized_reward, milp_nur, milp_ndr, milp_nr, milp_nc = analyze_plan(problem, milp_plan);
+# # Check feasibility, and compute actual reward
+# milp_feasible, milp_realized_reward, milp_nur, milp_ndr, milp_nr, milp_nc = analyze_plan(problem, milp_plan);
 
-println("")
-println("Computed plan is feasible: $(uppercase(string(milp_feasible)))")
-println("Computed optimal schedule. Computed reward: $milp_reward - Realized reward: $milp_realized_reward.")
-println("Requests Satisfied: $milp_nur/$(length(problem.requests)), Duplicate Collects: $milp_ndr")
-println("Ground Contacts Taken: $milp_nc")
+# println("")
+# println("Computed plan is feasible: $(uppercase(string(milp_feasible)))")
+# println("Computed optimal schedule. Computed reward: $milp_reward - Realized reward: $milp_realized_reward.")
+# println("Requests Satisfied: $milp_nur/$(length(problem.requests)), Duplicate Collects: $milp_ndr")
+# println("Ground Contacts Taken: $milp_nc")
 
 ##
 # Markov Decision Process (No Resources)
 ##
 
-# Adjust solve parameters
-problem.solve_gamma = 1.0 # Typical values 0.999 - 0.9999
-problem.solve_depth = 5
-problem.solve_breadth = 3
-problem.solve_horizon = T
+# # Adjust solve parameters
+# problem.solve_gamma = 1.0 # Typical values 0.999 - 0.9999
+# problem.solve_depth = 5
+# problem.solve_breadth = 3
+# problem.solve_horizon = T
 
-@time mdp_fs_plan, mdp_fs_reward = satellite_plan_mdp_fs(problem, sat_id=1)
+# @time mdp_fs_plan, mdp_fs_reward = satellite_plan_mdp_fs(problem)
+
+# # Check feasibility, and compute actual reward
+# mdp_fs_feasible, mdp_fs_realized_reward, mdp_fs_nur, mdp_fs_ndr, mdp_fs_nr, mdp_fs_nc = analyze_plan(problem, mdp_fs_plan);
+
+# println("Computed plan is feasible: $(uppercase(string(mdp_fs_feasible)))")
+# println("Computed optimal schedule. Computed reward: $mdp_fs_reward - Realized reward: $mdp_fs_realized_reward.")
+# println("Requests Satisfied: $mdp_fs_nur/$(length(problem.requests)), Duplicate Collects: $mdp_fs_ndr")
+# println("Ground Contacts Taken: $mdp_fs_nc")
+
+# # Profile MDP Planning code
+# @profilehtml satellite_plan_mdp_fs(problem);
+
+##
+# Markov Decision Process - Monte Carlo Tree Search (No Resources)
+##
+
+# Adjust solve parameters
+problem.solve_allow_repeats = false
+problem.mdp_reward_scarcity = false
+problem.solve_gamma = 1.0 # Typical values 0.99 - 0.9999
+problem.solve_depth = 10
+problem.solve_breadth = 0
+problem.solve_horizon = T
+problem.mcts_sim_iterations = 30
+problem.mcts_c = 3.0
+
+mdp_mcts_plan, mdp_mcts_reward = satellite_plan_mdp_mcts(problem, parallel=false)
 
 # Check feasibility, and compute actual reward
-mdp_fs_feasible, mdp_fs_realized_reward, mdp_fs_nur, mdp_fs_ndr, mdp_fs_nr, mdp_fs_nc = analyze_plan(problem, mdp_fs_plan);
+mdp_mcts_feasible, mdp_mcts_realized_reward, mdp_mcts_nur, mdp_mcts_ndr, mdp_mcts_nr, mdp_mcts_nc = analyze_plan(problem, mdp_mcts_plan);
 
-println("Computed plan is feasible: $(uppercase(string(mdp_fs_feasible)))")
-println("Computed optimal schedule. Computed reward: $mdp_fs_reward - Realized reward: $mdp_fs_realized_reward.")
-println("Requests Satisfied: $mdp_fs_nur/$(length(problem.requests)), Duplicate Collects: $mdp_fs_ndr")
-println("Ground Contacts Taken: $mdp_fs_nc")
+println("Computed plan is feasible: $(uppercase(string(mdp_mcts_feasible)))")
+println("Computed optimal schedule. Computed reward: $mdp_mcts_reward - Realized reward: $mdp_mcts_realized_reward.")
+println("Requests Satisfied: $mdp_mcts_nur/$(length(problem.requests)), Duplicate Collects: $mdp_mcts_ndr")
+println("Ground Contacts Taken: $mdp_mcts_nc")
 
-# Profile MDP Planning code
-Profile.clear()
-# @profile satellite_plan_mdp_fs(problem, sat_id=1);
-@profilehtml satellite_plan_mdp_fs(problem, sat_id=1);
-
-# Profile Execution
-# ProfileView.view()
+# Profile MCTS 
+@profilehtml satellite_plan_mdp_mcts(problem);

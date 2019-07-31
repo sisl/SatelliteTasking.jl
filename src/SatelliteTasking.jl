@@ -13,6 +13,7 @@ using Discretizers
 using Parameters
 
 # Package imports
+using PGFPlots
 using JuMP
 using Gurobi
 
@@ -24,12 +25,12 @@ include("data_structures.jl")
 include("models.jl")
 include("utils.jl")
 include("access.jl")
-include("baseline.jl")
 include("graph.jl")
 include("milp.jl")
 include("mdpcore.jl")
 include("mdpfs.jl")
 include("mdpmcts.jl")
+include("baseline.jl")
 include("analysis.jl")
 include("visualization.jl")
 

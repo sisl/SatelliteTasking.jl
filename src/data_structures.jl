@@ -645,10 +645,10 @@ end
     solve_horizon::Real = 90.0
 
     # Solver Parameters - MDP 
-    mdp_reward_scarcity::False = false
+    mdp_reward_scarcity::Bool = false
 
     # Solver Parameters - MCTS
-    mcts_rollout_iterations::Int = 10
+    mcts_sim_iterations::Int = 10
     mcts_c::Real = 1.0
 end
 
