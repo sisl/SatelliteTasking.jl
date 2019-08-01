@@ -134,7 +134,9 @@ function mdp_reward(problem::PlanningProblem, state::MDPState, action::Opportuni
         # Charge for duration of sunpoint
         power_generated += problem.spacecraft[1].powergen_sunpoint*(action.t_start - state.time)
 
-        reward += 0.01
+        # Have tiny bit of reward for charging
+        # reward += (action.t_start - state.time)/state.last_action.duration
+        reward += 0.0001*(action.t_start - state.time)
     end
 
     # Update resources to see if violations occur
@@ -143,8 +145,7 @@ function mdp_reward(problem::PlanningProblem, state::MDPState, action::Opportuni
 
     # Penalize resource over usage
     if power <= 0
-        # reward -= 1000
-        reward -= 1
+        reward -= 1000
     end
 
     # Don't penalize overcharge

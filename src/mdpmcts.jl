@@ -93,6 +93,12 @@ function mcts_simulate(problem::PlanningProblem, mcts::MCTSState, state::MDPStat
             q0 = 0.0
             n0 = 0
 
+            if typeof(action) == Sunpoint
+                # pre-seed value with reward
+                q0 = 1.0
+                n0 = 1
+            end
+
             # Initiallies N & Q arrays
             mcts.N[(state, action)] = n0
             mcts.Q[(state, action)] = q0
@@ -183,11 +189,11 @@ function mdp_mcts(problem::PlanningProblem, mcts::MCTSState, state::MDPState)
     # Choose optimal action from rolloute and state
     action = get_optimal_action(mcts, state)
 
-    println("")
-    println("State: $state")
-    for a in mcts.L[state]
-        println("Q($a): $(mcts.Q[(state, a)])")
-    end
+    # println("")
+    # println("State: $state")
+    # for a in mcts.L[state]
+    #     println("Q($a): $(mcts.Q[(state, a)])")
+    # end
 
     # Compute state action reward
     reward = mdp_reward(problem, state, action)
