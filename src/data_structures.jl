@@ -397,7 +397,7 @@ has the following format:
 Arguments:
 - `file::String` Filepath to JSON file encoding request 
 """
-function load_stations(file::String, id_offset::Integer=0)
+function load_stations(file::String; id_offset::Integer=0)
     data = JSON.parsefile(file)
 
     # Initialize array of Requests

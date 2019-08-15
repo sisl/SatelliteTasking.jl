@@ -42,7 +42,7 @@ function mdp_fs(problem::PlanningProblem, state::MDPState)
 
     if typeof(action) == Collect
         if action.location in state.requests
-            println("Planned duplicate collect: $(action) - $(action.location)")
+            # println("Planned duplicate collect: $(action) - $(action.location)")
         end
     end
 

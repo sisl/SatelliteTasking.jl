@@ -317,6 +317,11 @@ function mdp_state_actions(problem::PlanningProblem, state::MDPState)
     return actions
 end
 
+function mdp_state_action_lookup(problem::PlanningProblem)
+    # Create lookup of all feasible actions based on last action
+    action_lookup = Dict{Opportunity, Array{<:Opportunity, 1}}()
+end
+
 function mdp_reachable_states(problem::PlanningProblem, state::MDPState, action::Opportunity)
     return MDPState[mdp_step(problem, state, action)]
 end

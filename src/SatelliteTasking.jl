@@ -33,7 +33,7 @@ include("mdpmcts.jl")
 include("baseline.jl")
 include("analysis.jl")
 include("visualization.jl")
-
+include("simulation.jl")
 
 # Export satellite planning submodule
 # include(joinpath(".", "satellite_planning", "satellite_planning.jl"))

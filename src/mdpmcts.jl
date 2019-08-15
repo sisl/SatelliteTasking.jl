@@ -256,7 +256,7 @@ function satellite_plan_mdp_mcts(problem::PlanningProblem; parallel::Bool=false)
 
         # Break from search if terminal state
         if state.done == true
-            println("Returning hur. action: $action")
+            # println("Returning hur. action: $action")
             break
         end
 

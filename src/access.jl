@@ -256,7 +256,7 @@ function compute_access(problem::PlanningProblem;
 
     # Compute all opportunities for each spacecraft
     for spacecraft in problem.spacecraft
-        println("Computing access for spacecraft: $(spacecraft.id)")
+        @debug "Computing access for spacecraft: $(spacecraft.id)"
         opportunities = spacecraft_compute_access(problem, 
                             spacecraft,
                             problem.locations,

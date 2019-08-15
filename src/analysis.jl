@@ -20,12 +20,11 @@ function analyze_plan(problem::PlanningProblem, plan::Array{<:Opportunity, 1})
 
             for constraint in problem.constraints
                 # Use logical and to evaulate path feasibility on graph
-                valid = valid && constraint(col_start, col_end)
-            end
-
-            if !valid
-                println("Collect Failed:\n Start: $col_start\n End: $col_end\n")
-                feasible = false
+                if !constraint(col_start, col_end)
+                    println("Collect Failed:\n Start: $col_start\n End: $col_end\n")
+                    feasible = false
+                    break
+                end
             end
         end
     end
