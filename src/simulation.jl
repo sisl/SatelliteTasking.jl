@@ -164,7 +164,7 @@ function sat_sim(sc::Spacecraft,
     mdpmcts_plan, mdpmcts_reward, mdpmcts_time, mdpmcts_nsr, mdpmcts_pfs = Opportunity[], 0.0, 0.0, 0.0, 0.0
 
     # Initialize Planning Problem
-    problem = PlanningProblem(t_start=t_start, t_end=t_end)
+    problem = SatPlanningProblem(t_start=t_start, t_end=t_end)
 
     problem.solve_gamma = settings.solve_gamma
     problem.solve_depth = settings.solve_depth

@@ -14,7 +14,7 @@ export Noop
 export Sunpoint
 export Collect
 export Contact
-export PlanningProblem
+export SatPlanningProblem
 export add_locations
 export clear_locations
 export clear_opportunities
@@ -607,11 +607,34 @@ function Base.show(io::IO, con::Contact)
     print(io, s)
 end
 
+#############
+# MDP State #
+#############
+
+@with_kw struct SatMDPState
+    time::Union{Epoch, Float64}
+    last_action::Opportunity
+    requests::Array{Request, 1} = Request[]
+    power::Float64 = 1.0
+    data::Float64 = 0.0
+end
+Base.hash(s::SatMDPState, h::UInt) = hash(s.time, hash(s.last_action, hash(s.power, hash(s.data, hash(s.requests, hash(:TaskingState, h))))))
+
+function POMDPs.isequal(sl::SatMDPState, sr::SatMDPState)
+    return (
+        (sl.time == sr.time) &&  
+        (sl.last_action == sr.last_action) &&
+        (sl.power == sr.power) &&
+        (sl.data == sr.data) &&
+        (sl.image_array == sr.image_array)
+    )
+end
+
 ####################
 # Planning Problem #
 ####################
 
-@with_kw mutable struct PlanningProblem
+@with_kw mutable struct SatPlanningProblem <: POMDPs.MDP{SatMDPState, Opportunity}
     # General Planning Settings
     t_start::Epoch
     t_end::Epoch
@@ -631,17 +654,21 @@ end
     collects::Array{Collect, 1} = Collect[]
 
     # Lookup Tables
-    lt_locations     = Dict{Union{Integer, UUID}, Location}()
-    lt_opportunities = Dict{Union{Integer, UUID}, Opportunity}()
-    lt_contacts      = Dict{Union{Integer, UUID}, Contact}()
-    lt_collects      = Dict{Union{Integer, UUID}, Collect}()
-    lt_loc_opps = Dict{Union{Integer, UUID}, Array{Union{Integer, UUID}, 1}}()
+    lt_locations::Dict{Integer, Location} = Dict{Integer, Location}()
+    lt_opportunities::Dict{Integer, Opportunity} = Dict{Integer, Opportunity}()
+    lt_contacts::Dict{Integer, Contact} = Dict{Integer, Contact}()
+    lt_collects::Dict{Integer, Collect} = Dict{Integer, Collect}()
+    lt_loc_opps::Dict{Integer, AbstractVector{Integer}} = Dict{Integer, AbstractVector{Integer}}()
+    
+    # Action Lookup Table
+    actions::AbstractVector{Opportunity} = Opportunity[]
+    lt_feasible_actions::Dict{Tuple{Opportunity, Opportunity}, AbstractVector{Opportunity}} = Dict{Tuple{Opportunity, Opportunity}, AbstractVector{Opportunity}}()
 
     # Solver Parameters - General 
     solve_allow_repeats::Bool = false
     solve_gamma::Real   = 1.0
     solve_depth::Int    = 3
-    solve_breadth::Int  = 3
+    solve_breadth::Int  = 0
     solve_horizon::Real = 90.0
 
     # Solver Parameters - MDP 
@@ -655,7 +682,7 @@ end
 """
 Clear problem locations.
 """
-function clear_locations(problem::PlanningProblem)
+function clear_locations(problem::SatPlanningProblem)
     # Reset Locations
     problem.locations = Location[]
     problem.stations = GroundStation[]
@@ -665,22 +692,26 @@ end
 """
 Clear problem opportunities.
 """
-function clear_opportunities(problem::PlanningProblem)
+function clear_opportunities(problem::SatPlanningProblem)
     # Reset Opportunities
     problem.opportunities = Opportunity[]
     problem.contacts = Contact[]
     problem.collects = Collect[]
 
-    problem.lt_opportunities = Dict{Union{Integer, UUID}, Opportunity}()
-    problem.lt_contacts      = Dict{Union{Integer, UUID}, Contact}()
-    problem.lt_collects      = Dict{Union{Integer, UUID}, Collect}()
-    problem.lt_loc_opps      = Dict{Union{Integer, UUID}, Array{Union{Integer, UUID}, 1}}()
+    problem.lt_opportunities = Dict{Integer, Opportunity}()
+    problem.lt_contacts      = Dict{Integer, Contact}()
+    problem.lt_collects      = Dict{Integer, Collect}()
+    problem.lt_loc_opps      = Dict{Integer, Array{Integer, 1}}()
+
+    # Action Lookup Table
+    lt_actions = Dict{Union{Epoch, Real}, AbstractVector{Opportunity}}()
+    lt_feasible_actions = Dict{Tuple{Union{Epoch, Real}, Integer}, AbstractVector{Opportunity}}()
 end
 
 """
 Clear all problem opportunities
 """
-function clear_all(problem::PlanningProblem)
+function clear_all(problem::SatPlanningProblem)
     clear_locations(problem)
     clear_opportunities(problem)
 end
@@ -688,7 +719,7 @@ end
 """
 Add locations to planning problem.
 """
-function add_locations(problem::PlanningProblem, locations::Array{<:Location})
+function add_locations(problem::SatPlanningProblem, locations::Array{<:Location})
     if length(locations) == 0
         @warn "No locations in array. Nothing to add..."
         return
@@ -710,3 +741,4 @@ function add_locations(problem::PlanningProblem, locations::Array{<:Location})
 
     return
 end
+

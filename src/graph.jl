@@ -6,7 +6,7 @@ export satellite_plan_graph
 """
 Construct decision graph for solving network
 """
-function construct_graph(problem::PlanningProblem; sat_id::Integer=1)
+function construct_graph(problem::SatPlanningProblem; sat_id::Integer=1)
     # Sort opportunities to ensure time ascending order
     sort!(problem.opportunities, by = x -> x.t_start)
 
@@ -51,7 +51,7 @@ end
 """
 Solve a graph to find optimal transition path
 """
-function solve_graph(problem::PlanningProblem, graph::Dict{Opportunity, Array{<:Opportunity, 1}};
+function solve_graph(problem::SatPlanningProblem, graph::Dict{Opportunity, Array{<:Opportunity, 1}};
             contact_reward::Real=0.0)
    
     # Create graph based on incoming edges for each node
@@ -123,7 +123,7 @@ Returns:
 - `reward::Float64`
 - `requests::{<:Request, 1}`
 """
-function satellite_plan_graph(problem::PlanningProblem; sat_id::Integer=1,
+function satellite_plan_graph(problem::SatPlanningProblem; sat_id::Integer=1,
             contact_reward::Real=0)
     # Construct graph to solve 
     graph = construct_graph(problem, sat_id=sat_id)

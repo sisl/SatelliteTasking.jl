@@ -1,6 +1,6 @@
 export satellite_plan_milp
 
-function satellite_plan_milp(problem::PlanningProblem; sat_id::Integer=1,
+function satellite_plan_milp(problem::SatPlanningProblem; sat_id::Integer=1,
     contact_reward::Real=0, timeout::Real=900,
     enforce_first::Bool=false)
 
@@ -57,7 +57,7 @@ function satellite_plan_milp(problem::PlanningProblem; sat_id::Integer=1,
     reward = 0.0
 
     for idx in keys(problem.lt_collects)
-        if value(x[idx]) != 0.0
+        if JuMP.value(x[idx]) != 0.0
             push!(plan, problem.lt_collects[idx])
         end
     end

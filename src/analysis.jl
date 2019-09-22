@@ -2,7 +2,7 @@
 export analyze_plan
 export plot_resources
 
-function analyze_plan(problem::PlanningProblem, plan::Array{<:Opportunity, 1})
+function analyze_plan(problem::SatPlanningProblem, plan::Array{<:Opportunity, 1})
     
     # Evaluate any constraint violations
     feasible = true
@@ -57,7 +57,7 @@ function analyze_plan(problem::PlanningProblem, plan::Array{<:Opportunity, 1})
     return feasible, reward, n_unique_reqests, n_dup_requests, n_requests, n_contacts
 end
 
-function plot_resources(states::Array{MDPState, 1}; width::Real=25, height::Real=12.5, hsep::Real=2.0, vsep::Real=2.0, xmax::Real=24)
+function plot_resources(states::Array{SatMDPState, 1}; width::Real=25, height::Real=12.5, hsep::Real=2.0, vsep::Real=2.0, xmax::Real=24)
     # Plot history of power
 
     # Initialize array

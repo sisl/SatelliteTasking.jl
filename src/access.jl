@@ -154,7 +154,7 @@ function find_access_boundary(tle::TLE, location::Location, epc0::Epoch, step::R
     end
 end
 
-function spacecraft_compute_access(problem::PlanningProblem, spacecraft::Spacecraft,
+function spacecraft_compute_access(problem::SatPlanningProblem, spacecraft::Spacecraft,
             locations::Array{<:Location, 1}; 
             macro_step::Real=60.0,
             tol::Real=0.01, 
@@ -247,7 +247,7 @@ function spacecraft_compute_access(problem::PlanningProblem, spacecraft::Spacecr
     return opportunities
 end
 
-function compute_access(problem::PlanningProblem;
+function compute_access(problem::SatPlanningProblem;
             macro_step::Real=60.0, tol::Real=0.01, 
             orbit_fraction::Real=0.5)
 
@@ -286,7 +286,7 @@ function compute_access(problem::PlanningProblem;
 
     # Zero Location Opportunity Counts
     for loc in problem.locations
-        problem.lt_loc_opps[loc.id] = Union{Integer, UUID}[]
+        problem.lt_loc_opps[loc.id] = Integer[]
     end
 
     # Update opportunity lookup table
@@ -314,7 +314,7 @@ function compute_access(problem::PlanningProblem;
     return
 end
 
-function parallel_compute_access(problem::PlanningProblem;
+function parallel_compute_access(problem::SatPlanningProblem;
             macro_step::Real=60.0, tol::Real=0.01, 
             orbit_fraction::Real=0.5)
 
@@ -361,7 +361,7 @@ function parallel_compute_access(problem::PlanningProblem;
 
     # Zero Location Opportunity Counts
     for loc in problem.locations
-        problem.lt_loc_opps[loc.id] = Union{Integer, UUID}[]
+        problem.lt_loc_opps[loc.id] = Integer[]
     end
 
     # Update opportunity lookup table

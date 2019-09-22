@@ -12,6 +12,10 @@ using Distributions
 using Discretizers
 using Parameters
 
+# POMDP Solvers
+using POMDPs
+using MCTS
+
 # Package imports
 using PGFPlots
 using JuMP
