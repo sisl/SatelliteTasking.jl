@@ -459,6 +459,7 @@ end
 No-operation action. Advances state without changing other values
 """
 @with_kw mutable struct Noop <: Opportunity
+    id::Integer = 0
     t_start::Union{Epoch, Real} = 0.0
 end
 
@@ -470,6 +471,7 @@ function Base.show(io::IO, noop::Noop)
 end
 
 @with_kw mutable struct Sunpoint <: Opportunity
+    id::Integer = 0
     t_start::Union{Epoch, Real} = 0.0
 end
 
@@ -613,6 +615,7 @@ end
 
 @with_kw struct SatMDPState
     time::Union{Epoch, Float64}
+    current_action::Opportunity
     last_action::Opportunity
     requests::Array{Request, 1} = Request[]
     power::Float64 = 1.0
@@ -661,8 +664,8 @@ end
     lt_loc_opps::Dict{Integer, AbstractVector{Integer}} = Dict{Integer, AbstractVector{Integer}}()
     
     # Action Lookup Table
-    actions::AbstractVector{Opportunity} = Opportunity[]
-    lt_feasible_actions::Dict{Tuple{Opportunity, Opportunity}, AbstractVector{Opportunity}} = Dict{Tuple{Opportunity, Opportunity}, AbstractVector{Opportunity}}()
+    actions::AbstractVector{Integer} = Opportunity[]
+    lt_feasible_actions::Dict{Tuple{Integer, Integer}, AbstractVector{Opportunity}} = Dict{Tuple{Opportunity, Opportunity}, AbstractVector{Opportunity}}()
 
     # Solver Parameters - General 
     solve_allow_repeats::Bool = false
@@ -671,8 +674,8 @@ end
     solve_breadth::Int  = 0
     solve_horizon::Real = 90.0
 
-    # Solver Parameters - MDP 
-    mdp_reward_scarcity::Bool = false
+    # # Solver Parameters - MDP 
+    # mdp_reward_scarcity::Bool = false
 
     # Solver Parameters - MCTS
     mcts_sim_iterations::Int = 10
@@ -704,8 +707,8 @@ function clear_opportunities(problem::SatPlanningProblem)
     problem.lt_loc_opps      = Dict{Integer, Array{Integer, 1}}()
 
     # Action Lookup Table
-    lt_actions = Dict{Union{Epoch, Real}, AbstractVector{Opportunity}}()
-    lt_feasible_actions = Dict{Tuple{Union{Epoch, Real}, Integer}, AbstractVector{Opportunity}}()
+    lt_actions = Opportunity[]
+    lt_feasible_actions = Dict{Tuple{Opportunity, Opportunity}, AbstractVector{Opportunity}}()
 end
 
 """

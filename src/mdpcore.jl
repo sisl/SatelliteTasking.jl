@@ -79,28 +79,48 @@ function upcoming_actions(problem::SatPlanningProblem, epc::Epoch)
     return actions
 end
 
-export precompute_actions
-function precompute_actions(problem::SatPlanningProblem)
+export precompute_action_space
+function precompute_action_space(problem::SatPlanningProblem)
 
     # First compute feasible transition lookup
-    lt_feasible_transitions = Dict{Tuple{Opportunity, Opportunity}, Bool}()
+    lt_feasible_transitions = Dict{Tuple{Integer, Integer}, Bool}()
 
+    println("Computing Feasibility Lookup Table:")
     for so_idx in 1:length(problem.opportunities)
-        for eo_idx in (so_idx+1):length(problem.opportunities)
+        so_opp = problem.lt_opportunities[so_idx]
 
+        if so_idx % 100 == 0
+            println("Current Index: $so_idx")
+        end
+
+        for eo_idx in (so_idx+1):length(problem.opportunities)
+            eo_opp = problem.lt_opportunities[eo_idx]
+
+            # Check feasibility constraints
+            valid = true
+
+            for constraint in problem.constraints
+                if valid == false
+                    break
+                end
+
+                valid = valid && constraint(problem.lt_opportunities[so_idx], problem.lt_opportunities[eo_idx])
+            end
+
+            # Push 
+            lt_feasible_transitions[(so_idx, eo_idx)] = valid
         end
     end
 
+    println("Current Index: $(length(problem.opportunities))")
 
     # Dict mapping (last collect/downlink action) -> {all possible actions}
-    possible_actions = Dict{Opportunity, AbstractVector{Opportunity}}()
-
     sunpoint_actions = Tuple{Opportunity, Integer}[]
-    feasible_actions = Dict{Tuple{Opportunity, Opportunity}, AbstractVector{Opportunity}}()
-
+    lt_feasible_actions = Dict{Tuple{Integer, Integer}, AbstractVector{Opportunity}}()
 
     # Below might work but it doesn't solve the problem of having sunpointed actions
     # be part of the 
+    println("Computing Action Space Lookup:")
     for ca_idx in 1:length(problem.opportunities)
         ca_opp = problem.lt_opportunities[ca_idx]
 
@@ -108,114 +128,59 @@ function precompute_actions(problem::SatPlanningProblem)
             println("Current Index: $ca_idx")
         end
 
+        # Create sunpoint action once for time
+        if ca_idx < length(problem.opportunities)
+            sp_action = Sunpoint(id=length(problem.opportunities)+length(sunpoint_actions)+1, t_start=problem.opportunities[ca_idx+1].t_start)
+            push!(sunpoint_actions, (sp_action, ca_idx+1)) # Record equivalent index of sunpoint action
+        end
+
         for la_idx in 1:ca_idx-1
             la_opp = problem.lt_opportunities[la_idx]
-            # println("s$ca_idx, $la_idx")
 
             # Create Array for (current action, last action)
-            feasible_actions[(ca_opp, la_opp)] = Opportunity[]
+            lt_feasible_actions[(la_opp, ca_opp)] = Opportunity[]
 
             for fa_idx in (ca_idx+1):length(problem.opportunities)
-                # Check feasibility constraints
-                valid = true
-
-                for constraint in problem.constraints
-                    if valid == false
-                        break
-                    end
-
-                    valid = valid && constraint(problem.lt_opportunities[la_idx], problem.lt_opportunities[fa_idx])
+                if lt_feasible_transitions[(la_idx, fa_idx)] == true
+                    push!(lt_feasible_actions[(la_opp.id, ca_opp.id)], problem.opportunities[fa_idx])
                 end
 
-                if valid == true
-                    push!(feasible_actions[(ca_opp, la_opp)], problem.lt_opportunities[fa_idx])
+                if problem.solve_breadth > 0 && length(lt_feasible_actions[(la_opp.id, ca_opp.id)]) > problem.solve_breadth
+                    break
                 end
             end
 
-            # Create Sunpoint Opportunities and copy feasible actions
+            # Add sunpoint action as feasible action
             if ca_idx < length(problem.opportunities)
-                # Create action
-                sp_action = Sunpoint(t_start=problem.opportunities[ca_idx+1].t_start)
-
-                push!(sunpoint_actions, (sp_action, ca_idx+1)) # Record equivalent index of sunpoint action
-                push!(feasible_actions[(ca_opp, la_opp)], sp_action)
+                push!(lt_feasible_actions[(la_opp.id, ca_opp.id)], sp_action)
             end
         end
     end
 
     println("Current Index: $(length(problem.opportunities))")
 
+    println("Computing Sunpoint Indices:")
     for (sp_action, ca_idx) in sunpoint_actions
+        ca_opp = problem.lt_opportunities[ca_idx]
+
         if ca_idx % 100 == 0
             println("Current Sunpoint Index: $ca_idx")
         end
-
+        
         for la_idx in 1:ca_idx-1
             la_opp = problem.lt_opportunities[la_idx]
-            
-            eq_opp = problem.lt_opportunities[ca_idx]
 
             # Copy Exisiting feasible actions 
-            # push!(feasible_actions[(sp_action, la_opp)], feasible_actions[(eq_opp, la_opp)])
+            lt_feasible_actions[(la_opp.id, sp_action.id)] = copy(lt_feasible_actions[(la_opp.id, ca_opp.id)]) 
         end
     end
 
     println("Current Index: $(length(problem.opportunities))")
 
     # Update problem 
-    # problem.lt_feasible_actions = feasible_actions
-    problem.actions = vcat(problem.opportunities, sunpoint_actions)
+    problem.lt_feasible_actions = lt_feasible_actions
+    problem.actions = vcat(problem.opportunities, [x[1] for x in sunpoint_actions])
     sort!(problem.actions, by = x -> x.t_start)
-
-    return problem.actions
-
-    # for opp in problem.opportunities
-    #     # Initialize 
-    #     possible_actions[opp] = Opportunity[]
-
-    #     for idx in (opp.id+1):length(problem.opportunities)
-    #         # Check feasibility constraints
-    #         valid = true
-
-    #         for constraint in problem.constraints
-    #             if valid == false
-    #                 break
-    #             end
-
-    #             valid = valid && constraint(opp, problem.lt_opportunities[idx])
-    #         end
-
-    #         if valid == true
-    #             push!(possible_actions[opp], problem.lt_opportunities[idx])
-    #         end
-    #     end
-
-    #     # Add Sunpoint and Noop actions
-    #     if opp.id < length(problem.opportunities)
-    #         # Create action
-    #         sp_action = Sunpoint(t_start=problem.opportunities[opp.id+1].t_start)
-
-    #         push!(possible_actions[opp], sp_action)
-    #         # push!(possible_actions[opp], Noop(t_start=problem.opportunities[opp.id+1].t_start))
-    #     end
-    # end
-
-    # n_opps = 0
-    # n_actions = 0
-    # for idx in 1:length(problem.opportunities)-1
-    #     opp = problem.opportunities[idx]
-    #     actions = upcoming_actions(problem, opp.t_start)
-    #     println("$(opp.t_start) - $actions")
-    #     n_opps += 1
-    #     n_actions += 1
-    # end
-
-    # return possible_actions
-end
-
-export precompute_feasible_actions
-function precompute_feasible_actions(problem::SatPlanningProblem)
-
 end
 
 ###########################
@@ -270,31 +235,80 @@ POMDPs.discount(problem::SatPlanningProblem) = 1.0
 #     return sp
 # end
 
-# # State reward function
-# function POMDPs.reward(p::SatPlanningProblem, s::SatMDPState, a::Opportunity)
-#     # Ensure satellite still has pwoer
-#     if s.dead == true
-#         # Big penalty
-#         return -1000000.0
-#     end
-    
-#     # Reward as sum of all current images
-#     r = 0.0
-#     for (i, img) in enumerate(s.image_array)
-#         if img == true
-#             r += p.image_lookup[i].reward
-#         else
-#             r -= p.image_lookup[i].reward
-#         end
-#     end
-    
-#     return r
-# end
+# State reward function
+function POMDPs.reward(problem::SatPlanningProblem, state::SatMDPState, action::Opportunity)
+    reward = 0.0
 
-# # Action Space
-# POMDPs.actions(problem::SatPlanningProblem) = mdp.opportunities
-# function POMDPs.actions(problem::SatPlanningProblem, s::SatMDPState)
-#     return mdp.action_lookup[s.time]
+    # Update data generate
+    power_generated = 0.0
+    data_generated  = problem.spacecraft[1].datagen_backorbit*(action.t_start - state.time)
+
+    if typeof(action) == Collect
+        # Resources consumed by action
+        data_generated  += action.duration * problem.spacecraft[1].datagen_image
+        power_generated += action.duration * problem.spacecraft[1].powergen_image
+        
+        # Only reward if we have enough spare data space
+        if (state.data + data_generated < 1.0)
+            if !(action.location in state.requests)
+                reward += action.reward
+            end
+            # elseif problem.solve_allow_repeats == true
+            #     reward += action.reward*0.25
+            # end
+        else
+            # Penalize collection when full up
+            # reward -= action.reward
+        end
+
+    elseif typeof(action) == Contact
+        # reward += 0.01*action.duration
+
+        # Update data generation
+        data_generated  += action.duration * problem.spacecraft[1].datagen_downlink
+        power_generated += action.duration * problem.spacecraft[1].powergen_downlink
+    elseif typeof(action) == Noop
+        reward += 0.0
+    elseif typeof(action) == Sunpoint
+        # Charge for duration of sunpoint
+        power_generated += problem.spacecraft[1].powergen_sunpoint*(action.t_start - state.time)
+
+        # Have tiny bit of reward for charging
+        # reward += (action.t_start - state.time)/state.last_action.duration
+        reward += 0.0001*(action.t_start - state.time)
+    end
+
+    # Update resources to see if violations occur
+    power = state.power + power_generated
+    data  = state.data  + data_generated
+
+    # Penalize running out of power
+    if power <= 0
+        reward -= 10000
+    end
+
+    # Don't penalize overcharge
+    # if power > 1
+    #     reward -= 10.0
+    # end
+
+    # Don't penalize full capacity
+    # if data > 1
+    #     reward -= 10.0
+    # end
+
+    # Don't penalize having everything down
+    # if data < 0
+    #     reward -= 10.0
+    # end
+
+    return reward
+end
+
+# Action Space
+# POMDPs.actions(problem::SatPlanningProblem) = problem.actions
+# function POMDPs.actions(problem::SatPlanningProblem, state::SatMDPState)
+#     return mdp.lt_feasible_actions[(state.last_action.id, state.current_action.id)]
 # end
 
 # # Initial state funciton
