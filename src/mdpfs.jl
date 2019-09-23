@@ -22,13 +22,13 @@ function mdp_depth_first_search(problem::SatPlanningProblem, state::SatMDPState,
             ap, vp = mdp_depth_first_search(problem, sp, depth-1)
 
             # Strict Markov Update
-            # v = v + problem.solve_gamma*vp
+            # v = v + problem.solve_discount*vp
 
             # Get distance action is in the future
             t_diff = abs(ap.t_start - state.time)
 
             # Semi-markov update
-            v = v + vp*problem.solve_gamma^(t_diff)
+            v = v + vp*problem.solve_discount^(t_diff)
         end
 
         if v > vstar
@@ -45,7 +45,7 @@ function mdp_fs(problem::SatPlanningProblem, state::SatMDPState)
     action, value = mdp_depth_first_search(problem, state, problem.solve_depth)
 
     if typeof(action) == Collect
-        if action.location in state.requests
+        if action.location.id in state.request_ids
             # println("Planned duplicate collect: $(action) - $(action.location)")
         end
     end

@@ -264,6 +264,9 @@ mutable struct Request <: Location
     end
 end
 
+Base.hash(r::Request, h::UInt) = hash(r.id, hash(r.lon, hash(r.lat, hash(r.look_angle_min, hash(r.look_angle_max, hash(:Request, h))))))
+
+
 function Base.show(io::IO, req::Request)
 
     s = @sprintf "Request(ID: %s, Lon: %.3f, Lat: %0.3f, Reward: %.2f, Duration: %.2f)" string(req.id) req.lon req.lat req.reward req.collect_duration
@@ -361,6 +364,9 @@ mutable struct GroundStation <: Location
         new(lon, lat, ecef, elevation_min, duration_min, id)
     end
 end
+
+Base.hash(s::GroundStation, h::UInt) = hash(s.id, hash(s.lon, hash(s.lat, hash(s.elevation_min, hash(:GroundStation, h)))))
+
 
 # function Base.isequal(ll::GroundStation, rl::GroundStation)
 #     return (
@@ -507,7 +513,7 @@ Opportunity type for a Request collection.
     end
 end
 
-Base.hash(c::Collect, h::UInt) = hash(c.id, hash(c.spacecraft.id, hash(:Collect, h)))
+Base.hash(c::Collect, h::UInt) = hash(c.id, hash(c.spacecraft.id, hash(c.duration, hash(:Collect, h))))
 
 function JSON.lower(col::Collect)
     return Dict(
@@ -570,7 +576,7 @@ mutable struct Contact <: Opportunity
     end
 end
 
-Base.hash(c::Contact, h::UInt) = hash(c.id, hash(c.spacecraft.id, hash(:Contact, h)))
+Base.hash(c::Contact, h::UInt) = hash(c.id, hash(c.spacecraft.id, hash(c.duration, hash(:Contact, h))))
 
 
 function JSON.lower(con::Contact)
@@ -622,11 +628,18 @@ end
     time::Union{Epoch, Float64}
     last_cdo_action::Opportunity
     last_action::Opportunity
-    requests::Array{Request, 1} = Request[]
+    request_ids::Array{Int, 1} = Int[]
     power::Float64 = 1.0
     data::Float64 = 0.0
 end
-Base.hash(s::SatMDPState, h::UInt) = hash(s.time, hash(s.last_action, hash(s.power, hash(s.data, hash(s.requests, hash(:SatMDPState, h))))))
+Base.hash(s::SatMDPState, h::UInt) = hash(s.time, hash(s.last_action, hash(s.power, hash(s.data, hash(s.request_ids, hash(:SatMDPState, h))))))
+
+function Base.show(io::IO, state::SatMDPState)
+
+    s = @sprintf "SatMDPState(Time: %s, Last CDO Action: %s, Action: %s, Requests: %d, Power: %.2f, Data: %.2f)" string(state.time) string(state.last_cdo_action) string(state.last_action) length(state.request_ids) state.power state.data
+
+    print(io, s)
+end
 
 function POMDPs.isequal(sl::SatMDPState, sr::SatMDPState)
     return (
@@ -635,7 +648,7 @@ function POMDPs.isequal(sl::SatMDPState, sr::SatMDPState)
         (sl.last_cdo_action == sr.last_cdo_action) &&
         (sl.power == sr.power) &&
         (sl.data == sr.data) &&
-        (sl.requests == sr.requests)
+        (sl.request_ids == sr.request_ids)
     )
 end
 
@@ -676,7 +689,7 @@ end
 
     # Solver Parameters - General 
     solve_allow_repeats::Bool = false
-    solve_gamma::Real   = 1.0
+    solve_discount::Real   = 0.99
     solve_depth::Int    = 3
     solve_breadth::Int  = 0
     solve_horizon::Real = 90.0
@@ -685,8 +698,8 @@ end
     # mdp_reward_scarcity::Bool = false
 
     # Solver Parameters - MCTS
-    mcts_sim_iterations::Int = 10
-    mcts_c::Real = 1.0
+    mcts_n_iterations::Int = 50
+    mcts_exploration_constant::Real = 1.0
 end
 
 """

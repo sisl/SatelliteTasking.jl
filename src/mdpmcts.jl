@@ -11,30 +11,48 @@ function satellite_plan_mdp_mcts(problem::SatPlanningProblem; parallel::Bool=fal
     plan = Opportunity[state.last_action]
     action = nothing
     total_reward = 0.0
-    reward  = 0.0
+    r  = 0.0
 
-    solver = MCTSSolver(n_iterations=50, depth=20, exploration_constant=5.0, enable_tree_vis=false)
-    @POMDPs.requirements_info(solver, problem)
-    # policy = POMDPs.solve(solver, problem);
+    solver = MCTSSolver(n_iterations=problem.mcts_n_iterations, depth=problem.solve_depth, exploration_constant=problem.mcts_exploration_constant, enable_tree_vis=false)
+    # @POMDPs.requirements_info(solver, problem)
+    policy = POMDPs.solve(solver, problem);
 
-    # state = initialstate(problem, Random.MersenneTwister(4))
-    # push!(states, state)
-    # reward = state.last_collect.location.reward
-    # total_reward += reward
+    state = initialstate(problem, Random.MersenneTwister(4))
+    push!(states, state)
+    # r = state.last_collect.location.r
+    # r = reward(problem, state, state.last_action)
+    if typeof(state.last_action) == Collect
+        r = state.last_action.location.reward
+    else
+        r = 0
+    end
+    total_reward += r
 
-    # while state.done == false
-    #     # Compute optimal action
-    #     action = POMDPs.action(policy, state)
-    #     push!(plan, action)
+    # println("State: $state\n")
+    # println("Reward: $r\n")
+
+    while !isterminal(problem, state)
+        # Compute optimal action
+        action = POMDPs.action(policy, state)
+        push!(plan, action)
+        # println("Action: $action\n")
         
-    #     # Advance state with next action
-    #     state = POMDPs.generate_s(problem, state, action, Random.MersenneTwister(4))
-    #     push!(states, state)
+        # Advance state with next action
+        state = POMDPs.generate_s(problem, state, action, Random.MersenneTwister(4))
+        push!(states, state)
+        # println("State: $state\n")
 
-    #     # Update reward
-    #     reward = state.last_collect.location.reward
-    #     total_reward += reward
-    # end
+        # Update r
+        # r = state.last_collect.location.r
+        if typeof(state.last_action) == Collect
+            r = state.last_action.location.reward
+        else
+            r = 0
+        end
+        # println("Request Ids: $(state.request_ids)")
+        # println("Reward: $r\n")
+        total_reward += r
+    end
 
     return states, plan, total_reward
 end

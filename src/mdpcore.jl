@@ -3,21 +3,11 @@
 ###########################
 
 # Terminal States
-# POMDPs.isterminal(mdp::TaskingMDP, s::TaskingState) = (length(mdp.action_lookup[a.sow]) == 0)
-POMDPs.isterminal(problem::SatPlanningProblem, s::SatMDPState) = s.done
-POMDPs.discount(problem::SatPlanningProblem) = 1.0
+POMDPs.isterminal(problem::SatPlanningProblem, s::SatMDPState) = length(problem.lt_feasible_actions[(s.last_cdo_action.id, s.last_action.id)]) == 0
+POMDPs.discount(problem::SatPlanningProblem) = problem.solve_discount
 
 # Generate next state from state and action
 function POMDPs.generate_s(problem::SatPlanningProblem, state::SatMDPState, action::Opportunity, rng::AbstractRNG)
-    # # If done return same state, just done
-    # if typeof(action) == Done
-    #     return SatMDPState(time=state.time,
-    #             last_action=Done(t_start=state.time),
-    #             last_cdo_action=state.last_cdo_action,
-    #             requests=copy(state.requests),
-    #             power=state.power,
-    #             data=state.data)
-    # end
 
     # Current state time
     time0 = state.time
@@ -30,8 +20,8 @@ function POMDPs.generate_s(problem::SatPlanningProblem, state::SatMDPState, acti
     power = state.power
     data  = state.data
 
-    # Copy observed requests
-    requests = copy(state.requests)
+    # Copy observed request_ids
+    request_ids = copy(state.request_ids)
 
     # Finish state
     done = false
@@ -60,7 +50,7 @@ function POMDPs.generate_s(problem::SatPlanningProblem, state::SatMDPState, acti
             data_generated  += collect_generation
             power_generated += action.duration * problem.spacecraft[1].powergen_image
 
-            push!(requests, action.location)
+            push!(request_ids, action.location.id)
         end
 
     elseif typeof(action) == Contact
@@ -91,14 +81,16 @@ function POMDPs.generate_s(problem::SatPlanningProblem, state::SatMDPState, acti
     return SatMDPState(time=time,
             last_action=action,
             last_cdo_action=last_cdo_action,
-            requests=requests,
+            request_ids=request_ids,
             power=power,
             data=data)
 end
 
 # State reward function
 function POMDPs.reward(problem::SatPlanningProblem, state::SatMDPState, action::Opportunity)
-    reward = 0.0
+    r = 0.0
+
+    # println("Reward Action: $action")
 
     # Update data generate
     power_generated = 0.0
@@ -111,32 +103,37 @@ function POMDPs.reward(problem::SatPlanningProblem, state::SatMDPState, action::
         
         # Only reward if we have enough spare data space
         if (state.data + data_generated < 1.0)
-            if !(action.location in state.requests)
-                reward += action.reward
+            # println("Action Location ID: $(action.location.id) - Requests: $(state.request_ids)")
+            if !(action.location.id in state.request_ids)
+                # r += action.reward
+
+                # Semi-markov reward update
+                t_diff = abs(action.t_start - state.time)
+                r += action.reward*POMDPs.discount(problem)^(t_diff)
             end
             # elseif problem.solve_allow_repeats == true
-            #     reward += action.reward*0.25
+            #     r += action.reward*0.25
             # end
         else
             # Penalize collection when full up
-            # reward -= action.reward
+            # r -= action.reward
         end
 
     elseif typeof(action) == Contact
-        # reward += 0.01*action.duration
+        # r += 0.01*action.duration
 
         # Update data generation
         data_generated  += action.duration * problem.spacecraft[1].datagen_downlink
         power_generated += action.duration * problem.spacecraft[1].powergen_downlink
     elseif typeof(action) == Noop
-        reward += 0.0
+        r += 0.0
     elseif typeof(action) == Sunpoint
         # Charge for duration of sunpoint
         power_generated += problem.spacecraft[1].powergen_sunpoint*(action.t_start - state.time)
 
         # Have tiny bit of reward for charging
-        # reward += (action.t_start - state.time)/state.last_cdo_action.duration
-        reward += 0.0001*(action.t_start - state.time)
+        # r += (action.t_start - state.time)/state.last_cdo_action.duration
+        r += 0.0001*(action.t_start - state.time)
     end
 
     # Update resources to see if violations occur
@@ -145,7 +142,7 @@ function POMDPs.reward(problem::SatPlanningProblem, state::SatMDPState, action::
 
     # Penalize running out of power
     if power <= 0
-        reward -= 10000
+        r -= 10000
     end
 
     # Don't penalize overcharge
@@ -163,13 +160,14 @@ function POMDPs.reward(problem::SatPlanningProblem, state::SatMDPState, action::
     #     reward -= 10.0
     # end
 
-    return reward
+    # println("Reward Reward: $r")
+    return r
 end
 
 # Action Space
 POMDPs.actions(problem::SatPlanningProblem) = problem.actions
 function POMDPs.actions(problem::SatPlanningProblem, state::SatMDPState)
-    return problem.lt_feasible_actions[(state.last_cdo_action.id, state.current_action.id)]
+    return problem.lt_feasible_actions[(state.last_cdo_action.id, state.last_action.id)]
 end
 
 # Initial state funciton

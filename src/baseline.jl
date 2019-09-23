@@ -35,7 +35,7 @@ function baseline_step(problem::SatPlanningProblem, state::SatMDPState, action::
         return SatMDPState(time=state.time,
                 last_action=Done(t_start=state.time),
                 last_cdo_action=state.last_cdo_action,
-                requests=copy(state.requests),
+                request_ids=copy(state.request_ids),
                 power=state.power,
                 data=state.data)
     end
@@ -52,7 +52,7 @@ function baseline_step(problem::SatPlanningProblem, state::SatMDPState, action::
     data  = state.data
 
     # Copy observed requests
-    requests = copy(state.requests)
+    request_ids = copy(state.request_ids)
 
     # Finish state
     done = false
@@ -81,7 +81,7 @@ function baseline_step(problem::SatPlanningProblem, state::SatMDPState, action::
             data_generated  += collect_generation
             power_generated += action.duration * problem.spacecraft[1].powergen_image
 
-            push!(requests, action.location)
+            push!(request_ids, action.location.id)
         end
 
     elseif typeof(action) == Contact
@@ -112,7 +112,7 @@ function baseline_step(problem::SatPlanningProblem, state::SatMDPState, action::
     return SatMDPState(time=time,
             last_action=action,
             last_cdo_action=last_cdo_action,
-            requests=requests,
+            request_ids=request_ids,
             power=power,
             data=data)
 end

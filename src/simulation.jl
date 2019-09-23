@@ -139,7 +139,7 @@ end
     milp::Bool=false
     mdpfs::Bool=false
     mdpmcts::Bool=false
-    solve_gamma::Real = 1.0
+    solve_discount::Real = 1.0
     solve_depth::Int = 3
     solve_breadth::Int = 3
     solve_horizon::Real = 5400.0
@@ -166,7 +166,7 @@ function sat_sim(sc::Spacecraft,
     # Initialize Planning Problem
     problem = SatPlanningProblem(t_start=t_start, t_end=t_end)
 
-    problem.solve_gamma = settings.solve_gamma
+    problem.solve_discount = settings.solve_discount
     problem.solve_depth = settings.solve_depth
     problem.solve_breadth = settings.solve_breadth
     problem.solve_horizon = settings.solve_horizon
