@@ -13,6 +13,7 @@ using Discretizers
 using Parameters
 
 # POMDP Solvers
+using Random
 using POMDPs
 using MCTS
 

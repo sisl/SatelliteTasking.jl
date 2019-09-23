@@ -2,6 +2,10 @@
 export mdp_fs
 export satellite_plan_mdp_fs
 
+function mdp_reachable_states(problem::SatPlanningProblem, state::SatMDPState, action::Opportunity)
+    return SatMDPState[baseline_step(problem, state, action)]
+end
+
 function mdp_depth_first_search(problem::SatPlanningProblem, state::SatMDPState, depth::Integer)
     
     # Early exit 
@@ -11,8 +15,8 @@ function mdp_depth_first_search(problem::SatPlanningProblem, state::SatMDPState,
 
     astar, vstar = Done(t_start=state.time), -Inf
 
-    for a in mdp_state_actions(problem, state)
-        v = mdp_reward(problem, state, a)
+    for a in problem.lt_feasible_actions[(state.last_cdo_action.id, state.last_action.id)]
+        v = POMDPs.reward(problem, state, a)
 
         for sp in mdp_reachable_states(problem, state, a)
             ap, vp = mdp_depth_first_search(problem, sp, depth-1)
@@ -55,7 +59,7 @@ function mdp_fs(problem::SatPlanningProblem, state::SatMDPState)
     end
 
     # Step to next state with selected action
-    state = mdp_step(problem, state, action)
+    state = baseline_step(problem, state, action)
 
     return state, action, value
 end
@@ -67,7 +71,7 @@ function satellite_plan_mdp_fs(problem::SatPlanningProblem)
     
     # Set initial state
     init_opp = problem.opportunities[1]
-    state = SatMDPState(time=init_opp.t_start, last_action=init_opp)
+    state = SatMDPState(time=init_opp.t_start, last_action=init_opp, last_cdo_action=init_opp)
 
     states = SatMDPState[state]
     plan = Opportunity[state.last_action]
@@ -75,11 +79,6 @@ function satellite_plan_mdp_fs(problem::SatPlanningProblem)
 
     while true
         state, action, reward = mdp_fs(problem, state)
-
-        # println("State: $state")
-        # println("Action: $action")
-        # println("Actions in horizon: $(length(find_actions(problem, state, problem.solve_horizon)))")
-        # println("Value: $reward")
 
         # Break from search if terminal state
         if typeof(action) == Done

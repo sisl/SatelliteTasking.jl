@@ -2,6 +2,7 @@
 export satellite_plan_baseline
 export satellite_plan_resource_baseline
 
+
 """
 Binary search method to find the first opportunity with an index greater than
 the target simulation time (Epoch or elapsed time)
@@ -33,6 +34,7 @@ function baseline_step(problem::SatPlanningProblem, state::SatMDPState, action::
     if typeof(action) == Done
         return SatMDPState(time=state.time,
                 last_action=Done(t_start=state.time),
+                last_cdo_action=state.last_cdo_action,
                 requests=copy(state.requests),
                 power=state.power,
                 data=state.data)
@@ -43,7 +45,7 @@ function baseline_step(problem::SatPlanningProblem, state::SatMDPState, action::
     time  = state.time
 
     # Store last viable action
-    last_action = state.last_action
+    last_cdo_action = state.last_cdo_action
 
     # Resource
     power = state.power
@@ -70,7 +72,7 @@ function baseline_step(problem::SatPlanningProblem, state::SatMDPState, action::
 
     elseif typeof(action) == Collect
         # Update last action
-        last_action = action
+        last_cdo_action = action
 
         collect_generation = action.duration * problem.spacecraft[1].datagen_image
 
@@ -84,7 +86,7 @@ function baseline_step(problem::SatPlanningProblem, state::SatMDPState, action::
 
     elseif typeof(action) == Contact
         # Update last action
-        last_action = action
+        last_cdo_action = action
 
         data_generated  += action.duration * problem.spacecraft[1].datagen_downlink
         power_generated += action.duration * problem.spacecraft[1].powergen_downlink
@@ -108,11 +110,11 @@ function baseline_step(problem::SatPlanningProblem, state::SatMDPState, action::
     if data < 0.0 data = 0.0 end
 
     return SatMDPState(time=time,
-            last_action=last_action,
+            last_action=action,
+            last_cdo_action=last_cdo_action,
             requests=requests,
             power=power,
             data=data)
-    
 end
 
 function next_feasible_action(problem::SatPlanningProblem, state::SatMDPState)
@@ -155,7 +157,7 @@ function next_feasible_action(problem::SatPlanningProblem, state::SatMDPState)
                 break
             end
 
-            valid = valid && constraint(state.last_action, opp)
+            valid = valid && constraint(state.last_cdo_action, opp)
         end
 
         # If valid transition add to edges
@@ -171,7 +173,7 @@ function satellite_plan_baseline(problem::SatPlanningProblem)
 
     # Get Initial State
     init_opp = problem.opportunities[1]
-    state = SatMDPState(time=init_opp.t_start, last_action=init_opp)
+    state = SatMDPState(time=init_opp.t_start, last_action=init_opp, last_cdo_action=init_opp)
 
     states = SatMDPState[state]
     plan = Opportunity[problem.opportunities[1]]
@@ -202,8 +204,8 @@ function satellite_plan_resource_baseline(problem::SatPlanningProblem; allow_rep
 
     # Get Initial State
     init_opp = problem.opportunities[1]
-    state = SatMDPState(time=init_opp.t_start, last_action=init_opp)
-    action = state.last_action
+    state = SatMDPState(time=init_opp.t_start, last_cdo_action=init_opp)
+    action = state.last_cdo_action
 
     states = SatMDPState[state]
     plan = Opportunity[problem.opportunities[1]]

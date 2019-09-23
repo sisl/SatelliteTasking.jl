@@ -507,6 +507,8 @@ Opportunity type for a Request collection.
     end
 end
 
+Base.hash(c::Collect, h::UInt) = hash(c.id, hash(c.spacecraft.id, hash(:Collect, h)))
+
 function JSON.lower(col::Collect)
     return Dict(
         "id" => col.id,
@@ -568,6 +570,9 @@ mutable struct Contact <: Opportunity
     end
 end
 
+Base.hash(c::Contact, h::UInt) = hash(c.id, hash(c.spacecraft.id, hash(:Contact, h)))
+
+
 function JSON.lower(con::Contact)
     return Dict(
         "id" => con.id,
@@ -615,21 +620,22 @@ end
 
 @with_kw struct SatMDPState
     time::Union{Epoch, Float64}
-    current_action::Opportunity
+    last_cdo_action::Opportunity
     last_action::Opportunity
     requests::Array{Request, 1} = Request[]
     power::Float64 = 1.0
     data::Float64 = 0.0
 end
-Base.hash(s::SatMDPState, h::UInt) = hash(s.time, hash(s.last_action, hash(s.power, hash(s.data, hash(s.requests, hash(:TaskingState, h))))))
+Base.hash(s::SatMDPState, h::UInt) = hash(s.time, hash(s.last_action, hash(s.power, hash(s.data, hash(s.requests, hash(:SatMDPState, h))))))
 
 function POMDPs.isequal(sl::SatMDPState, sr::SatMDPState)
     return (
         (sl.time == sr.time) &&  
         (sl.last_action == sr.last_action) &&
+        (sl.last_cdo_action == sr.last_cdo_action) &&
         (sl.power == sr.power) &&
         (sl.data == sr.data) &&
-        (sl.image_array == sr.image_array)
+        (sl.requests == sr.requests)
     )
 end
 
@@ -664,7 +670,8 @@ end
     lt_loc_opps::Dict{Integer, AbstractVector{Integer}} = Dict{Integer, AbstractVector{Integer}}()
     
     # Action Lookup Table
-    actions::AbstractVector{Integer} = Opportunity[]
+    actions::AbstractVector{Opportunity} = Opportunity[]
+    lt_actions::Dict{Integer, Opportunity} = Dict{Integer, Opportunity}()
     lt_feasible_actions::Dict{Tuple{Integer, Integer}, AbstractVector{Opportunity}} = Dict{Tuple{Opportunity, Opportunity}, AbstractVector{Opportunity}}()
 
     # Solver Parameters - General 

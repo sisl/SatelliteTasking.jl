@@ -380,3 +380,125 @@ function parallel_compute_access(problem::SatPlanningProblem;
 
     return
 end
+
+###############################
+# Action Space Precomputation #
+###############################
+
+export precompute_action_space
+function precompute_action_space(problem::SatPlanningProblem; enable_resources::Bool=false)
+
+    # First compute feasible transition lookup
+    lt_feasible_transitions = Dict{Tuple{Integer, Integer}, Bool}()
+
+    println("Computing Feasibility Lookup Table:")
+    for start_opp_idx in 1:length(problem.opportunities)
+        start_opp_opp = problem.lt_opportunities[start_opp_idx]
+
+        if start_opp_idx % 100 == 0
+            println("Current Index: $start_opp_idx")
+        end
+
+        for end_opp_idx in (start_opp_idx+1):length(problem.opportunities)
+            end_opp_opp = problem.lt_opportunities[end_opp_idx]
+
+            # Check feasibility constraints
+            valid = true
+
+            for constraint in problem.constraints
+                if valid == false
+                    break
+                end
+
+                valid = valid && constraint(problem.lt_opportunities[start_opp_idx], problem.lt_opportunities[end_opp_idx])
+            end
+
+            # Push 
+            lt_feasible_transitions[(start_opp_idx, end_opp_idx)] = valid
+        end
+    end
+
+    println("Current Index: $(length(problem.opportunities))")
+
+    # Dict mapping (last collect/downlink action) -> {all possible actions}
+    sunpoint_actions = Tuple{Opportunity, Integer}[]
+    lt_feasible_actions = Dict{Tuple{Integer, Integer}, AbstractVector{Opportunity}}()
+
+    # Below might work but it doesn't solve the problem of having sunpointed actions
+    # be part of the 
+    println("Computing Action Space Lookup:")
+    for ca_idx in 1:length(problem.opportunities)
+        ca_opp = problem.lt_opportunities[ca_idx]
+
+        if ca_idx % 100 == 0
+            println("Current Index: $ca_idx")
+        end
+
+        # Create sunpoint action once for time
+        if enable_resources == true && ca_idx < length(problem.opportunities)
+            sp_action = Sunpoint(id=length(problem.opportunities)+length(sunpoint_actions)+1, t_start=problem.opportunities[ca_idx+1].t_start)
+            push!(sunpoint_actions, (sp_action, ca_idx+1)) # Record equivalent index of sunpoint action
+        end
+
+        for lcdo_idx in 1:ca_idx
+            lcdo_opp = problem.lt_opportunities[lcdo_idx]
+
+            # Create Array for (current action, last action)
+            lt_feasible_actions[(lcdo_opp.id, ca_opp.id)] = Opportunity[]
+
+            for fa_idx in (ca_idx+1):length(problem.opportunities)
+                if lt_feasible_transitions[(lcdo_idx, fa_idx)] == true
+                    push!(lt_feasible_actions[(lcdo_opp.id, ca_opp.id)], problem.opportunities[fa_idx])
+                end
+
+                if problem.solve_breadth > 0 && length(lt_feasible_actions[(lcdo_opp.id, ca_opp.id)]) > problem.solve_breadth
+                    break
+                end
+            end
+
+            # Add sunpoint action as feasible action
+            if enable_resources == true && ca_idx < length(problem.opportunities)
+                push!(lt_feasible_actions[(lcdo_opp.id, ca_opp.id)], sp_action)
+            end
+        end
+    end
+
+    println("Current Index: $(length(problem.opportunities))")
+
+    if enable_resources == true
+        println("Computing Sunpoint Indices:")
+        for (sp_action, ca_idx) in sunpoint_actions
+            ca_opp = problem.lt_opportunities[ca_idx]
+
+            if ca_idx % 100 == 0
+                println("Current Sunpoint Index: $ca_idx")
+            end
+            
+            for lcdo_idx in 1:ca_idx
+                lcdo_opp = problem.lt_opportunities[lcdo_idx]
+
+                # Copy Exisiting feasible actions 
+                lt_feasible_actions[(lcdo_opp.id, sp_action.id)] = copy(lt_feasible_actions[(lcdo_opp.id, ca_opp.id)]) 
+            end
+        end
+
+        println("Current Sunpoint Index: $(length(problem.opportunities))")
+    end
+
+
+    # Update Problem Values 
+    problem.lt_feasible_actions = lt_feasible_actions
+    if enable_resources == true
+        problem.actions = vcat(problem.opportunities, [x[1] for x in sunpoint_actions])
+    else
+        problem.actions = problem.opportunities
+    end
+    sort!(problem.actions, by = x -> x.t_start)
+
+    # Create Action Lookup Table
+    lt_actions = Dict{Integer, Opportunity}()
+    for action in problem.actions
+        lt_actions[action.id] = action
+    end
+    problem.lt_actions = lt_actions
+end
