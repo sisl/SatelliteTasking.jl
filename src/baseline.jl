@@ -204,7 +204,7 @@ function satellite_plan_resource_baseline(problem::SatPlanningProblem; allow_rep
 
     # Get Initial State
     init_opp = problem.opportunities[1]
-    state = SatMDPState(time=init_opp.t_start, last_cdo_action=init_opp)
+    state = SatMDPState(time=init_opp.t_start, last_action=init_opp, last_cdo_action=init_opp)
     action = state.last_cdo_action
 
     states = SatMDPState[state]

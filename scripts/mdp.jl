@@ -26,7 +26,7 @@ t_start = Epoch(2019, 1, 1, 0, 0, 0, tsys="UTC"); # Start of time span
 t_end = Epoch(2019, 1, 2, 0, 0, 0, tsys="UTC"); # End of simulation time span
 
 # Initialize Planning Problem
-problem = PlanningProblem(t_start=t_start, t_end=t_end);
+problem = SatPlanningProblem(t_start=t_start, t_end=t_end);
 
 # Add constraints to problem
 push!(problem.constraints, constraint_agility_single_axis)
@@ -126,7 +126,7 @@ println("Found $num_accessible_requests out of $(length(problem.requests)) reque
 ##
 
 # # Adjust solve parameters
-# problem.solve_gamma = 1.0 # Typical values 0.999 - 0.9999
+# problem.solve_discount = 1.0 # Typical values 0.999 - 0.9999
 # problem.solve_depth = 5
 # problem.solve_breadth = 3
 # problem.solve_horizon = T
@@ -151,7 +151,7 @@ println("Found $num_accessible_requests out of $(length(problem.requests)) reque
 # Adjust solve parameters
 problem.solve_allow_repeats = false
 problem.mdp_reward_scarcity = false
-problem.solve_gamma = 1.0 # Typical values 0.99 - 0.9999
+problem.solve_discount = 1.0 # Typical values 0.99 - 0.9999
 problem.solve_depth = 10
 problem.solve_breadth = 0
 problem.solve_horizon = T
