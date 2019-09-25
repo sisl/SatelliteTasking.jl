@@ -3,11 +3,24 @@
 ###########################
 
 # Terminal States
-POMDPs.isterminal(problem::SatPlanningProblem, s::SatMDPState) = length(problem.lt_feasible_actions[(s.last_cdo_action.id, s.last_action.id)]) == 0
+function POMDPs.isterminal(problem::SatPlanningProblem, s::SatMDPState)
+    done = false
+
+    # Have remaining actions 
+    if length(problem.lt_feasible_actions[(s.last_cdo_action.id, s.last_action.id)]) == 0
+        done = true
+    end
+
+    # if s.power <= 0
+    #     done = true
+    # end
+    
+    return done
+end
 POMDPs.discount(problem::SatPlanningProblem) = problem.solve_discount
 
 # Generate next state from state and action
-function POMDPs.generate_s(problem::SatPlanningProblem, state::SatMDPState, action::Opportunity, rng::AbstractRNG)
+function POMDPs.gen(problem::SatPlanningProblem, state::SatMDPState, action::Opportunity, rng::AbstractRNG)
 
     # Current state time
     time0 = state.time
@@ -72,18 +85,23 @@ function POMDPs.generate_s(problem::SatPlanningProblem, state::SatMDPState, acti
 
     if power < 0.0 
         power = 0.0 
-        done = true
     end
 
     if data > 1.0 data = 1.0 end
     if data < 0.0 data = 0.0 end
 
-    return SatMDPState(time=time,
-            last_action=action,
-            last_cdo_action=last_cdo_action,
-            request_ids=request_ids,
-            power=power,
-            data=data)
+    # Compute next state and reward for next state
+    sp = SatMDPState(time=time,
+        last_action=action,
+        last_cdo_action=last_cdo_action,
+        request_ids=request_ids,
+        power=power,
+        data=data
+    )
+
+    # spr = reward(problem, state, action)
+
+    return (sp=sp,)
 end
 
 # State reward function
@@ -116,7 +134,7 @@ function POMDPs.reward(problem::SatPlanningProblem, state::SatMDPState, action::
             # end
         else
             # Penalize collection when full up
-            # r -= action.reward
+            # r -= 1000
         end
 
     elseif typeof(action) == Contact
@@ -141,8 +159,17 @@ function POMDPs.reward(problem::SatPlanningProblem, state::SatMDPState, action::
     data  = state.data  + data_generated
 
     # Penalize running out of power
-    if power <= 0
+    if power <= 0.3
         r -= 10000
+    end
+
+    # if 0.2 < power <= 0.4
+    #     r -= 10
+    # end
+
+    # Penalize being full on data
+    if data >= 0.75
+        r -= 1000
     end
 
     # Don't penalize overcharge

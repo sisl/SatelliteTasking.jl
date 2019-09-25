@@ -55,7 +55,9 @@ function mdp_fs(problem::SatPlanningProblem, state::SatMDPState)
     # end
 
     if typeof(action) != Done && action.t_start == state.time
-        throw(ErrorException("Took action that isn't advancing time...\n $state - $action"))
+        # throw(ErrorException("Took action that isn't advancing time...\n $state - $action"))
+        @debug "Took action that isn't advancing time...\n $state - $action"
+        return state, Done(t_start=state.time), 0
     end
 
     # Step to next state with selected action

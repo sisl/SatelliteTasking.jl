@@ -9,6 +9,7 @@ function satellite_plan_mdp_mcts(problem::SatPlanningProblem; parallel::Bool=fal
     state = initialstate(problem, Random.MersenneTwister(4))
     states = SatMDPState[state]
     plan = Opportunity[state.last_action]
+    plan_rewards = Real[]
     action = nothing
     total_reward = 0.0
     r  = 0.0
@@ -26,6 +27,7 @@ function satellite_plan_mdp_mcts(problem::SatPlanningProblem; parallel::Bool=fal
     else
         r = 0
     end
+    push!(plan_rewards, r)
     total_reward += r
 
     # println("State: $state\n")
@@ -38,7 +40,7 @@ function satellite_plan_mdp_mcts(problem::SatPlanningProblem; parallel::Bool=fal
         # println("Action: $action\n")
         
         # Advance state with next action
-        state = POMDPs.generate_s(problem, state, action, Random.MersenneTwister(4))
+        state = POMDPs.gen(problem, state, action, Random.MersenneTwister(4)).sp
         push!(states, state)
         # println("State: $state\n")
 
@@ -49,10 +51,11 @@ function satellite_plan_mdp_mcts(problem::SatPlanningProblem; parallel::Bool=fal
         else
             r = 0
         end
+        push!(plan_rewards, r)
         # println("Request Ids: $(state.request_ids)")
         # println("Reward: $r\n")
         total_reward += r
     end
 
-    return states, plan, total_reward
+    return states, plan, plan_rewards, total_reward
 end
