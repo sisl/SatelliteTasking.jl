@@ -169,7 +169,7 @@ function POMDPs.reward(problem::SatPlanningProblem, state::SatMDPState, action::
 
     # Penalize being full on data
     if data >= 0.75
-        r -= 1000
+        r -= 10000
     end
 
     # Don't penalize overcharge

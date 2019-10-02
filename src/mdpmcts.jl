@@ -14,7 +14,7 @@ function satellite_plan_mdp_mcts(problem::SatPlanningProblem; parallel::Bool=fal
     total_reward = 0.0
     r  = 0.0
 
-    solver = MCTSSolver(n_iterations=problem.mcts_n_iterations, depth=problem.solve_depth, exploration_constant=problem.mcts_exploration_constant, enable_tree_vis=false)
+    solver = MCTSSolver(n_iterations=problem.mcts_n_iterations, depth=problem.solve_depth, exploration_constant=problem.mcts_exploration_constant)
     # @POMDPs.requirements_info(solver, problem)
     policy = POMDPs.solve(solver, problem);
 
