@@ -140,9 +140,14 @@ function POMDPs.reward(problem::SatPlanningProblem, state::SatMDPState, action::
     elseif typeof(action) == Contact
         # r += 0.01*action.duration
 
+        
+
         # Update data generation
         data_generated  += action.duration * problem.spacecraft[1].datagen_downlink
         power_generated += action.duration * problem.spacecraft[1].powergen_downlink
+
+        n_img_downlinked = action.duration * abs(problem.spacecraft[1].datagen_downlink / problem.spacecraft[1].datagen_image)
+        r += n_img_downlinked*0.01
     elseif typeof(action) == Noop
         r += 0.0
     elseif typeof(action) == Sunpoint

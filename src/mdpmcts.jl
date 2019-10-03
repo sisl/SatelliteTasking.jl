@@ -20,40 +20,53 @@ function satellite_plan_mdp_mcts(problem::SatPlanningProblem; parallel::Bool=fal
 
     state = initialstate(problem, Random.MersenneTwister(4))
     push!(states, state)
-    # r = state.last_collect.location.r
-    # r = reward(problem, state, state.last_action)
+
+    # Compute initial state reward
     if typeof(state.last_action) == Collect
-        r = state.last_action.location.reward
-    else
-        r = 0
+        r += state.last_action.location.reward
     end
     push!(plan_rewards, r)
     total_reward += r
 
-    # println("State: $state\n")
-    # println("Reward: $r\n")
 
     while !isterminal(problem, state)
         # Compute optimal action
         action = POMDPs.action(policy, state)
-        push!(plan, action)
-        # println("Action: $action\n")
         
         # Advance state with next action
-        state = POMDPs.gen(problem, state, action, Random.MersenneTwister(4)).sp
+        next_state = POMDPs.gen(problem, state, action, Random.MersenneTwister(4)).sp
         push!(states, state)
-        # println("State: $state\n")
 
-        # Update r
-        # r = state.last_collect.location.r
-        if typeof(state.last_action) == Collect
-            r = state.last_action.location.reward
-        else
-            r = 0
-        end
+        # Compute action reward
+        r = POMDPs.reward(problem, state, action)
+
+        # # Check next-state is safe, otherwise override with safe action
+        # if next_state.power <= 0.0
+        #     # Get Sunpointed action
+        #     candidate_actions = problem.lt_feasible_actions[(state.last_cdo_action.id, state.last_action.id)]
+        #     action = candidate_actions[findfirst(x -> typeof(x) == Sunpoint, candidate_actions)]
+
+        #     next_state = POMDPs.gen(problem, state, action, Random.MersenneTwister(4)).sp
+        #     r = POMDPs.reward(problem, state, action)
+        # end
+
+         # Alternate method for regenerating action
+         if r <= 0.0
+            # Get Sunpointed action
+            candidate_actions = problem.lt_feasible_actions[(state.last_cdo_action.id, state.last_action.id)]
+            action = candidate_actions[findfirst(x -> typeof(x) == Sunpoint, candidate_actions)]
+
+            next_state = POMDPs.gen(problem, state, action, Random.MersenneTwister(4)).sp
+
+            # Compute estimated reward action
+            r = POMDPs.reward(problem, state, action)
+         end
+
+        # Update State, action, reward 
+        state = next_state
+        push!(plan, action)
+        push!(states, state)
         push!(plan_rewards, r)
-        # println("Request Ids: $(state.request_ids)")
-        # println("Reward: $r\n")
         total_reward += r
     end
 
