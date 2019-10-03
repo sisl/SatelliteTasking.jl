@@ -365,7 +365,11 @@ function parallel_compute_access(problem::SatPlanningProblem;
     end
 
     # Update opportunity lookup table
-    for opp in problem.opportunities
+    for (id, opp) in enumerate(problem.opportunities)
+        # Assign global opportunity ID
+        opp.id = id
+
+        # Create lookup entry
         problem.lt_opportunities[opp.id] = opp
 
         if typeof(opp) == Contact
@@ -501,4 +505,174 @@ function precompute_action_space(problem::SatPlanningProblem; enable_resources::
         lt_actions[action.id] = action
     end
     problem.lt_actions = lt_actions
+end
+
+export pas_fa_work
+function pas_fa_work(problem::SatPlanningProblem, start_indices::AbstractVector{Integer})
+    # Array to store feasible transitoins
+    feasible_transitions = Tuple{Integer, Integer, Bool}[]
+
+    # println("Checking in! - $(length(problem.opportunities)) - Work: $start_indices")
+
+    # For Opportunity compute all feasible transitions
+    for start_opp_idx in start_indices
+        start_opp_opp = problem.lt_opportunities[start_opp_idx]
+
+        for end_opp_idx in (start_opp_idx+1):length(problem.opportunities)
+            end_opp_opp = problem.lt_opportunities[end_opp_idx]
+
+            # Check feasibility constraints
+            valid = true
+
+            for constraint in problem.constraints
+                if valid == false
+                    break
+                end
+
+                valid = valid && constraint(problem.lt_opportunities[start_opp_idx], problem.lt_opportunities[end_opp_idx])
+            end
+
+            # Push 
+            push!(feasible_transitions, (start_opp_idx, end_opp_idx, valid))
+        end
+    end
+
+    return feasible_transitions
+end
+
+export pas_cas_work
+function pas_cas_work(problem::SatPlanningProblem, lt_transitions::Dict{Tuple{Integer, Integer}, Bool}, current_index::AbstractVector{Integer}; enable_resources::Bool=false)
+    println("Checking in!")
+    flush(stdout)
+    sunpoint_actions = Tuple{Opportunity, Integer}[]
+    lt_feasible_actions = Dict{Tuple{Integer, Integer}, AbstractVector{Opportunity}}()
+
+    for ca_idx in current_index
+        ca_opp = problem.lt_opportunities[ca_idx]
+
+        # Create sunpoint action once for time
+        if enable_resources == true && ca_idx < length(problem.opportunities)
+            sp_action = Sunpoint(id=length(problem.opportunities)+length(sunpoint_actions)+1, t_start=problem.opportunities[ca_idx+1].t_start)
+            push!(sunpoint_actions, (sp_action, ca_idx+1)) # Record equivalent index of sunpoint action
+        end
+
+        for lcdo_idx in 1:ca_idx
+            lcdo_opp = problem.lt_opportunities[lcdo_idx]
+
+            # Create Array for (current action, last action)
+            lt_feasible_actions[(lcdo_opp.id, ca_opp.id)] = Opportunity[]
+
+            for fa_idx in (ca_idx+1):length(problem.opportunities)
+                if lt_transitions[(lcdo_idx, fa_idx)] == true
+                    push!(lt_feasible_actions[(lcdo_opp.id, ca_opp.id)], problem.opportunities[fa_idx])
+                end
+
+                if problem.solve_breadth > 0 && length(lt_feasible_actions[(lcdo_opp.id, ca_opp.id)]) > problem.solve_breadth
+                    break
+                end
+            end
+
+            # Add sunpoint action as feasible action
+            if enable_resources == true && ca_idx < length(problem.opportunities)
+                push!(lt_feasible_actions[(lcdo_opp.id, ca_opp.id)], sp_action)
+            end
+        end
+    end
+
+    return lt_feasible_actions, sunpoint_actions
+end
+
+export parallel_precompute_action_space
+function parallel_precompute_action_space(problem::SatPlanningProblem; enable_resources::Bool=false)
+
+    ## Compute Feasible Transitions
+    fn(p) = w -> pas_fa_work(p, w)
+
+    # Create work assignments to minimize message passing
+    lw = length(problem.opportunities)  # Length of work
+    nw = nworkers()                     # Number of workers
+    wa = floor(Int, lw/nw)              # Average work per worker
+    wr = lw - nw*wa                     # Remaining worker
+
+    # Construct Work Assignment
+    work = AbstractVector{Integer}[]
+
+    push!(work, collect(1:(wa+wr)))
+    for i in 2:nw
+        push!(work, collect((1+wr+(i-1)*wa):(i*wa+wr)))
+    end 
+
+    # Execute work in parallel, aggregate 
+    feasibility_results = vcat(pmap(fn(problem), work)...)
+
+    # Aggrecate results
+    lt_feasible_transitions = Dict{Tuple{Integer, Integer}, Bool}()
+
+    for item in feasibility_results
+        lt_feasible_transitions[(item[1], item[2])] = item[3]
+    end
+
+    ## Compute Action Space
+
+    fn(p, lt_f, er) = w -> pas_cas_work(p, lt_f, w, enable_resources=er)
+
+    # Create work assignments to minimize message passing
+    lw = length(problem.opportunities)  # Length of work
+    nw = nworkers()                     # Number of workers
+    wa = floor(Int, lw/nw)              # Average work per worker
+    wr = lw - nw*wa                     # Remaining worker
+
+    # Construct Work Assignment
+    work = AbstractVector{Integer}[]
+
+    cids = collect(shuffle(1:length(problem.opportunities)))
+    push!(work, collect(cids[1:(wa+wr)]))
+    for i in 2:nw
+        push!(work, collect(cids[(1+wr+(i-1)*wa):(i*wa+wr)]))
+    end 
+
+    # Execute work in parallel, aggregate 
+    println("Starting Action Space Compute")
+    action_space_results = pmap(fn(problem, lt_feasible_transitions, enable_resources), work)
+
+    # Aggrecate results
+    sunpoint_actions = Tuple{Opportunity, Integer}[]
+    lt_feasible_actions = Dict{Tuple{Integer, Integer}, AbstractVector{Opportunity}}()
+
+    for (lt_feas, sp_actions) in action_space_results
+
+        # Copy Feasibility Lookup
+        for (k, v) in lt_feas
+            lt_feasible_actions[k] = v
+        end
+
+        # Copy Sunpoint Actions and update ID
+        for spa in sp_actions
+            # Update ID
+            spa[1].id = length(problem.opportunities)+length(sunpoint_actions)+1
+            push!(sunpoint_actions, spa)
+        end
+
+    end
+
+    return lt_feasible_actions
+    
+    ## Compute Sunpoint Actions 
+
+
+    # Update Problem Values
+    # problem.lt_feasible_actions = lt_feasible_actions
+    # if enable_resources == true
+    #     problem.actions = vcat(problem.opportunities, [x[1] for x in sunpoint_actions])
+    # else
+    #     problem.actions = problem.opportunities
+    # end
+    # sort!(problem.actions, by = x -> x.t_start)
+
+    # # Create Action Lookup Table
+    # lt_actions = Dict{Integer, Opportunity}()
+    # for action in problem.actions
+    #     lt_actions[action.id] = action
+    # end
+    # problem.lt_actions = lt_actions
 end
