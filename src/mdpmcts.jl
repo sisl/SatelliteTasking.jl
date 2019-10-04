@@ -1,5 +1,5 @@
 export satellite_plan_mdp_mcts
-function satellite_plan_mdp_mcts(problem::SatPlanningProblem; parallel::Bool=false)
+function satellite_plan_mdp_mcts(problem::SatPlanningProblem; enable_resources::Bool=false)
 
     # Sort opportunities
     sort!(problem.opportunities, by = x -> x.t_start)
@@ -51,7 +51,7 @@ function satellite_plan_mdp_mcts(problem::SatPlanningProblem; parallel::Bool=fal
         # end
 
          # Alternate method for regenerating action
-         if r <= 0.0
+         if r <= 0.0 && enable_resources == true
             # Get Sunpointed action
             candidate_actions = problem.lt_feasible_actions[(state.last_cdo_action.id, state.last_action.id)]
             action = candidate_actions[findfirst(x -> typeof(x) == Sunpoint, candidate_actions)]
