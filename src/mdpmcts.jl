@@ -50,8 +50,8 @@ function satellite_plan_mdp_mcts(problem::SatPlanningProblem; enable_resources::
         #     r = POMDPs.reward(problem, state, action)
         # end
 
-         # Alternate method for regenerating action
-         if r <= 0.0 && enable_resources == true
+        # Alternate method for regenerating action
+        if r <= 0.0 && enable_resources == true
             # Get Sunpointed action
             candidate_actions = problem.lt_feasible_actions[(state.last_cdo_action.id, state.last_action.id)]
             action = candidate_actions[findfirst(x -> typeof(x) == Sunpoint, candidate_actions)]
@@ -60,7 +60,7 @@ function satellite_plan_mdp_mcts(problem::SatPlanningProblem; enable_resources::
 
             # Compute estimated reward action
             r = POMDPs.reward(problem, state, action)
-         end
+        end
 
         # Update State, action, reward 
         state = next_state
